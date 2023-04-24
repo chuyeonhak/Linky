@@ -8,13 +8,20 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
 
-//let project = Project.makeProject()
-
-let project = Project.makeModule(
-    name: "App",
+let project = Project.makeAppProject(
+    name: Module.app.name,
     platform: .iOS,
     product: .app,
-    dependencies: TargetDependency.spms,
+    dependencies: [
+        TargetDependency.SPM.firebaseCrashlytics,
+        TargetDependency.SPM.swinject,
+        TargetDependency.SPM.rxSwift,
+        TargetDependency.SPM.rxCocoa,
+        TargetDependency.SPM.rxRelay,
+        Module.core.project,
+        Module.features.project
+    ],
     resources: ["Resources/**"],
-    infoPlist: .file(path: "Support/Info.plist")
+    infoPlist: Project.Linky.infoPlist
     )
+

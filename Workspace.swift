@@ -6,7 +6,5 @@ import ProjectDescriptionHelpers
 
 let workspace = Workspace(
     name: Project.Linky.name,
-    projects: [
-        "\(Project.Linky.name)/App"
-    ]
+    projects: Module.allCases.map(\.path)
 )

@@ -5,112 +5,12 @@ import ProjectDescription
 /// Create your own conventions, e.g: a func that makes sure all shared targets are "static frameworks"
 /// See https://docs.tuist.io/guides/helpers/
 
-extension Project {
-    /// Helper function to create the Project for this ExampleApp
-    public static func app(name: String, platform: Platform, additionalTargets: [String]) -> Project {
-        var targets = makeAppTargets(name: name,
-                                     platform: platform,
-                                     dependencies: additionalTargets.map { TargetDependency.target(name: $0) })
-        targets += additionalTargets.flatMap({ makeFrameworkTargets(name: $0, platform: platform) })
-        return Project(name: name,
-                       organizationName: "tuist.io",
-                       targets: targets)
-    }
-
-    // MARK: - Private
-
-    /// Helper function to create a framework target and an associated unit test target
-    private static func makeFrameworkTargets(name: String, platform: Platform) -> [Target] {
-        let sources = Target(name: name,
-                platform: platform,
-                product: .framework,
-                bundleId: "io.tuist.\(name)",
-                infoPlist: .default,
-                sources: ["Targets/\(name)/Sources/**"],
-                resources: [],
-                dependencies: [])
-        let tests = Target(name: "\(name)Tests",
-                platform: platform,
-                product: .unitTests,
-                bundleId: "io.tuist.\(name)Tests",
-                infoPlist: .default,
-                sources: ["Targets/\(name)/Tests/**"],
-                resources: [],
-                dependencies: [.target(name: name)])
-        return [sources, tests]
-    }
-
-    /// Helper function to create the application target and the unit test target.
-    private static func makeAppTargets(name: String, platform: Platform, dependencies: [TargetDependency]) -> [Target] {
-        let platform: Platform = platform
-        let infoPlist: [String: InfoPlist.Value] = [
-            "CFBundleShortVersionString": "1.0",
-            "CFBundleVersion": "1",
-            "UIMainStoryboardFile": "",
-            "UILaunchStoryboardName": "LaunchScreen"
-            ]
-
-        let mainTarget = Target(
-            name: name,
-            platform: platform,
-            product: .app,
-            bundleId: "io.tuist.\(name)",
-            infoPlist: .extendingDefault(with: infoPlist),
-            sources: ["Targets/\(name)/Sources/**"],
-            resources: ["Targets/\(name)/Resources/**"],
-            dependencies: dependencies
-        )
-
-        let testTarget = Target(
-            name: "\(name)Tests",
-            platform: platform,
-            product: .unitTests,
-            bundleId: "io.tuist.\(name)Tests",
-            infoPlist: .default,
-            sources: ["Targets/\(name)/Tests/**"],
-            dependencies: [
-                .target(name: "\(name)")
-        ])
-        return [mainTarget, testTarget]
-    }
-    
-//    public static func makeProject() -> Project {
-//        return Project(name: Linky.name,
-//                       organizationName: Linky.name,
-//                       targets: makeApp())
-//    }
-    
-//    public static func makeProject() -> Project {
-//        let app = makeApp()
-//        return Project(name: "App", organizationName: "App", targets: [app])
-//    }
-    
-    public static func makeApp() -> Target {
-        return Target(name: "App",
-                      platform: Linky.platform,
-                      product: .app,
-                      productName: "App",
-                      bundleId: Linky.bundleId,
-                      deploymentTarget: Linky.deploymentTarget,
-                      infoPlist: Linky.infoPlist,
-                      sources: "Sources/**",
-                      resources: "Resources/**",
-                      dependencies: [],
-                      settings: .settings(
-                        base: Setting.baseSetting,
-                        
-                        configurations: Setting.configurations,
-                        defaultSettings: .recommended)
-        )
-    }
-}
-
 public extension Project {
-    static func makeModule(
+    static func makeAppProject(
         name: String,
         platform: Platform = .iOS,
         product: Product,
-        organizationName: String = "chuchu",
+        organizationName: String = Linky.bundleId,
         packages: [Package] = [],
         deploymentTarget: DeploymentTarget? = Linky.deploymentTarget,
         dependencies: [TargetDependency] = [],
@@ -165,6 +65,85 @@ public extension Project {
             schemes: schemes
         )
     }
+    
+    static func makeFrameworkProject(
+        name: String,
+        dependencies: [TargetDependency] = [],
+        resources: ProjectDescription.ResourceFileElements? = nil
+    ) -> Project {
+        let targtes = makeFrameworkTargets(
+            name: name,
+            bundleId: Linky.bundleId + ".\(name.lowercased())",
+            dependencies: dependencies)
+        
+        return Project(
+            name: name,
+            targets: targtes,
+            schemes: []
+        )
+    }
+    
+    private static func makeFrameworkTargets(
+        name: String,
+        bundleId: String,
+        dependencies: [TargetDependency] = [],
+        resources: ProjectDescription.ResourceFileElements? = nil
+    ) -> [Target] {
+        var targets: [Target] = []
+        targets = [
+            Target(
+                name: "\(name)Interface",
+                platform: .iOS,
+                product: .staticFramework,
+                bundleId: bundleId,
+                deploymentTarget: Linky.deploymentTarget,
+                infoPlist: Linky.infoPlist,
+                sources: ["Interfaces/**"],
+                resources: resources,
+                dependencies: dependencies
+            )
+            ,Target(
+                name: name,
+                platform: .iOS,
+                product: .staticFramework,
+                bundleId: bundleId,
+                deploymentTarget: Linky.deploymentTarget,
+                infoPlist: Linky.infoPlist,
+                sources: ["Sources/**"],
+                resources: resources,
+                dependencies: dependencies
+            ),
+            Target(
+                name: "\(name)Tests",
+                platform: .iOS,
+                product: .unitTests,
+                bundleId: bundleId,
+                deploymentTarget: Linky.deploymentTarget,
+                infoPlist: Linky.infoPlist,
+                sources: "Tests/**",
+                dependencies: [
+                    .target(name: "\(name)"),
+                    .target(name: "\(name)Interface")
+                ],
+                settings: .settings(base: SettingsDictionary()
+                    .automaticCodeSigning(devTeam: Linky.team))
+            )
+        ]
+        
+        return targets
+    }
+    
+    static func makeFeatureProject(
+        name: String,
+        dependencies: [TargetDependency] = []
+    ) -> Project {
+        return Project(
+            name: name,
+            targets: Features.allCases.map(\.target),
+            schemes: []
+        )
+    }
+    
 }
 
 extension Scheme {

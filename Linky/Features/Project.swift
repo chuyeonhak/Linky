@@ -8,4 +8,4 @@
 import ProjectDescription
 import ProjectDescriptionHelpers
 
-let project = 
+let project = Project.makeFeatureProject(name: Module.features.name)

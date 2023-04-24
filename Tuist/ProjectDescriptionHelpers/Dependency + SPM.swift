@@ -9,14 +9,14 @@ import ProjectDescription
 
 public extension TargetDependency {
     enum SPM: CaseIterable {
-        static let rxSwift = TargetDependency.external(name: "RxSwift")
-        static let rxCocoa = TargetDependency.external(name: "RxCocoa")
-        static let rxRelay = TargetDependency.external(name: "RxRelay")
-        static let snpaKit = TargetDependency.external(name: "SnapKit")
-        static let then = TargetDependency.external(name: "Then")
-        static let swinject = TargetDependency.external(name: "Swinject")
-        static let firebaseAnalytics = TargetDependency.external(name: "FirebaseAnalytics")
-        static let firebaseCrashlytics = TargetDependency.external(name: "FirebaseCrashlytics")
+        public static let rxSwift = TargetDependency.external(name: "RxSwift")
+        public static let rxCocoa = TargetDependency.external(name: "RxCocoa")
+        public static let rxRelay = TargetDependency.external(name: "RxRelay")
+        public static let snpaKit = TargetDependency.external(name: "SnapKit")
+        public static let then = TargetDependency.external(name: "Then")
+        public static let swinject = TargetDependency.external(name: "Swinject")
+        public static let firebaseAnalytics = TargetDependency.external(name: "FirebaseAnalytics")
+        public static let firebaseCrashlytics = TargetDependency.external(name: "FirebaseCrashlytics")
     }
     
     static let spms: [TargetDependency] = [

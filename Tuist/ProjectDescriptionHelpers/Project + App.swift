@@ -15,9 +15,8 @@ extension Project {
         public static let deploymentTarget: DeploymentTarget = .iOS(targetVersion: "14.0", devices: [.iphone, .ipad])
         public static let team = "GP9D94CZ57"
         public static let name = "Linky"
-        public static let bundleId = "com.linky.chu"
+        public static let bundleId = "com.chuchu"
         public static let infoPlist: ProjectDescription.InfoPlist = .file(path: "Support/Info.plist")
-        
     }
     
     public enum Setting {

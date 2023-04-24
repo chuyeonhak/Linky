@@ -5,4 +5,9 @@
 //  Created by chuchu on 2023/04/24.
 //
 
-import Foundation
+
+public class CoreServices {
+    public init() {
+        print("Core Success")
+    }
+}
