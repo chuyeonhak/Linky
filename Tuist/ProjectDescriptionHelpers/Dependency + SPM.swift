@@ -12,7 +12,7 @@ public extension TargetDependency {
         public static let rxSwift = TargetDependency.external(name: "RxSwift")
         public static let rxCocoa = TargetDependency.external(name: "RxCocoa")
         public static let rxRelay = TargetDependency.external(name: "RxRelay")
-        public static let snpaKit = TargetDependency.external(name: "SnapKit")
+        public static let snapkit = TargetDependency.external(name: "SnapKit")
         public static let then = TargetDependency.external(name: "Then")
         public static let swinject = TargetDependency.external(name: "Swinject")
         public static let firebaseAnalytics = TargetDependency.external(name: "FirebaseAnalytics")
@@ -23,7 +23,7 @@ public extension TargetDependency {
         SPM.rxSwift,
         SPM.rxCocoa,
         SPM.rxRelay,
-        SPM.snpaKit,
+        SPM.snapkit,
         SPM.then,
         SPM.swinject,
         SPM.firebaseCrashlytics,

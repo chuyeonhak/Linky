@@ -1,4 +1,5 @@
 import UIKit
+import Features
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 

@@ -46,8 +46,22 @@ public extension Features {
             deploymentTarget: Project.Linky.deploymentTarget,
             infoPlist: Project.Linky.infoPlist,
             sources: ["\(name)/**"],
-            dependencies: []
+            dependencies: [Module.core.project,
+                           TargetDependency.SPM.snapkit,
+                           TargetDependency.SPM.then]
         )
+    }
+    
+    var path: ProjectDescription.Path {
+        .relativeToRoot(Project.Linky.name + "/Features/" + name)
+    }
+    
+    var project: TargetDependency {
+        .project(target: name, path: path)
+    }
+    
+    var package: Package {
+        .package(path: path)
     }
 }
 

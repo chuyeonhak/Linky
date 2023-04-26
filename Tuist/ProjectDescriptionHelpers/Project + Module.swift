@@ -24,11 +24,11 @@ extension Module {
     
     public var path: ProjectDescription.Path {
         .relativeToRoot(Project.Linky.name + "/" + name)
-      }
-
-      public var project: TargetDependency {
+    }
+    
+    public var project: TargetDependency {
         .project(target: name, path: path)
-      }
+    }
 }
 
 extension Module: CaseIterable {}

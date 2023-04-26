@@ -139,6 +139,7 @@ public extension Project {
     ) -> Project {
         return Project(
             name: name,
+            packages: Features.allCases.filter(\.isUsing).map(\.package),
             targets: Features.allCases.filter(\.isUsing).map(\.target),
             schemes: []
         )
