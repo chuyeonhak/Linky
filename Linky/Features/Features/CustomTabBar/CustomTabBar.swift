@@ -7,6 +7,8 @@
 
 import UIKit
 
+import Core
+
 import RxSwift
 import RxCocoa
 
@@ -105,14 +107,14 @@ final class CustomTabBar: UIView {
     }
     
     private func addTabViews() {
-        ["icoTimelineOn", "icoTagOff", "icoMoreOff"].forEach {
+        TabType.allCases.forEach { type in
             let view = UIView()
-            let imageView = UIImageView(image: UIImage(named: $0))
+            let imageView = UIImageView(image: type.offImage)
             let label = UILabel()
             
-            label.text = $0
+            label.text = type.title
             label.textColor = .black
-            label.font = .systemFont(ofSize: 11)
+            label.font = FontManager.shared.pretendard(weight: .medium, size: 11)
             
             [imageView, label].forEach(view.addSubview(_:))
             
