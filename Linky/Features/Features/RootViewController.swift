@@ -7,15 +7,19 @@
 
 import UIKit
 
+import Core
+
 import Then
 import SnapKit
 import RxSwift
 import RxCocoa
-import Core
 
 
 public final class RootViewController: UITabBarController {
     let firstVc = UINavigationController(rootViewController: TimelineViewController())
+    
+    var customTabBar: CustomTabBar!
+//    let customTabBar = CustomTabBar()
     public override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -31,8 +35,6 @@ public final class RootViewController: UITabBarController {
 //            thirdVc
         ], animated: false)
         self.tabBar.isHidden = true
-        fontCheck()
-        
         commonInit()
     }
     
@@ -40,9 +42,18 @@ public final class RootViewController: UITabBarController {
         
     }
     
-    func fontCheck() {
-        
-
+    private func setTabbar() {
+        self.customTabBar = CustomTabBar()
+        view.addSubview(customTabBar)
+        customTabBar.snp.makeConstraints {
+            let bottomInset = UIApplication.shared.safeAreaInset.bottom
+            $0.bottom.leading.trailing.equalToSuperview()
+            $0.height.equalTo(bottomInset + 78)
+        }
+    }
+    
+    override public func viewDidAppear(_ animated: Bool) {
+        setTabbar()
     }
 }
 
@@ -86,8 +97,8 @@ final class TimelineViewController: UIViewController {
         super.viewDidLoad()
 //        self.navigationController?.navigationBar.barTintColor = .red
 //        self.navigationController?.navigationBar.backgroundColor = .red
-        setNavigationBar()
-        self.view.backgroundColor = .blue
+        configureNavigationButton()
+        self.view.backgroundColor = UIColor(named: "MainColor")
         
         view.addSubview(testButton)
         view.addSubview(listTableView)
@@ -117,17 +128,16 @@ final class TimelineViewController: UIViewController {
         let label = UILabel().then {
             $0.text = "test"
         }
-        let testItem = UIBarButtonItem(customView: label)
-        UIView.animate(withDuration: 0.3) {
-            self.navigationItem.leftBarButtonItem = leftIsEmpty ? testItem : nil
-//            self.navigationItem.leftBarButtonItem?.customView?.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
-            let testVC = UIViewController()
-            testVC.view.backgroundColor = .black
-            let searchController = UISearchController(searchResultsController: nil)
-            searchController.searchBar.delegate = self
-            searchController.searchBar.placeholder = "검색어를 입력해 주세요."
-            self.navigationItem.searchController = leftIsEmpty ? searchController : nil
-        }
+        
+//        let testItem = UIBarButtonItem(customView: label)
+        let testItem = makeLeftItem()
+        self.navigationItem.leftBarButtonItem = leftIsEmpty ? testItem : nil
+        print(testItem.customView!.frame)
+        
+        let searchController = UISearchController(searchResultsController: nil)
+        searchController.searchBar.delegate = self
+        searchController.searchBar.placeholder = "검색어를 입력해 주세요."
+        self.navigationItem.searchController = leftIsEmpty ? searchController : nil
     }
 }
 
@@ -206,20 +216,82 @@ final class TestCell: UITableViewCell {
 }
 
 private extension TimelineViewController {
-    func setNavigationBar() {
-        configureNavigationTitle()
-        configureNavigationButton()
-    }
-    
-    func configureNavigationTitle() {
-        self.title = "태그"
-    }
     
     func configureNavigationButton() {
-        let item = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(test))
-        self.navigationItem.leftBarButtonItem = item
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Next", style: .plain, target: self, action: nil)
-        self.navigationItem.leftBarButtonItem = nil
+//        navigationController?.navigationBar.isTranslucent = false
+        let leftItem = makeLeftItem()
+        let rightItem = makeRightItem()
+        
+        navigationItem.leftBarButtonItem = leftItem
+        navigationItem.rightBarButtonItem = rightItem
+    }
+    
+    private func makeLeftItem() -> UIBarButtonItem {
+        let leftButton = UIButton()
+        
+        leftButton.setImage(UIImage(named: "icoLogo"), for: .normal)
+        leftButton.setTitle(" LINKY", for: .normal)
+        leftButton.titleLabel?.font = FontManager.shared.pretendard(weight: .medium, size: 18)
+        leftButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 6)
+        
+        leftButton.rx.tap
+            .bind {
+                print("wow")
+            }
+            .disposed(by: disposeBag)
+        
+        return UIBarButtonItem(customView: leftButton)
+    }
+    
+    @objc func leftTapped() {
+        print("wow")
+    }
+    
+    private func makeRightItem() -> UIBarButtonItem {
+        let rightButton = UIButton()
+        
+        rightButton.setImage(UIImage(named: "icoArrowBottom"), for: .normal)
+        rightButton.setTitle("전체", for: .normal)
+        rightButton.setTitleColor(.black, for: .normal)
+        rightButton.titleLabel?.font = FontManager.shared.pretendard(weight: .semiBold, size: 14)
+        rightButton.semanticContentAttribute = .forceRightToLeft
+//        rightButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 6)
+        
+//        let rightView = UIView()
+//
+//        let downImageView = UIImageView(image: UIImage(named: "icoArrowBottom"))
+//        let rightTitleLabel = UILabel().then {
+//            $0.text = "전체"
+//            $0.font = FontManager.shared.pretendard(weight: .semiBold, size: 14)
+//        }
+//
+//        [downImageView, rightTitleLabel].forEach(rightView.addSubview(_:))
+//
+//        downImageView.snp.makeConstraints {
+//            $0.trailing.equalToSuperview()
+//            $0.centerY.equalToSuperview()
+//            $0.size.equalTo(20)
+//        }
+//
+//        rightTitleLabel.snp.makeConstraints {
+//            $0.trailing.equalTo(downImageView.snp.leading)
+//            $0.centerY.equalToSuperview()
+//        }
+//
+//        let rightTapped = UITapGestureRecognizer()
+//
+//        rightView.addGestureRecognizer(rightTapped)
+//
+//        rightTapped.rx.event
+//            .bind { _ in
+//                print("wow")
+//            }.disposed(by: disposeBag)
+        
+        rightButton.rx.tap
+            .bind { print("rightButtonTapped") }
+            .disposed(by: disposeBag)
+        
+        return UIBarButtonItem(customView: rightButton)
     }
     
     @objc
