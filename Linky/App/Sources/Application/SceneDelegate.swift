@@ -11,7 +11,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         options connectionOptions: UIScene.ConnectionOptions
     ) {
         guard let scene = (scene as? UIWindowScene) else { return }
-        self.window = UIWindow(windowScene: scene)
+        window = UIWindow(windowScene: scene)
+        deviceSizeSetting(window: window)
+        
         let vc = RootViewController()
         window?.rootViewController = vc
         window?.makeKeyAndVisible()
@@ -28,3 +30,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidEnterBackground(_ scene: UIScene) {}
 }
 
+extension SceneDelegate {
+    private func deviceSizeSetting(window: UIWindow?) {
+        UIApplication.safeAreaInset = window?.windowScene?.windows.first?.safeAreaInsets ?? .zero
+    }
+}
