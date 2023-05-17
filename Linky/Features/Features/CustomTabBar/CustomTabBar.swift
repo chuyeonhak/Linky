@@ -181,12 +181,11 @@ extension CACornerMask {
 
 
 extension UIApplication {
+    public static var safeAreaInset: UIEdgeInsets = .zero
+    
     var window: UIWindow? {
         UIApplication.shared.connectedScenes
             .flatMap { ($0 as? UIWindowScene)?.windows ?? [] }
-            .last { $0.isKeyWindow }
-    }
-    var safeAreaInset: UIEdgeInsets {
-        window?.safeAreaInsets ?? .zero
+            .first { $0.isKeyWindow }
     }
 }
