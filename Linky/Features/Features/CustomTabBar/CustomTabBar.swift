@@ -153,15 +153,29 @@ extension UIView {
         layer.shadowRadius = blur
     }
     
+    func insert(_ mask: CACornerMask) {
+        layer.maskedCorners.insert(mask)
+    }
+    
     func addCornerRadius(radius: CGFloat,
-                         _ maskedCorners: CACornerMask = []) {
+                         _ maskedCorners: [CACornerMask] = []) {
         
         layer.cornerRadius = radius
-        layer.maskedCorners = maskedCorners
+        maskedCorners.forEach(insert)
     }
 }
 
+extension UIColor {
+    static let main = UIColor(named: "main")
+    static let error = UIColor(named: "error")
+    static let code1 = UIColor(named: "code1")
+}
+
 extension CACornerMask {
+    public static var allCorners: [CACornerMask] {
+        return [.topLeft, .topLeft, .bottomLeft, .bottomRight]
+    }
+    
     public static var topLeft: CACornerMask {
         return .layerMinXMinYCorner
     }
@@ -178,7 +192,6 @@ extension CACornerMask {
         return .layerMaxXMaxYCorner
     }
 }
-
 
 extension UIApplication {
     public static var safeAreaInset: UIEdgeInsets = .zero

@@ -33,7 +33,7 @@ final class TestViewController: UIViewController {
 //        self.navigationController?.navigationBar.barTintColor = .red
 //        self.navigationController?.navigationBar.backgroundColor = .red
         configureNavigationButton()
-        self.view.backgroundColor = UIColor(named: "MainColor")
+        self.view.backgroundColor = .main
         
         view.addSubview(testButton)
         view.addSubview(listTableView)
