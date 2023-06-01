@@ -28,7 +28,7 @@ final class CustomTabBar: UIView {
     }
     
     let addButtonShadowView = UIView().then {
-        $0.backgroundColor = .white
+        $0.backgroundColor = .code8
         $0.layer.cornerRadius = 34
     }
     
@@ -50,6 +50,7 @@ final class CustomTabBar: UIView {
         addComponent()
         setConstraints()
         bind()
+        selectItem(index: 0)
     }
     
     private func addComponent() {
@@ -64,7 +65,7 @@ final class CustomTabBar: UIView {
     }
     
     private func setConstraints() {
-        containerShadowView.backgroundColor = .white
+        containerShadowView.backgroundColor = .code8
         
         wrapperView.snp.makeConstraints {
             $0.edges.equalToSuperview()
@@ -112,8 +113,11 @@ final class CustomTabBar: UIView {
             let imageView = UIImageView(image: type.offImage)
             let label = UILabel()
             
+            imageView.tag = Tag.tabImageView
+            label.tag = Tag.tabLabel
+            
             label.text = type.title
-            label.textColor = .black
+            label.textColor = Const.Custom.deseleted.color
             label.font = FontManager.shared.pretendard(weight: .medium, size: 11)
             
             [imageView, label].forEach(view.addSubview(_:))
@@ -134,18 +138,54 @@ final class CustomTabBar: UIView {
     }
     
     private func buttonAnimation(_ isAnimation: Bool) {
-        let transform: CGAffineTransform = isAnimation ? .identity : CGAffineTransform(rotationAngle: .pi / 4)
+        let transform = isAnimation ? .identity : CGAffineTransform(rotationAngle: .pi / 4)
         
         UIView.animate(withDuration: 0.3) {
             self.addButton.transform = transform
         }
+    }
+    
+    func selectTab(index: Int) -> Int {
+        resetSelectedItem()
+        selectItem(index: index)
+        
+        return index
+    }
+    
+    private func getTabSubView(index: Int) -> UIView? {
+        return tabbarStackView.arrangedSubviews[safe: index]
+    }
+    
+    private func resetSelectedItem() {
+        TabType.allCases.enumerated().forEach { index, type in
+            let subview = getTabSubView(index: index)
+            let imageView = subview?.viewWithTag(Tag.tabImageView) as? UIImageView
+            let label = subview?.viewWithTag(Tag.tabLabel) as? UILabel
+            
+            imageView?.image = type.offImage
+            label?.textColor = Const.Custom.deseleted.color
+        }
+    }
+    
+    private func selectItem(index: Int) {
+        let subview = getTabSubView(index: index)
+        let imageView = subview?.viewWithTag(Tag.tabImageView) as? UIImageView
+        let label = subview?.viewWithTag(Tag.tabLabel) as? UILabel
+        
+        imageView?.image = TabType(rawValue: index)?.onImage
+        label?.textColor = Const.Custom.selected.color
     }
 }
 
 
 
 extension UIView {
-    func addShadow(offset: CGSize, color: UIColor = .black, opacity: Float = 0.5, blur: CGFloat = 5.0) {
+    func addShadow(
+        offset: CGSize,
+        color: UIColor = .black,
+        opacity: Float = 0.5,
+        blur: CGFloat = 5.0) {
+            
         layer.masksToBounds = false
         layer.shadowColor = color.cgColor
         layer.shadowOffset = offset
@@ -175,6 +215,7 @@ extension UIColor {
     static let code5 = UIColor(named: "code5")
     static let code6 = UIColor(named: "code6")
     static let code7 = UIColor(named: "code7")
+    static let code8 = UIColor(named: "code8")
 }
 
 extension CACornerMask {
@@ -206,5 +247,11 @@ extension UIApplication {
         UIApplication.shared.connectedScenes
             .flatMap { ($0 as? UIWindowScene)?.windows ?? [] }
             .first { $0.isKeyWindow }
+    }
+}
+
+extension Array {
+    subscript (safe index: Int) -> Element? {
+        return indices ~= index ? self[index] : nil
     }
 }

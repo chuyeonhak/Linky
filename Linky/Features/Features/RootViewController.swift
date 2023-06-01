@@ -56,7 +56,8 @@ public final class RootViewController: UITabBarController {
             subview.addGestureRecognizer(tapGesture)
             
             tapGesture.rx.event
-                .map { _ in index }
+                .withUnretainedOnly(self)
+                .map { $0.customTabBar.selectTab(index: index) }
                 .bind(to: rx.selectedIndex)
                 .disposed(by: disposeBag)
         }
