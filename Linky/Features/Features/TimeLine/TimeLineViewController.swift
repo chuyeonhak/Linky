@@ -50,7 +50,7 @@ private extension TimeLineViewController {
         leftButton.setTitle(" LINKY", for: .normal)
         leftButton.setTitleColor(.code3, for: .normal)
         leftButton.titleLabel?.font = FontManager.shared.pretendard(weight: .bold, size: 24)
-        leftButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 6)
+//        leftButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 6)
         
         leftButton.rx.tap
             .bind {
@@ -70,7 +70,7 @@ private extension TimeLineViewController {
         
         rightButton.setImage(UIImage(named: "icoArrowBottom"), for: .normal)
         rightButton.setTitle("전체", for: .normal)
-        rightButton.setTitleColor(.code4, for: .normal)
+        rightButton.setTitleColor(.code3, for: .normal)
         rightButton.titleLabel?.font = FontManager.shared.pretendard(weight: .semiBold, size: 14)
         rightButton.semanticContentAttribute = .forceRightToLeft
         
