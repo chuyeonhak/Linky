@@ -125,6 +125,7 @@ private extension TestViewController {
         
         leftButton.setImage(UIImage(named: "icoLogo"), for: .normal)
         leftButton.setTitle(" LINKY", for: .normal)
+        leftButton.setTitleColor(.code3, for: .normal)
         leftButton.titleLabel?.font = FontManager.shared.pretendard(weight: .medium, size: 18)
         leftButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 6)
         

@@ -17,6 +17,7 @@ import RxCocoa
 
 public final class RootViewController: UITabBarController {
     let firstVc = UINavigationController(rootViewController: TimeLineViewController())
+    let secondVc = UINavigationController(rootViewController: TagViewController())
     let disposeBag = DisposeBag()
     
     var customTabBar: CustomTabBar!
@@ -26,6 +27,7 @@ public final class RootViewController: UITabBarController {
         
         setViewControllers([
             firstVc,
+            secondVc,
         ], animated: false)
         self.tabBar.isHidden = true
         commonInit()
@@ -54,11 +56,9 @@ public final class RootViewController: UITabBarController {
             subview.addGestureRecognizer(tapGesture)
             
             tapGesture.rx.event
-                .bind { _ in
-                    print(index)
-                }
+                .map { _ in index }
+                .bind(to: rx.selectedIndex)
                 .disposed(by: disposeBag)
-            
         }
     }
 }

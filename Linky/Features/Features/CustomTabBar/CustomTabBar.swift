@@ -169,6 +169,12 @@ extension UIColor {
     static let main = UIColor(named: "main")
     static let error = UIColor(named: "error")
     static let code1 = UIColor(named: "code1")
+    static let code2 = UIColor(named: "code2")
+    static let code3 = UIColor(named: "code3")
+    static let code4 = UIColor(named: "code4")
+    static let code5 = UIColor(named: "code5")
+    static let code6 = UIColor(named: "code6")
+    static let code7 = UIColor(named: "code7")
 }
 
 extension CACornerMask {

@@ -33,7 +33,8 @@ final class TimeLineViewController: UIViewController {
 private extension TimeLineViewController {
     func configureNavigationButton() {
         navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.barTintColor = .black
+        navigationController?.navigationBar.barTintColor = .code7
+        navigationController?.navigationBar.shadowImage = UIImage()
         
         let leftItem = makeLeftItem()
         let rightItem = makeRightItem()
@@ -47,7 +48,8 @@ private extension TimeLineViewController {
         
         leftButton.setImage(UIImage(named: "icoLogo"), for: .normal)
         leftButton.setTitle(" LINKY", for: .normal)
-        leftButton.titleLabel?.font = FontManager.shared.pretendard(weight: .medium, size: 18)
+        leftButton.setTitleColor(.code3, for: .normal)
+        leftButton.titleLabel?.font = FontManager.shared.pretendard(weight: .bold, size: 24)
         leftButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 6)
         
         leftButton.rx.tap
@@ -68,7 +70,7 @@ private extension TimeLineViewController {
         
         rightButton.setImage(UIImage(named: "icoArrowBottom"), for: .normal)
         rightButton.setTitle("전체", for: .normal)
-        rightButton.setTitleColor(UIColor(red: 204, green: 206, blue: 211, alpha: 1), for: .normal)
+        rightButton.setTitleColor(.code4, for: .normal)
         rightButton.titleLabel?.font = FontManager.shared.pretendard(weight: .semiBold, size: 14)
         rightButton.semanticContentAttribute = .forceRightToLeft
         
