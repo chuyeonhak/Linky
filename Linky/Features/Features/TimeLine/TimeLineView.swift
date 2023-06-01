@@ -14,12 +14,14 @@ import Then
 import RxSwift
 
 final class TimeLineView: UIView {
+    let disposeBag = DisposeBag()
+    
     let emptyView = UIView()
     
-    let clockImageView = UIImageView(image: UIImage(named: "clock"))
+    let clockImageView = UIImageView(image: Const.Asset.clock.image)
     
     let emptyTitleLabel = UILabel().then {
-        $0.text = "내가 추가한 링크를\n시간 순서대로 볼 수 있어요."
+        $0.text = Const.Text.emptyTitle
         $0.textColor = UIColor(red: 231, green: 232, blue: 235, alpha: 1)
         $0.numberOfLines = 0
         $0.textAlignment = .center
@@ -28,7 +30,7 @@ final class TimeLineView: UIView {
     
     let addLinkButton = UIButton().then {
         $0.addCornerRadius(radius: 10)
-        $0.setTitle("링크 추가하기", for: .normal)
+        $0.setTitle(Const.Text.addLink, for: .normal)
         $0.setTitleColor(.white, for: .normal)
         $0.backgroundColor = .main
         $0.titleLabel?.font = FontManager.shared.pretendard(weight: .bold, size: 15)
@@ -92,5 +94,10 @@ final class TimeLineView: UIView {
         
     }
     
-    private func bind() { }
+    private func bind() {
+        addLinkButton.rx.tap
+            .bind {
+                print("wow")
+            }.disposed(by: disposeBag)
+    }
 }
