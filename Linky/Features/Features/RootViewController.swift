@@ -18,24 +18,34 @@ import RxCocoa
 public final class RootViewController: UITabBarController {
     let firstVc = UINavigationController(rootViewController: TimeLineViewController())
     let secondVc = UINavigationController(rootViewController: TagViewController())
+    let thirdVc = UINavigationController(rootViewController: MoreViewController())
     let disposeBag = DisposeBag()
     
     var customTabBar: CustomTabBar!
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
 //        let hello = HomeTabbarController()
         
-        setViewControllers([
-            firstVc,
-            secondVc,
-        ], animated: false)
+        setViewControllers([firstVc, secondVc, thirdVc], animated: false)
         self.tabBar.isHidden = true
         commonInit()
     }
     
     private func commonInit() {
+        setTabbar()
+        setStatusBar()
+        setTabbarBind()
+    }
+    
+    private func setStatusBar() {
+        let window = UIApplication.shared.windows.first
+        let statusBarManager = window?.windowScene?.statusBarManager
         
+        let statusBarView = UIView(frame: statusBarManager?.statusBarFrame ?? .zero)
+        statusBarView.backgroundColor = .code7
         
+        window?.addSubview(statusBarView)
     }
     
     private func setTabbar() {
@@ -48,8 +58,7 @@ public final class RootViewController: UITabBarController {
         }
     }
     
-    override public func viewSafeAreaInsetsDidChange() {
-        setTabbar()
+    private func setTabbarBind() {
         customTabBar.tabbarStackView.arrangedSubviews.enumerated().forEach { index, subview in
             let tapGesture = UITapGestureRecognizer()
             

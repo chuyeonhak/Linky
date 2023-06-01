@@ -33,8 +33,7 @@ final class CustomTabBar: UIView {
     }
     
     let addButton = UIButton().then {
-        $0.layer.cornerRadius = 34
-        $0.setImage(UIImage(named: "plus"), for: .normal)
+        $0.setImage(UIImage(named: "icoPlus"), for: .normal)
     }
     
     override init(frame: CGRect) {
@@ -79,9 +78,8 @@ final class CustomTabBar: UIView {
         
         addButton.snp.makeConstraints {
             $0.top.equalTo(addButtonShadowView).inset(6)
-            $0.width.equalTo(62)
-            $0.height.equalTo(63)
             $0.centerX.equalTo(addButtonShadowView)
+            $0.size.equalTo(56)
         }
         
         containerShadowView.snp.makeConstraints {
@@ -125,7 +123,7 @@ final class CustomTabBar: UIView {
             imageView.snp.makeConstraints {
                 $0.top.equalToSuperview().inset(12)
                 $0.centerX.equalToSuperview()
-                $0.size.equalTo(20)
+                $0.size.equalTo(24)
             }
             
             label.snp.makeConstraints {
@@ -193,15 +191,11 @@ extension UIView {
         layer.shadowRadius = blur
     }
     
-    func insert(_ mask: CACornerMask) {
-        layer.maskedCorners.insert(mask)
-    }
-    
     func addCornerRadius(radius: CGFloat,
-                         _ maskedCorners: [CACornerMask] = []) {
+                         _ maskedCorners: CACornerMask = .allCorners) {
         
         layer.cornerRadius = radius
-        maskedCorners.forEach(insert)
+        layer.maskedCorners = maskedCorners
     }
 }
 
@@ -219,8 +213,8 @@ extension UIColor {
 }
 
 extension CACornerMask {
-    public static var allCorners: [CACornerMask] {
-        return [.topLeft, .topLeft, .bottomLeft, .bottomRight]
+    public static var allCorners: CACornerMask {
+        return [.topLeft, .topRight, .bottomLeft, .bottomRight]
     }
     
     public static var topLeft: CACornerMask {

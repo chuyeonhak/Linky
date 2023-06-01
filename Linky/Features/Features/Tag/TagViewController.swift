@@ -33,6 +33,7 @@ private extension TagViewController {
     func configureNavigationButton() {
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.barTintColor = .code7
+        navigationController?.navigationBar.backgroundColor = .code7
         navigationController?.navigationBar.shadowImage = UIImage()
         
         let leftItem = makeLeftItem()
@@ -56,10 +57,6 @@ private extension TagViewController {
             .disposed(by: disposeBag)
         
         return UIBarButtonItem(customView: leftButton)
-    }
-    
-    @objc func leftTapped() {
-        print("wow")
     }
     
     private func makeRightItem() -> UIBarButtonItem {

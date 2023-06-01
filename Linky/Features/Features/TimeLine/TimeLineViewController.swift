@@ -34,6 +34,7 @@ private extension TimeLineViewController {
     func configureNavigationButton() {
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.barTintColor = .code7
+        navigationController?.navigationBar.backgroundColor = .code7
         navigationController?.navigationBar.shadowImage = UIImage()
         
         let leftItem = makeLeftItem()
@@ -50,7 +51,6 @@ private extension TimeLineViewController {
         leftButton.setTitle(" LINKY", for: .normal)
         leftButton.setTitleColor(.code3, for: .normal)
         leftButton.titleLabel?.font = FontManager.shared.pretendard(weight: .bold, size: 24)
-//        leftButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 6)
         
         leftButton.rx.tap
             .bind {
@@ -59,10 +59,6 @@ private extension TimeLineViewController {
             .disposed(by: disposeBag)
         
         return UIBarButtonItem(customView: leftButton)
-    }
-    
-    @objc func leftTapped() {
-        print("wow")
     }
     
     private func makeRightItem() -> UIBarButtonItem {
