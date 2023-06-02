@@ -71,6 +71,14 @@ public final class RootViewController: UITabBarController {
                 .disposed(by: disposeBag)
         }
     }
+    
+    func tabBarAnimation(shouldShow: Bool) {
+        let originY = UIScreen.main.bounds.height - customTabBar.frame.height
+        let offsetY = shouldShow ? originY: UIScreen.main.bounds.height
+        UIView.animate(withDuration: 0.25) {
+            self.customTabBar.frame.origin.y = offsetY
+        }
+    }
 }
 
 final class TimelineNavigationController: UINavigationController {
