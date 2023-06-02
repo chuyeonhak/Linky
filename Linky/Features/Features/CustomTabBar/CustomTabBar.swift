@@ -210,6 +210,10 @@ extension UIColor {
     static let code6 = UIColor(named: "code6")
     static let code7 = UIColor(named: "code7")
     static let code8 = UIColor(named: "code8")
+    
+    static let naviCode1 = UIColor(named: "naviCode1")
+    static let naviCode2 = UIColor(named: "naviCode2")
+    static let naviCode3 = UIColor(named: "naviCode3")
 }
 
 extension CACornerMask {
@@ -247,5 +251,45 @@ extension UIApplication {
 extension Array {
     subscript (safe index: Int) -> Element? {
         return indices ~= index ? self[index] : nil
+    }
+}
+
+extension UITextField {
+    func changePlaceholderTextColor(placeholderText: String, textColor: UIColor?) {
+        self.attributedPlaceholder = NSAttributedString(
+            string: placeholderText,
+            attributes: [NSAttributedString.Key.foregroundColor: textColor ?? UIColor()])
+    }
+}
+
+extension Reactive where Base: UIView {
+    var isFirstResponder: Observable<Bool> {
+        return Observable
+            .merge(
+                methodInvoked(#selector(UIView.becomeFirstResponder)),
+                methodInvoked(#selector(UIView.resignFirstResponder))
+            )
+            .map{ [weak view = self.base] _ in
+                view?.isFirstResponder ?? false
+            }
+            .startWith(base.isFirstResponder)
+            .distinctUntilChanged()
+            .share(replay: 1)
+    }
+}
+
+extension ObservableType {
+    func asDriverOnErrorEmpty() -> Driver<Element> {
+        return asDriver { (error) in
+            return .empty()
+        }
+    }
+    
+    func withPrevious(startWith first: Element) -> Observable<(previous: Element, current: Element)> {
+        return scan((first, first)) { ($0.1, $1) }.skip(1)
+    }
+    
+    func withUnretainedOnly<Object: AnyObject>(_ obj: Object) -> Observable<Object> {
+        return withUnretained(obj).map { $0.0 }
     }
 }
