@@ -13,13 +13,12 @@ extension AddLinkView {
             case title
             case placeholder
             case text
-            case line
             case buttonTitle
             case buttonBG
             
             var color: UIColor? {
                 switch self {
-                case .title, .text, .line: return .code2
+                case .title, .text: return .code2
                 case .placeholder: return .code4
                 case .buttonTitle: return .naviCode1
                 case .buttonBG: return .naviCode3

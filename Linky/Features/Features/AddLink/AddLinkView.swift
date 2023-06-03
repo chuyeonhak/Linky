@@ -60,7 +60,7 @@ final class AddLinkView: UIView {
     }
     
     private func setConstraints() {
-        backgroundColor = .code7
+        backgroundColor = .code8
         
         addLinkTitle.snp.makeConstraints {
             $0.top.equalToSuperview().inset(58)

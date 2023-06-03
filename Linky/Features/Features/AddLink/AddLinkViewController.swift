@@ -46,9 +46,10 @@ final class AddLinkViewController: UIViewController {
     private func navigationSetting() {
         let rightItem = makeRightItem()
         
-        self.navigationItem.rightBarButtonItem = rightItem
-        self.navigationController?.navigationBar.tintColor = .code2
-        self.navigationController?.navigationBar.topItem?.title = ""
+        navigationItem.rightBarButtonItem = rightItem
+        navigationController?.navigationBar.topItem?.title = ""
+        navigationController?.navigationBar.barTintColor = .code8
+        navigationController?.navigationBar.backgroundColor = .code8
     }
     
     private func makeRightItem() -> UIBarButtonItem {
@@ -62,17 +63,10 @@ final class AddLinkViewController: UIViewController {
             .withLatestFrom(addLinkView.canComplete) { $1 }
             .filter { $0 }
             .withUnretainedOnly(self)
-            .bind { $0.navigationController?.popViewController(animated: true) }
+            .bind { $0.openAddLinkDetail() }
             .disposed(by: disposeBag)
         
         return UIBarButtonItem(customView: rightButton)
-    }
-    
-    private func linkTextFiledIsEmpty() -> Bool {
-        let trimmedString = addLinkView.linkTextFiled
-            .text?.trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        return trimmedString?.isEmpty == true
     }
     
     private func setRightButton(textIsEmpty: Bool) {
@@ -85,13 +79,13 @@ final class AddLinkViewController: UIViewController {
         button?.titleLabel?.font = font
     }
     
-    private func openAddLink() {
-        let addLinkViewController = AddLinkViewController()
+    private func openAddLinkDetail() {
+        let detailViewContrller = AddLinkDetailViewContrller()
         
         let tabBar = tabBarController as? RootViewController
         
         tabBar?.tabBarAnimation(shouldShow: false)
         
-        navigationController?.pushViewController(addLinkViewController, animated: true)
+        navigationController?.pushViewController(detailViewContrller, animated: true)
     }
 }

@@ -52,11 +52,6 @@ final class TimeLineViewController: UIViewController {
 
 private extension TimeLineViewController {
     func configureNavigationButton() {
-        navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.barTintColor = .code7
-        navigationController?.navigationBar.backgroundColor = .code7
-        navigationController?.navigationBar.shadowImage = UIImage()
-        
         let leftItem = makeLeftItem()
         let rightItem = makeRightItem()
         

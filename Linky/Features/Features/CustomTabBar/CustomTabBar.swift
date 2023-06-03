@@ -214,6 +214,8 @@ extension UIColor {
     static let naviCode1 = UIColor(named: "naviCode1")
     static let naviCode2 = UIColor(named: "naviCode2")
     static let naviCode3 = UIColor(named: "naviCode3")
+    
+    static let sub = UIColor(named: "sub")
 }
 
 extension CACornerMask {
