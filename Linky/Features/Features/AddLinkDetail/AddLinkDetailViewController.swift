@@ -63,10 +63,21 @@ final class AddLinkDetailViewContrller: UIViewController {
         rightButton.setTitleColor(.main, for: .normal)
         rightButton.titleLabel?.font = FontManager.shared.pretendard(weight: .semiBold, size: 14)
         
-//        rightButton.rx.tap
+        rightButton.rx.tap
+            .withUnretainedOnly(self)
+            .bind { $0.openAddLinkComplete() }
+            .disposed(by: disposeBag)
         
         return UIBarButtonItem(customView: rightButton)
     }
+    
+    private func openAddLinkComplete() {
+        let addLinkCompleteVc = AddLinkCompleteViewContrller()
+        
+        navigationController?.pushViewController(addLinkCompleteVc, animated: true)
+    }
+    
+    
 
     
     private func openAddLink() {
