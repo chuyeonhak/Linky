@@ -38,22 +38,18 @@ extension SceneDelegate {
     
     private func setNavigation() {
         setNavigationBar()
-        setBackButtonTitle()
     }
     
     private func setNavigationBar() {
-//        let backButtonImage = UIImage(named: "icoArrowLeft")
-        
-//        UINavigationBar.appearance().backIndicatorImage = backButtonImage
-//        UINavigationBar.appearance().backIndicatorTransitionMaskImage = backButtonImage
+        let backButtonImage = UIImage(named: "icoArrowLeft")?
+            .withAlignmentRectInsets(UIEdgeInsets(top: 0, left: 0, bottom: 6, right: 0))
+
+        UINavigationBar.appearance().backIndicatorImage = backButtonImage
+        UINavigationBar.appearance().backIndicatorTransitionMaskImage = backButtonImage
         UINavigationBar.appearance().isTranslucent = false
         UINavigationBar.appearance().barTintColor = UIColor(named: "code7")
         UINavigationBar.appearance().backgroundColor = UIColor(named: "code7")
         UINavigationBar.appearance().shadowImage = UIImage()
         UINavigationBar.appearance().tintColor = UIColor(named: "code2")
-    }
-    
-    private func setBackButtonTitle() {
-        UIBarButtonItemAppearance().normal.titleTextAttributes = [.font: UIFont.systemFont(ofSize: 10)]
     }
 }
