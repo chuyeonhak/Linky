@@ -215,6 +215,11 @@ extension UIColor {
     static let naviCode2 = UIColor(named: "naviCode2")
     static let naviCode3 = UIColor(named: "naviCode3")
     
+    
+    static let alphaCode1 = UIColor(named: "alphaCode1")
+    static let alphaCode2 = UIColor(named: "alphaCode2")
+    static let alphaCode3 = UIColor(named: "alphaCode3")
+    
     static let sub = UIColor(named: "sub")
 }
 
