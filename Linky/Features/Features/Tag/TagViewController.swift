@@ -65,7 +65,6 @@ private extension TagViewController {
         rightButton.setImage(UIImage(named: "icoSearch"), for: .normal)
         rightButton.setTitleColor(.code4, for: .normal)
         rightButton.titleLabel?.font = FontManager.shared.pretendard(weight: .semiBold, size: 14)
-        rightButton.semanticContentAttribute = .forceRightToLeft
         
         rightButton.rx.tap
             .bind { print("rightButtonTapped") }

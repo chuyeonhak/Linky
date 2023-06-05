@@ -38,6 +38,15 @@ final class AddLinkViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        setPasteButton()
+        navigationController?.navigationBar.barTintColor = .code8
+        navigationController?.navigationBar.backgroundColor = .code8
+        navigationController?.navigationBar.backItem?.title = ""
+        
+        UIApplication.shared.windows.first?.viewWithTag(Tag.statusBar)?.backgroundColor = .code8
+    }
+    
+    private func setPasteButton() {
         guard let pasteString = UIPasteboard.general.string else { return }
         
         addLinkView.pasteButton.isHidden = pasteString.isEmpty
@@ -45,11 +54,12 @@ final class AddLinkViewController: UIViewController {
     
     private func navigationSetting() {
         let rightItem = makeRightItem()
+        let backButtonItem = makeBackButton()
         
+        navigationItem.backBarButtonItem = backButtonItem
         navigationItem.rightBarButtonItem = rightItem
         navigationController?.navigationBar.topItem?.title = ""
-        navigationController?.navigationBar.barTintColor = .code8
-        navigationController?.navigationBar.backgroundColor = .code8
+        
     }
     
     private func makeRightItem() -> UIBarButtonItem {
@@ -67,6 +77,20 @@ final class AddLinkViewController: UIViewController {
             .disposed(by: disposeBag)
         
         return UIBarButtonItem(customView: rightButton)
+    }
+    
+    private func makeBackButton() -> UIBarButtonItem {
+        let backButtonItem = UIBarButtonItem(
+            title: "링크 추가",
+            style: .plain,
+            target: nil,
+            action: nil)
+        
+        backButtonItem.setTitleTextAttributes(
+            [.font: FontManager.shared.pretendard(weight: .semiBold, size: 18)],
+            for: .normal)
+        
+        return backButtonItem
     }
     
     private func setRightButton(textIsEmpty: Bool) {

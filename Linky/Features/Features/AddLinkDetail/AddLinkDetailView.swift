@@ -121,7 +121,7 @@ final class AddLinkDetailView: UIView {
         linkCollectionView.snp.makeConstraints {
             $0.top.equalTo(tagLineTextField.snp.bottom).offset(16)
             $0.leading.trailing.equalTo(tagLineTextField)
-            $0.height.equalTo(66)
+            $0.height.equalTo(0)
         }
         
         linkInfoView.snp.makeConstraints {
@@ -143,7 +143,7 @@ final class AddLinkDetailView: UIView {
         linkSubtitle.snp.makeConstraints {
             $0.top.equalTo(linkTitle)
             $0.leading.equalTo(linkTitle.snp.trailing).offset(4)
-            $0.trailing.greaterThanOrEqualToSuperview().inset(20)
+            $0.trailing.lessThanOrEqualToSuperview().inset(20)
         }
         
         linkLabel.snp.makeConstraints {
