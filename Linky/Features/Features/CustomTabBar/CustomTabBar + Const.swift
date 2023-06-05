@@ -21,9 +21,6 @@ extension CustomTabBar {
             }
         }
     }
-    
-    enum Tag {
-        static let tabLabel = 1
-        static let tabImageView = 2
-    }
 }
+
+

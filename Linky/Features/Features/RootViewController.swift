@@ -44,6 +44,7 @@ public final class RootViewController: UITabBarController {
         
         let statusBarView = UIView(frame: statusBarManager?.statusBarFrame ?? .zero)
         statusBarView.backgroundColor = .code7
+        statusBarView.tag = Tag.statusBar
         
         window?.addSubview(statusBarView)
     }

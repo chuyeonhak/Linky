@@ -36,7 +36,10 @@ final class LineTextField: UITextField {
         textColor = .code2
         tintColor = .code4
         
-//        textAlignment = .natural
+        if let clearButton = value(forKeyPath: "_clearButton") as? UIButton {
+            clearButton.setImage(UIImage(named: "icoClose"), for: .normal)
+        }
+        
         clearButtonMode = .whileEditing
     }
     
