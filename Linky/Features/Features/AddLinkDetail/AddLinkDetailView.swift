@@ -36,7 +36,14 @@ final class AddLinkDetailView: UIView {
             placeholderText: Const.Text.tagPlaceholder, textColor: .code4)
     }
     
-    let linkCollectionView = UIView()
+    lazy var linkCollectionView = UICollectionView(
+        frame: .zero,
+        collectionViewLayout: CollectionViewLeftAlignFlowLayout()).then {
+            $0.delegate = self
+            $0.dataSource = self
+            $0.backgroundColor = .clear
+            $0.register(TagCell.self, forCellWithReuseIdentifier: TagCell.identifier)
+        }
     
     let lineView = UIView().then {
         $0.backgroundColor = Const.Custom.line.color
@@ -64,6 +71,15 @@ final class AddLinkDetailView: UIView {
         $0.textColor = Const.Custom.link.color
         $0.font = FontManager.shared.pretendard(weight: .regular, size: 12)
     }
+    
+    var testArray: [TestTag] = [
+        TestTag(title: "웃긴거"),
+        TestTag(title: "# 데이트"),
+        TestTag(title: "맛집"),
+        TestTag(title: "카페"),
+        TestTag(title: "강의"),
+        TestTag(title: "업무 관련")
+    ]
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -121,7 +137,7 @@ final class AddLinkDetailView: UIView {
         linkCollectionView.snp.makeConstraints {
             $0.top.equalTo(tagLineTextField.snp.bottom).offset(16)
             $0.leading.trailing.equalTo(tagLineTextField)
-            $0.height.equalTo(0)
+            $0.height.equalTo(66)
         }
         
         linkInfoView.snp.makeConstraints {
@@ -154,4 +170,9 @@ final class AddLinkDetailView: UIView {
     }
     
     private func bind() { }
+}
+
+struct TestTag {
+    let title: String
+    var isSelected: Bool = false
 }
