@@ -48,7 +48,6 @@ final class CustomTabBar: UIView {
     private func commonInit() {
         addComponent()
         setConstraints()
-        bind()
         selectItem(index: 0)
     }
     
@@ -95,18 +94,9 @@ final class CustomTabBar: UIView {
         }
     }
     
-    private func bind() {
-        addButton.rx.tap
-            .withUnretainedOnly(self)
-            .bind {
-                let isAnimation = $0.addButton.transform != .identity
-                $0.buttonAnimation(isAnimation)
-            }
-            .disposed(by: disposeBag)
-    }
-    
     private func addTabViews() {
-        TabType.allCases.forEach { type in
+        let allCase = TabType.allCases[0...2]
+        allCase.forEach { type in
             let view = UIView()
             let imageView = UIImageView(image: type.offImage)
             let label = UILabel()
@@ -135,14 +125,7 @@ final class CustomTabBar: UIView {
         }
     }
     
-    private func buttonAnimation(_ isAnimation: Bool) {
-        let transform = isAnimation ? .identity : CGAffineTransform(rotationAngle: .pi / 4)
-        
-        UIView.animate(withDuration: 0.3) {
-            self.addButton.transform = transform
-        }
-    }
-    
+    @discardableResult
     func selectTab(index: Int) -> Int {
         resetSelectedItem()
         selectItem(index: index)

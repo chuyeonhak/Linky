@@ -14,6 +14,8 @@ import Then
 import RxSwift
 
 final class EmptyView: UIView {
+    let disposeBag = DisposeBag()
+    
     var tabType: CustomTabBar.TabType!
     
     lazy var emptyImageView = UIImageView(image: tabType.emptyImage)
@@ -73,11 +75,22 @@ final class EmptyView: UIView {
         
         addLinkButton.snp.makeConstraints {
             $0.top.equalTo(emptyTitleLabel.snp.bottom).offset(70)
+            $0.leading.trailing.equalToSuperview().inset(24)
             $0.centerX.equalToSuperview()
-            $0.width.equalTo(312)
             $0.height.equalTo(46)
         }
     }
     
-    private func bind() { }
+    private func bind() {
+        addLinkButton.rx.tap
+            .bind { [weak self] in self?.openAddLink() }
+            .disposed(by: disposeBag)
+    }
+    
+    private func openAddLink() {
+
+        let tabBar = UIApplication.shared.window?.rootViewController as? RootViewController
+        
+        tabBar?.openAddLink()
+    }
 }

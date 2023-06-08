@@ -12,12 +12,14 @@ extension CustomTabBar {
         case timeline = 0
         case tag = 1
         case more = 2
+        case link = 3
         
         var title: String {
             switch self {
             case .timeline: return "타임라인"
             case .tag: return "태그"
             case .more: return "더보기"
+            case .link: return "링크"
             }
         }
         
@@ -26,6 +28,7 @@ extension CustomTabBar {
             case .timeline: return "icoTimeline"
             case .tag: return "icoTag"
             case .more: return "icoMore"
+            case .link: return "icoLink"
             }
         }
         
@@ -46,6 +49,7 @@ extension CustomTabBar {
             case .timeline: return "내가 추가한 링크를\n시간 순서대로 볼 수 있어요."
             case .tag: return "내가 추가한 링크를\n태그 별로 볼 수 있어요"
             case .more: return ""
+            case .link: return "링크 등록 완료!"
             }
         }
         
