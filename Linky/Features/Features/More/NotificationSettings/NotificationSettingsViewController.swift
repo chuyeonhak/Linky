@@ -14,32 +14,27 @@ import Then
 import RxSwift
 
 final class NotificationSettingsViewController: UIViewController {
-    var moreView: MoreView!
+    var notificationSettingsView: NotificationSettingsView!
     let disposeBag = DisposeBag()
     
     override func loadView() {
-        let moreLineView = MoreView()
+        let notificationSettingsView = NotificationSettingsView()
         
-        self.moreView = moreLineView
-        self.view = moreLineView
+        self.notificationSettingsView = notificationSettingsView
+        self.view = notificationSettingsView
     }
     
     override func viewDidLoad() {
-        print(#function)
-        configureNavigationButton()
+        super.viewDidLoad()
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        navigationController?.navigationBar.barTintColor = .code7
-        navigationController?.navigationBar.backgroundColor = .code7
-        UIApplication.shared.windows.first?.viewWithTag(Tag.statusBar)?.backgroundColor = .code7
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        let tabBar = tabBarController as? RootViewController
+        navigationController?.navigationBar.barTintColor = .code8
+        navigationController?.navigationBar.backgroundColor = .code8
         
-        tabBar?.tabBarAnimation(shouldShow: true)
+        UIApplication.shared.windows.first?.viewWithTag(Tag.statusBar)?.backgroundColor = .code8
     }
 }
