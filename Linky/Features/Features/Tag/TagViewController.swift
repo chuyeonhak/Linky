@@ -25,7 +25,23 @@ class TagViewController: UIViewController {
     }
     
     override func viewDidLoad() {
+        super.viewDidLoad()
+        
         configureNavigationButton()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationController?.navigationBar.barTintColor = .code7
+        navigationController?.navigationBar.backgroundColor = .code7
+        UIApplication.shared.windows.first?.viewWithTag(Tag.statusBar)?.backgroundColor = .code7
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        let tabBar = tabBarController as? RootViewController
+        
+        tabBar?.tabBarAnimation(shouldShow: true)
     }
 }
 
