@@ -36,7 +36,7 @@ final class AddLinkDetailView: UIView {
             placeholderText: Const.Text.tagPlaceholder, textColor: .code4)
     }
     
-    lazy var linkCollectionView = UICollectionView(
+    lazy var tagCollectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: CollectionViewLeftAlignFlowLayout()).then {
             $0.delegate = self
@@ -56,20 +56,20 @@ final class AddLinkDetailView: UIView {
     let linkTitle = UILabel().then {
         $0.text = "네이버 지도"
         $0.textColor = Const.Custom.linkTitle.color
-        $0.font = FontManager.shared.pretendard(weight: .semiBold, size: 12)
+        $0.font = FontManager.shared.pretendard(weight: .semiBold, size: 13)
     }
     
     let linkSubtitle = UILabel().then {
         $0.text = "나나방콕 상무점"
         $0.textColor = Const.Custom.subtitle.color
         $0.textAlignment = .left
-        $0.font = FontManager.shared.pretendard(weight: .medium, size: 12)
+        $0.font = FontManager.shared.pretendard(weight: .medium, size: 13)
     }
     
     let linkLabel = UILabel().then {
         $0.text = "www.naver.com"
         $0.textColor = Const.Custom.link.color
-        $0.font = FontManager.shared.pretendard(weight: .regular, size: 12)
+        $0.font = FontManager.shared.pretendard(weight: .regular, size: 13)
     }
     
     var testArray: [TestTag] = [
@@ -78,7 +78,8 @@ final class AddLinkDetailView: UIView {
         TestTag(title: "맛집"),
         TestTag(title: "카페"),
         TestTag(title: "강의"),
-        TestTag(title: "업무 관련")
+        TestTag(title: "wowoooowwww"),
+        TestTag(title: "테스트 입니다아아아아아아앙"),
     ]
     
     override init(frame: CGRect) {
@@ -101,7 +102,7 @@ final class AddLinkDetailView: UIView {
          linkLineTextField,
          addTagLabel,
          tagLineTextField,
-         linkCollectionView,
+         tagCollectionView,
          linkInfoView].forEach(addSubview)
         
         [lineView,
@@ -134,14 +135,16 @@ final class AddLinkDetailView: UIView {
             $0.leading.trailing.height.equalTo(linkLineTextField)
         }
         
-        linkCollectionView.snp.makeConstraints {
+        tagCollectionView.snp.makeConstraints {
+            let height = getCollectionViewHeight()
+            
             $0.top.equalTo(tagLineTextField.snp.bottom).offset(16)
             $0.leading.trailing.equalTo(tagLineTextField)
-            $0.height.equalTo(66)
+            $0.height.equalTo(height)
         }
         
         linkInfoView.snp.makeConstraints {
-            $0.top.equalTo(linkCollectionView.snp.bottom).offset(36)
+            $0.top.equalTo(tagCollectionView.snp.bottom).offset(36)
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(64)
         }
@@ -170,6 +173,42 @@ final class AddLinkDetailView: UIView {
     }
     
     private func bind() { }
+    
+    private func getCollectionViewHeight() -> Int {
+        let itemLine = getCollectionViewLine()
+        let itemHeight = 37
+        let limit = 5
+        let isExceeded = itemLine > limit
+        
+        tagCollectionView.isScrollEnabled = isExceeded
+        
+        return (isExceeded ? limit: itemLine) * 37
+    }
+    
+    private func getCollectionViewLine() -> Int {
+        let deviceWidth = UIApplication.shared.window?.bounds.width ?? .zero
+        let inset: CGFloat = 42.0
+        let collectionViewWidth = deviceWidth - (inset * 2)
+        let textWidthArray = testArray.map { getItemWidth(text: $0.title) }
+        
+        var limit: CGFloat = collectionViewWidth
+        var count: Int = testArray.isEmpty ? 0: 1
+        
+        for (index, textWidth) in textWidthArray.enumerated() {
+            let currentWidth = textWidth + 4 // itemSpacing
+            
+            if let next = textWidthArray[safe: index + 1],
+               case let nextWidth = next + 4,
+               limit - (currentWidth + nextWidth) < 0 {
+                count += 1
+                limit = collectionViewWidth
+            } else {
+                limit -= currentWidth
+            }
+        }
+        
+        return count
+    }
 }
 
 struct TestTag {

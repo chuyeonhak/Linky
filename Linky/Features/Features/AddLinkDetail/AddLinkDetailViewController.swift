@@ -76,18 +76,5 @@ final class AddLinkDetailViewContrller: UIViewController {
         
         navigationController?.pushViewController(addLinkCompleteVc, animated: true)
     }
-    
-    
-
-    
-    private func openAddLink() {
-//        let addLinkViewController = AddLinkViewController()
-//
-//        let tabBar = tabBarController as? RootViewController
-//
-//        tabBar?.tabBarAnimation(shouldShow: false)
-//
-//        navigationController?.pushViewController(addLinkViewController, animated: true)
-    }
 }
 
