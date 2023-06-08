@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension AddLinkView {
+public extension AddLinkView {
     struct Const {
         enum Custom {
             case title

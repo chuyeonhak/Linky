@@ -13,7 +13,7 @@ import SnapKit
 import Then
 import RxSwift
 
-final class AddLinkView: UIView {
+public final class AddLinkView: UIView {
     let disposeBag = DisposeBag()
     
     let canComplete = PublishSubject<Bool>()
