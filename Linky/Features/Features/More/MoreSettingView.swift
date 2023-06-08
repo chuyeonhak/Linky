@@ -1,5 +1,5 @@
 //
-//  MoreCell.swift
+//  MoreSettingView.swift
 //  Features
 //
 //  Created by chuchu on 2023/06/01.
@@ -13,7 +13,7 @@ import SnapKit
 import Then
 import RxSwift
 
-final class MoreCell: UITableViewCell {
+final class MoreSettingView: UIView {
     static let identifier = description()
     
     let iconImageView = UIImageView()
@@ -27,8 +27,8 @@ final class MoreCell: UITableViewCell {
         $0.backgroundColor = .code7
     }
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         commonInit()
     }
     
@@ -44,7 +44,7 @@ final class MoreCell: UITableViewCell {
     private func addComponent() {
         [iconImageView,
          titleLabel,
-         separatorView].forEach(contentView.addSubview)
+         separatorView].forEach(addSubview)
     }
     
     private func setConstraints() {
@@ -64,7 +64,7 @@ final class MoreCell: UITableViewCell {
         }
     }
     
-    func configure(type: MoreView.SettingType) {
+    func configure(type: SettingType) {
         backgroundColor = .clear
         iconImageView.image = type.image
         titleLabel.text = type.title

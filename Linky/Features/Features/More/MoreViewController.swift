@@ -20,6 +20,8 @@ final class MoreViewController: UIViewController {
     override func loadView() {
         let moreLineView = MoreView()
         
+        moreLineView.delegate = self
+        
         self.moreView = moreLineView
         self.view = moreLineView
     }
@@ -27,6 +29,20 @@ final class MoreViewController: UIViewController {
     override func viewDidLoad() {
         print(#function)
         configureNavigationButton()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationController?.navigationBar.barTintColor = .code7
+        navigationController?.navigationBar.backgroundColor = .code7
+        UIApplication.shared.windows.first?.viewWithTag(Tag.statusBar)?.backgroundColor = .code7
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        let tabBar = tabBarController as? RootViewController
+        
+        tabBar?.tabBarAnimation(shouldShow: true)
     }
 }
 

@@ -13,16 +13,20 @@ import SnapKit
 import Then
 import RxSwift
 
+protocol SettingViewDelegate {
+    func openNavigation(type: SettingType)
+}
+
 final class MoreView: UIView {
-    lazy var tableView = UITableView().then {
+    let disposeBag = DisposeBag()
+    
+    var delegate: SettingViewDelegate?
+    
+    lazy var settingStackView = UIStackView().then {
         $0.addCornerRadius(radius: 12)
-        $0.separatorStyle = .none
-        $0.allowsSelection = false
-//        $0.isScrollEnabled = false
-        $0.delegate = self
-        $0.dataSource = self
-        $0.register(MoreCell.self, forCellReuseIdentifier: MoreCell.identifier)
         $0.addShadow(offset: CGSize(width: 0, height: 0), opacity: 0.16, blur: 10)
+        $0.axis = .vertical
+        $0.distribution = .fillEqually
     }
     
     override init(frame: CGRect) {
@@ -41,16 +45,34 @@ final class MoreView: UIView {
     }
     
     private func addComponent() {
-        addSubview(tableView)
+        addSubview(settingStackView)
+        configSettingViews()
     }
     
     private func setConstraints() {
         backgroundColor = .code7
         
-        tableView.backgroundColor = .code8
-        tableView.snp.makeConstraints {
+        settingStackView.backgroundColor = .code8
+        settingStackView.snp.makeConstraints {
             $0.top.leading.trailing.equalToSuperview().inset(16)
-            $0.height.equalTo(288)
+            $0.height.equalTo(SettingType.allCases.count * 48)
+        }
+    }
+    
+    private func configSettingViews() {
+        SettingType.allCases.forEach { type in
+            let settingView = MoreSettingView(),
+                settingViewTapped = UITapGestureRecognizer()
+            
+            settingView.configure(type: type)
+            settingView.addGestureRecognizer(settingViewTapped)
+            
+            settingViewTapped.rx.event
+                .bind { [weak self] _ in
+                    self?.delegate?.openNavigation(type: type)
+                }.disposed(by: disposeBag)
+            
+            settingStackView.addArrangedSubview(settingView)
         }
     }
     
