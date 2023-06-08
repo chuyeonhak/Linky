@@ -14,7 +14,6 @@ import SnapKit
 class TagCell: UICollectionViewCell {
     let tagLabel = UILabel().then {
         $0.font = FontManager.shared.pretendard(weight: .semiBold, size: 14)
-        $0.textColor = Const.Custom.text.color
     }
     
     static let identifier = description()
@@ -48,10 +47,15 @@ class TagCell: UICollectionViewCell {
     func configure(model: TestTag?) {
         guard let model else { return }
         
-        let color = model.isSelected ? Const.Custom.select.color: Const.Custom.deselect.color
-    
-        contentView.backgroundColor = color
+        var bgColor: UIColor? {
+            model.isSelected ? Const.Custom.select.color: Const.Custom.deselect.color
+        }
         
+        var textColor: UIColor? {
+            model.isSelected ? Const.Custom.selectText.color: Const.Custom.deselectText.color
+        }
+        contentView.backgroundColor = bgColor
+        tagLabel.textColor = textColor
         tagLabel.text = model.title
     }
 }

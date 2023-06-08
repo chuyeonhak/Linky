@@ -10,14 +10,16 @@ import UIKit
 extension TagCell {
     struct Const {
         enum Custom {
-            case text
+            case selectText
+            case deselectText
             case select
             case deselect
             
             var color: UIColor? {
                 switch self {
-                case .text: return .code3
-                case .select: return .alphaCode3
+                case .selectText: return .code7
+                case .deselectText: return .code3
+                case .select: return .code3
                 case .deselect: return .alphaCode2
                 }
             }
