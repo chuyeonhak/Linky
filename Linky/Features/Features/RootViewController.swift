@@ -71,6 +71,10 @@ public final class RootViewController: UITabBarController {
                 .bind(to: rx.selectedIndex)
                 .disposed(by: disposeBag)
         }
+        
+        customTabBar.addButton.rx.tap
+            .bind { [weak self] in self?.openAddLink() }
+            .disposed(by: disposeBag)
     }
     
     func tabBarAnimation(shouldShow: Bool) {
@@ -78,6 +82,23 @@ public final class RootViewController: UITabBarController {
         let offsetY = shouldShow ? originY: UIScreen.main.bounds.height
         UIView.animate(withDuration: 0.25) {
             self.customTabBar.frame.origin.y = offsetY
+        }
+    }
+    
+    func openAddLink() {
+        let addLinkViewController = AddLinkViewController()
+        let navigationController = getNavigationController()
+        
+        tabBarAnimation(shouldShow: false)
+        
+        navigationController.pushViewController(addLinkViewController, animated: true)
+    }
+    
+    private func getNavigationController() -> UINavigationController {
+        switch selectedIndex {
+        case 0: return firstVc
+        case 1: return secondVc
+        default: return thirdVc
         }
     }
 }

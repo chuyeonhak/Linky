@@ -27,10 +27,6 @@ final class TimeLineViewController: UIViewController {
     override func viewDidLoad() {
         configureNavigationButton()
         
-        timeLineView.emptyView.addLinkButton.rx.tap
-            .withUnretainedOnly(self)
-            .bind { $0.openAddLink() }
-            .disposed(by: disposeBag)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -45,16 +41,6 @@ final class TimeLineViewController: UIViewController {
         let tabBar = tabBarController as? RootViewController
         
         tabBar?.tabBarAnimation(shouldShow: true)
-    }
-    
-    private func openAddLink() {
-        let addLinkViewController = AddLinkViewController()
-        
-        let tabBar = tabBarController as? RootViewController
-        
-        tabBar?.tabBarAnimation(shouldShow: false)
-        
-        navigationController?.pushViewController(addLinkViewController, animated: true)
     }
 }
 
