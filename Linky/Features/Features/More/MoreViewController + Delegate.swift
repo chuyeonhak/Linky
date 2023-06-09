@@ -24,7 +24,7 @@ extension MoreViewController: SettingViewDelegate {
         switch type {
         case .notificationSettings: return NotificationSettingsViewController()
         case .tips: return TipViewController()
-        case .lock: return UIViewController()
+        case .lock: return LockViewController()
         case .tagManagement: return UIViewController()
         case .linkManagement: return UIViewController()
         case .synchronizationGuide: return UIViewController()

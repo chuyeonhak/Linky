@@ -180,6 +180,16 @@ extension UIView {
         layer.cornerRadius = radius
         layer.maskedCorners = maskedCorners
     }
+    
+    func fadeInOut(_ duration: TimeInterval = 0.25,
+                   startAlpha: CGFloat = 1.0,
+                   completion: (()->())? = nil) {
+        UIView.animate(withDuration: duration) {
+            self.alpha = abs(startAlpha - 1.0)
+        } completion: { _ in
+            completion?()
+        }
+    }
 }
 
 extension UIColor {
