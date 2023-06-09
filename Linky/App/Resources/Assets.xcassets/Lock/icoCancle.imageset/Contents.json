@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "120퍼-활용하기 2.png",
+      "filename" : "icoCancle.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,12 +12,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "tips.png",
+      "filename" : "icoCancle 1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "120퍼-활용하기 2@2x.png",
+      "filename" : "icoCancle@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -28,12 +28,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "tips@2x.png",
+      "filename" : "icoCancle@2x 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "120퍼-활용하기 2@3x.png",
+      "filename" : "icoCancle@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -44,7 +44,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "tips@3x.png",
+      "filename" : "icoCancle@3x 1.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
