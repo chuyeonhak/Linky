@@ -7,13 +7,28 @@
 
 import UIKit
 
+import Core
+
 import SnapKit
 import Then
 import RxSwift
 
 final class PadView: UIView {
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    let type: PadType!
+    
+    lazy var padLabel = UILabel().then {
+        $0.text = type.title
+        $0.textColor = .code2
+        $0.font = FontManager.shared.pretendard(weight: .medium, size: 22)
+    }
+    
+    lazy var padImageView = UIImageView(image: type.image)
+    
+    var isPlaying: Bool = false
+    
+    init(type: PadType) {
+        self.type = type
+        super.init(frame: .zero)
         commonInit()
     }
     
@@ -27,10 +42,35 @@ final class PadView: UIView {
         bind()
     }
     
-    private func addComponent() { }
+    private func addComponent() {
+        backgroundColor = .code8
+        
+        [padLabel, padImageView].forEach(addSubview)
+    }
     
-    private func setConstraints() { }
+    private func setConstraints() {
+        padLabel.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+        
+        padImageView.snp.makeConstraints {
+            let size = type == .biometricsAuth ?
+            CGSize(width: 24, height: 24):
+            CGSize(width: 26, height: 20)
+            
+            $0.center.equalToSuperview()
+            $0.size.equalTo(size)
+        }
+    }
     
     private func bind() { }
+    
+    func setBackgroundColor(isSelect: Bool) {
+        UIView.animate(withDuration: 0.25) {
+            let bgColor: UIColor? = isSelect ? .code7 : .code8
+            self.backgroundColor = bgColor
+        }
+    }
 }
+
 
