@@ -1,4 +1,6 @@
 import UIKit
+
+import Core
 import Features
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -26,9 +28,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func sceneWillResignActive(_ scene: UIScene) {}
 
-    func sceneWillEnterForeground(_ scene: UIScene) {}
+    func sceneWillEnterForeground(_ scene: UIScene) {
+        openLockScreen()
+    }
 
-    func sceneDidEnterBackground(_ scene: UIScene) {}
+    private func openLockScreen() {
+        if UserDefaultsManager.shared.usePassword {
+            print(UserDefaultsManager.shared.password)
+            let lockScreenVc = LockScreenViewController(type: .normal)
+
+            lockScreenVc.modalPresentationStyle = .overFullScreen
+
+            UIApplication.shared.window?.rootViewController?.present(lockScreenVc, animated: false)
+        }
+    }
 }
 
 extension SceneDelegate {

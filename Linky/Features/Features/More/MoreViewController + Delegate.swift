@@ -10,7 +10,12 @@ import UIKit
 import Core
 
 extension MoreViewController: SettingViewDelegate {
-    func openNavigation(type: SettingType) {
+    func openNavigation(type: SettingType, hasLock: Bool = true) {
+        if type == .lock && UserDefaultsManager.shared.usePassword && hasLock {
+            openLockScreen()
+            return
+        }
+        
         let vc = getViewController(type: type)
         let backButtonItem = makeBackButton(type: type)
         let tabBar = tabBarController as? RootViewController
@@ -43,5 +48,20 @@ extension MoreViewController: SettingViewDelegate {
             for: .normal)
         
         return backButtonItem
+    }
+    
+    private func openLockScreen() {
+        let lockScreenVc = LockScreenViewController(type: .normal)
+        
+        lockScreenVc.unlockAction = { didUnlock in
+            if didUnlock {
+                self.openNavigation(type: .lock, hasLock: false)
+                self.dismiss(animated: true)
+            }
+        }
+        
+        lockScreenVc.modalPresentationStyle = .overFullScreen
+        
+        UIApplication.shared.window?.rootViewController?.present(lockScreenVc, animated: true)
     }
 }

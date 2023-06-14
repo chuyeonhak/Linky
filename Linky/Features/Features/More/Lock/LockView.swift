@@ -16,6 +16,8 @@ import RxSwift
 final class LockView: UIView {
     let disposeBag = DisposeBag()
     
+    let auth = BiometricsAuthManager()
+    
     let lockLabel = UILabel().then {
         $0.text = "화면 잠금"
         $0.textColor = .code2
@@ -33,6 +35,7 @@ final class LockView: UIView {
     
     let lockSwitch = UISwitch().then {
         $0.onTintColor = .main
+        $0.isOn = UserDefaultsManager.shared.usePassword
     }
     
     lazy var changePasswordView = settingLockView(type: .changePassword)
@@ -41,6 +44,7 @@ final class LockView: UIView {
     
     let biometricsAuthSwitch = UISwitch().then {
         $0.onTintColor = .main
+        $0.isOn = UserDefaultsManager.shared.useBiometricsAuth
     }
     
     lazy var warningLabel = UILabel().then {
@@ -125,13 +129,39 @@ final class LockView: UIView {
     }
     
     private func bind() {
+        let changePasswordTapped = UITapGestureRecognizer()
+        
+        auth.delegate = self
+        
+        changePasswordView.addGestureRecognizer(changePasswordTapped)
+        
         lockSwitch.rx.isOn.changed
             .bind { [weak self] isOn in
                 self?.fadeAnimation(isOn: isOn)
                 if isOn {
-                    self?.openLockScreen()
+                    self?.openLockScreen(type: .newPassword)
+                } else {
+                    UserDefaultsManager.shared.usePassword = false
+                    UserDefaultsManager.shared.password = ""
                 }
             }.disposed(by: disposeBag)
+        
+        changePasswordTapped.rx.event
+            .bind { [weak self] _ in self?.openLockScreen(type: .changePassword) }
+            .disposed(by: disposeBag)
+        
+        biometricsAuthSwitch.rx.isOn.changed
+            .bind { [weak self] isOn in
+                UserDefaultsManager.shared.useBiometricsAuth = isOn
+                if isOn && !UserDefaultsManager.shared.isFirstBioAuth {
+                    self?.auth.execute()
+                }
+            }.disposed(by: disposeBag)
+        
+//        UserDefaults.standard.rx.observe(Bool.self, UserDefaultsManager.Key.usePassword)
+//            .map { $0 ?? false }
+//            .bind { [weak self] in self?.unlock(usePassword: $0) }
+//            .disposed(by: disposeBag)
     }
 
     private func settingLockView(type: LockSetting) -> UIView {
@@ -162,7 +192,15 @@ final class LockView: UIView {
         return settingLockView
     }
     
-    private func fadeAnimation(isOn: Bool) {
+    private func setLockSwitch(didUnlock: Bool) {
+        let alpha: CGFloat = didUnlock ? 1.0: 0.0
+        lockSwitch.setOn(didUnlock, animated: false)
+        
+        [settingView,
+         warningLabel].forEach { $0.alpha = alpha }
+    }
+    
+    private func fadeAnimation(isOn: Bool, animated: Bool = true) {
         let alpha: CGFloat = isOn ? 0.0: 1.0
         
         [settingView,
@@ -171,11 +209,47 @@ final class LockView: UIView {
         }
     }
     
-    private func openLockScreen() {
-        let lockScreenVc = LockScreenViewController(type: .newPassword)
+    private func openLockScreen(type: LockType) {
+        let lockScreenVc = LockScreenViewController(type: type)
+        
+        lockScreenVc.unlockAction = { [weak self] didUnlock in
+            self?.unlock(didUnlock: didUnlock, type: type)
+        }
         
         lockScreenVc.modalPresentationStyle = .overFullScreen
         
         UIApplication.shared.window?.rootViewController?.present(lockScreenVc, animated: true)
+    }
+    
+    private func unlock(didUnlock: Bool, type: LockType) {
+        if type == .newPassword {
+            UserDefaultsManager.shared.usePassword = didUnlock
+            setLockSwitch(didUnlock: didUnlock)
+        }
+    }
+}
+
+extension LockView: AuthenticateStateDelegate {
+    func didUpdateState(_ state: BiometricsAuthManager.AuthenticationState) {
+        switch state {
+        case .loggedIn:
+            if !UserDefaultsManager.shared.isFirstBioAuth {
+                UserDefaultsManager.shared.isFirstBioAuth = true
+            }
+            UserDefaultsManager.shared.useBiometricsAuth = true
+        case .fail(let error):
+            checkError(error: error)
+            UserDefaultsManager.shared.useBiometricsAuth = false
+            biometricsAuthSwitch.isOn = false
+        }
+    }
+    
+    private func checkError(error: BiometricsAuthManager.AuthError) {
+        switch error {
+        case .userDenied:
+            print("선택하지 않았음.")
+        case .unkowned:
+            print("모르는 에러")
+        }
     }
 }

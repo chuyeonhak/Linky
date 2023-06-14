@@ -14,18 +14,22 @@ import Then
 import RxSwift
 
 final class LockScreenView: UIView {
-    let type: LockType!
+    let viewModel: LockScreenViewModel!
+    
     let disposeBag = DisposeBag()
     
-    lazy var titleLabel = UILabel().then {
-        $0.text = type.title
+    let vibrator = UINotificationFeedbackGenerator().then {
+        $0.prepare()
+    }
+    
+    let titleLabel = UILabel().then {
         $0.textColor = .code2
         $0.font = FontManager.shared.pretendard(weight: .semiBold, size: 22)
         
     }
     
-    lazy var subtitleLabel = UILabel().then {
-        $0.text = type.subtitle
+    let subtitleLabel = UILabel().then {
+        
         $0.textColor = .code4
         $0.font = FontManager.shared.pretendard(weight: .medium, size: 13)
     }
@@ -42,11 +46,10 @@ final class LockScreenView: UIView {
     
     var padViews: [PadView] = []
     
-    init(type: LockType) {
-        self.type = type
+    init(viewModel: LockScreenViewModel) {
+        self.viewModel = viewModel
         super.init(frame: .zero)
         commonInit()
-        print(type)
     }
     
     required init?(coder: NSCoder) {
@@ -106,6 +109,19 @@ final class LockScreenView: UIView {
         padPanGesture.rx.event
             .bind { [weak self] in self?.padPanGesture(pan: $0) }
             .disposed(by: disposeBag)
+        
+        viewModel.output?.lockType
+            .drive { [weak self] in self?.setLockType(type: $0) }
+            .disposed(by: disposeBag)
+        
+        
+        viewModel.output?.passwordCount
+            .drive { [weak self] in self?.setPasswordView(passwordCount: $0) }
+            .disposed(by: disposeBag)
+        
+        viewModel.output?.passwordError
+            .drive { [weak self] _ in self?.errorEmit() }
+            .disposed(by: disposeBag)
     }
     
     private func setPasswordView() {
@@ -120,7 +136,7 @@ final class LockScreenView: UIView {
     }
     
     private func setPadView() {
-        for row in type.pads {
+        for row in viewModel.model.lockType.value.pads {
             let rowStackView = getRowStackView(pads: row)
             
             padWrapperStackView.addArrangedSubview(rowStackView)
@@ -139,7 +155,8 @@ final class LockScreenView: UIView {
             padView.addGestureRecognizer(padViewTapped)
             
             padViewTapped.rx.event
-                .bind { [weak self] _ in self?.padTapEvent(type: pad) }
+                .map { _ in pad }
+                .bind(to: viewModel.input.padTap)
                 .disposed(by: disposeBag)
             
             rowStackView.addArrangedSubview(padView)
@@ -149,17 +166,65 @@ final class LockScreenView: UIView {
         return rowStackView
     }
     
-    private func padTapEvent(type: PadView.PadType) {
-        switch type {
-        case .number(let num):
-            print(num)
-        case .cancle:
-            print("cancle")
-        case .biometricsAuth:
-            print("biometricsAuth")
-        case .back:
-            print("back")
+    private func setLockType(type: LockType) {
+        titleLabel.text = type.title
+        subtitleLabel.text = type.subtitle
+        
+    }
+    
+    private func setPasswordView(passwordCount: Int) {
+        switch passwordCount {
+        case 0:
+            passwordStackView.arrangedSubviews.forEach {
+                $0.backgroundColor = .code5
+            }
+        case 1...3:
+            passwordStackView.arrangedSubviews[0...passwordCount].forEach {
+                $0.backgroundColor = .code2
+            }
+            
+            passwordStackView.arrangedSubviews[passwordCount...3].forEach {
+                $0.backgroundColor = .code5
+            }
+        case 4:
+            passwordStackView.arrangedSubviews.forEach {
+                $0.backgroundColor = .code2
+            }
+        default: break
         }
+    }
+    
+    private func errorEmit() {
+        setErrorTitle()
+        shakeAnimation()
+    }
+    
+    private func setErrorTitle() {
+        subtitleLabel.text = LockType.normal.invalidText
+        subtitleLabel.textColor = .error
+    }
+    
+    private func shakeAnimation(shouldVibrate: Bool = true, completion: (() -> ())? = nil) {
+        let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
+        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
+        animation.duration = 0.5
+        animation.values = [-20.0, 20.0, -20.0, 20.0, -10.0, 10.0, -5.0, 5.0, 0.0]
+        
+        [titleLabel,
+         subtitleLabel,
+         passwordStackView].forEach {
+            $0.layer.add(animation, forKey: "shake")
+        }
+        
+        if shouldVibrate {
+            self.vibrate()
+        }
+        
+        completion?()
+    }
+    
+    public func vibrate(_ type: UINotificationFeedbackGenerator.FeedbackType = .error) {
+        vibrator.notificationOccurred(type)
     }
     
     private func padPanGesture(pan: UIPanGestureRecognizer) {
@@ -167,11 +232,14 @@ final class LockScreenView: UIView {
 //        print(padWrapperStackView.frame.contains(location))
 //        padViews[1].convert(padWrapperStackView, to: self)
 //        print(location)
-        let view = padViews.first {
-            self.convert($0.frame, from: padWrapperStackView.arrangedSubviews[0]).contains(location)
-        }
+//        let view = padViews.first {
+//            self.padWrapperStackView.convert($0.frame, to: self).contains(location)
+//            self.convert($0.bounds, from: padWrapperStackView).contains(location)
+//        }
         
-        view?.setBackgroundColor(isSelect: true)
+        
+        
+//        view?.setBackgroundColor(isSelect: true)
         
 //        print(convert(padViews[1].frame, from: padWrapperStackView.arrangedSubviews[0]))
 //        print(convert(padViews[1].frame, to: padWrapperStackView).contains(location))

@@ -5,14 +5,15 @@
 //  Created by chuchu on 2023/06/08.
 //
 
-enum LockType {
-    case nomal
-    case newPassword // 비밀 번호 입력해주세요.
-    case changePassword // 비밃 번호 바꾸기
+public enum LockType {
+    case normal
+    case newPassword  // 비밀 번호 입력해주세요.
+    case checkPassword  // 2번 확인
+    case changePassword  // 비밃 번호 바꾸기
     
     var title: String {
         switch self {
-        case .nomal, .newPassword:
+        case .normal, .newPassword, .checkPassword:
             return "비밀번호 입력"
         case .changePassword:
             return "새로운 암호 입력"
@@ -21,10 +22,12 @@ enum LockType {
     
     var subtitle: String {
         switch self {
-        case .nomal, .newPassword:
+        case .normal, .newPassword:
             return "비밀번호 네 자리를 입력해 주세요."
         case .changePassword:
             return "새로운 암호를 입력해 주세요."
+        case .checkPassword:
+            return "확인을 위해 한 번 더 입력해 주세요."
         }
     }
     
@@ -41,8 +44,8 @@ enum LockType {
     
     private var leftBottomPad: PadView.PadType {
         switch self {
-        case .nomal: return .biometricsAuth
-        case .newPassword, .changePassword: return .cancle
+        case .normal: return .biometricsAuth
+        case .newPassword, .changePassword, .checkPassword: return .cancle
         }
     }
 }

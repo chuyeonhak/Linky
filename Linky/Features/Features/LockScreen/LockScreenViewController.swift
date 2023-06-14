@@ -13,13 +13,17 @@ import SnapKit
 import Then
 import RxSwift
 
-final class LockScreenViewController: UIViewController {
+public final class LockScreenViewController: UIViewController {
     var lockScreenView: LockScreenView!
     
     let type: LockType!
+    let viewModel = LockScreenViewModel()
+    let auth = BiometricsAuthManager()
     let disposeBag = DisposeBag()
     
-    init(type: LockType) {
+    var unlockAction: ((Bool) -> ())? = nil
+    
+    public init(type: LockType) {
         self.type = type
         
         super.init(nibName: nil, bundle: nil)
@@ -29,18 +33,22 @@ final class LockScreenViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func loadView() {
-        let lockScreenView = LockScreenView(type: type)
+    public override func loadView() {
+        viewModel.model.lockType.accept(type)
+        let lockScreenView = LockScreenView(viewModel: viewModel)
         
         self.lockScreenView = lockScreenView
         self.view = lockScreenView
     }
     
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setBiometricsAuth()
+        bind()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         navigationController?.navigationBar.barTintColor = .code7
@@ -48,7 +56,39 @@ final class LockScreenViewController: UIViewController {
         UIApplication.shared.windows.first?.viewWithTag(Tag.statusBar)?.backgroundColor = .code7
     }
     
+    private func setBiometricsAuth() {
+        if type == .normal && UserDefaultsManager.shared.useBiometricsAuth {
+            auth.delegate = self
+            auth.execute()
+        }
+    }
+    
+    private func bind() {
+        viewModel.output?.didUnlock
+            .drive { [weak self] in
+                self?.unlockAction?($0)
+                self?.dismiss(animated: true) }
+            .disposed(by: disposeBag)
+        
+        viewModel.output?.checkBiometricsAuth
+            .drive { [weak self] _ in self?.auth.execute() }
+            .disposed(by: disposeBag)
+    }
+    
     deinit { print(description, "deinit") }
 }
 
-
+extension LockScreenViewController: AuthenticateStateDelegate {
+    public func didUpdateState(_ state: Core.BiometricsAuthManager.AuthenticationState) {
+        switch state {
+        case .loggedIn:
+            unlockAction?(true)
+            dismiss(animated: true)
+        case .fail(let error):
+            print(error)
+            print("wow")
+        }
+    }
+    
+    
+}
