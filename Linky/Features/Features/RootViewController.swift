@@ -78,10 +78,13 @@ public final class RootViewController: UITabBarController {
     }
     
     func tabBarAnimation(shouldShow: Bool) {
-        let originY = UIScreen.main.bounds.height - customTabBar.frame.height
-        let offsetY = shouldShow ? originY: UIScreen.main.bounds.height
+        let height = UIApplication.safeAreaInset.bottom + 78
+        
         UIView.animate(withDuration: 0.25) {
-            self.customTabBar.frame.origin.y = offsetY
+            self.customTabBar.snp.updateConstraints {
+                $0.height.equalTo(shouldShow ? height: 0)
+            }
+            self.view.layoutIfNeeded()
         }
     }
     
