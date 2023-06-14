@@ -36,9 +36,16 @@ extension PadView {
         private func getBiometricsImage() -> UIImage? {
             let type = BiometricsAuthManager.biometricType()
             let color: UIColor = .code2 ?? .white
+            let imageString = type == .faceID ? "faceid": "touchid"
+            let image = UIImage(systemName: imageString) ?? UIImage()
+            
             switch type {
-            case .faceID: return UIImage(systemName: "faceid")?.withTintColor(color)
-            case .touchID: return UIImage(systemName: "touchid")?.withTintColor(color)
+            case _ where !UserDefaultsManager.shared.useBiometricsAuth:
+                return nil
+            case .faceID:
+                return image.withTintColor(color, renderingMode: .alwaysOriginal)
+            case .touchID:
+                return image.withTintColor(color, renderingMode: .alwaysOriginal)
             default: return nil
             }
         }
