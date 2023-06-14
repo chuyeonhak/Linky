@@ -14,7 +14,7 @@ import Then
 import RxSwift
 
 protocol SettingViewDelegate {
-    func openNavigation(type: SettingType)
+    func openNavigation(type: SettingType, hasLock: Bool)
 }
 
 final class MoreView: UIView {
@@ -69,7 +69,7 @@ final class MoreView: UIView {
             
             settingViewTapped.rx.event
                 .bind { [weak self] _ in
-                    self?.delegate?.openNavigation(type: type)
+                    self?.delegate?.openNavigation(type: type, hasLock: true)
                 }.disposed(by: disposeBag)
             
             settingStackView.addArrangedSubview(settingView)
