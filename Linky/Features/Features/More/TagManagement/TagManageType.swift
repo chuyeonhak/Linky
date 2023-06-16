@@ -1,5 +1,5 @@
 //
-//  TagManageViewController + Type.swift
+//  TagManageType.swift
 //  Features
 //
 //  Created by chuchu on 2023/06/15.
@@ -24,6 +24,14 @@ enum TagManageType {
         switch self {
         case .add: return ""
         case .edit: return "새로운 태그 이름을 입력해주세요."
+        case .delete: return ""
+        }
+    }
+    
+    var placeholder: String {
+        switch self {
+        case .add: return "추가할 태그를 입력해 주세요."
+        case .edit: return "변경할 태그를 입력해 주세요."
         case .delete: return ""
         }
     }

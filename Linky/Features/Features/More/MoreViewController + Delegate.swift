@@ -30,7 +30,7 @@ extension MoreViewController: SettingViewDelegate {
         case .notificationSettings: return NotificationSettingsViewController()
         case .tips: return TipViewController()
         case .lock: return LockViewController()
-        case .tagManagement: return UIViewController()
+        case .tagManagement: return TagManageViewController()
         case .linkManagement: return UIViewController()
         case .synchronizationGuide: return UIViewController()
         }
@@ -51,7 +51,7 @@ extension MoreViewController: SettingViewDelegate {
     }
     
     private func openLockScreen() {
-        let lockScreenVc = LockScreenViewController(type: .normal)
+        let lockScreenVc = LockScreenViewController(type: .enterLockScreen)
         
         lockScreenVc.unlockAction = { didUnlock in
             if didUnlock {
