@@ -93,7 +93,7 @@ final class LockScreenView: UIView {
         }
         
         padWrapperStackView.snp.makeConstraints {
-            let height = UIScreen.main.bounds.width / 6 * 4
+            let height = UIScreen.main.bounds.height * 0.4
             
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(safeAreaLayoutGuide)
