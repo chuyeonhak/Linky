@@ -8,11 +8,13 @@
 import Foundation
 
 public struct UserDefaultsManager {
-    public enum Key {
-        public static let usePassword = "usePassword"
-        public static let password = "password"
-        public static let useBiometricsAuth = "useBiometricsAuth"
-        public static let isFirstBioAuth = "isFirstBioAuth"
+    private enum Key {
+        static let usePassword = "usePassword"
+        static let password = "password"
+        static let useBiometricsAuth = "useBiometricsAuth"
+        static let isFirstBioAuth = "isFirstBioAuth"
+        static let tagList = "tagList"
+        static let dropedTagList = "dropedTagList"
     }
     public static var shared = UserDefaultsManager()
     
@@ -69,6 +71,17 @@ public struct UserDefaultsManager {
         }
         set {
             UserDefaults.standard.set(newValue, forKey: Key.isFirstBioAuth)
+        }
+    }
+    
+    public var tagList: [TagData] {
+        get {
+            guard let tagListData = UserDefaults.standard.value(forKey: Key.tagList) as? Data,
+                  case let decoder = JSONDecoder(),
+                  let tagList = try? decoder.decode([TagData].self, from: tagListData)
+            else { return  [] }
+            
+            return tagList
         }
     }
 }
