@@ -260,6 +260,14 @@ extension UITextField {
             string: placeholderText,
             attributes: [NSAttributedString.Key.foregroundColor: textColor ?? UIColor()])
     }
+    
+    func maxLength(maxSize: Int, complete: ((Int) -> ())? = nil) {
+        guard let text else { return }
+        if text.count > maxSize {
+            self.text = String(text.prefix(maxSize))
+            complete?(maxSize)
+        }
+    }
 }
 
 extension Reactive where Base: UIView {
