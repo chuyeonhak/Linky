@@ -17,9 +17,11 @@ final class PadView: UIView {
     let type: PadType!
     
     lazy var padLabel = UILabel().then {
+        let fontSize: CGFloat = type == .cancel ? 18.0: 22.0
+        
         $0.text = type.title
         $0.textColor = .code2
-        $0.font = FontManager.shared.pretendard(weight: .medium, size: 22)
+        $0.font = FontManager.shared.pretendard(weight: .medium, size: fontSize)
     }
     
     lazy var padImageView = UIImageView(image: type.image)

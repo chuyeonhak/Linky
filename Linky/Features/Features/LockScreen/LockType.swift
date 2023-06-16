@@ -10,10 +10,11 @@ public enum LockType {
     case newPassword  // 비밀 번호 입력해주세요.
     case checkPassword  // 2번 확인
     case changePassword  // 비밃 번호 바꾸기
+    case enterLockScreen
     
     var title: String {
         switch self {
-        case .normal, .newPassword, .checkPassword:
+        case .normal, .newPassword, .checkPassword, .enterLockScreen:
             return "비밀번호 입력"
         case .changePassword:
             return "새로운 암호 입력"
@@ -22,7 +23,7 @@ public enum LockType {
     
     var subtitle: String {
         switch self {
-        case .normal, .newPassword:
+        case .normal, .newPassword, .enterLockScreen:
             return "비밀번호 네 자리를 입력해 주세요."
         case .changePassword:
             return "새로운 암호를 입력해 주세요."
@@ -45,7 +46,7 @@ public enum LockType {
     private var leftBottomPad: PadView.PadType {
         switch self {
         case .normal: return .biometricsAuth
-        case .newPassword, .changePassword, .checkPassword: return .cancle
+        case .newPassword, .changePassword, .checkPassword, .enterLockScreen: return .cancel
         }
     }
 }

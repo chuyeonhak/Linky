@@ -66,7 +66,7 @@ final class LockScreenViewModel {
         let devicePassword = UserDefaultsManager.shared.password
         
         switch type {
-        case .normal:
+        case .normal, .enterLockScreen:
             let isCorrect = devicePassword == password
             isCorrect ? model.didUnlock.onNext(true): model.error.onNext(())
         case .newPassword, .changePassword:
@@ -94,7 +94,7 @@ final class LockScreenViewModel {
             model.password.accept(currentPassword.appending(numString))
             
             if currentPassword.count == 3 { model.pwEnterComplete.onNext(()) }
-        case .cancle:
+        case .cancel:
             model.didUnlock.onNext(false)
         case .biometricsAuth where UserDefaultsManager.shared.useBiometricsAuth:
             model.checkBiometricsAuth.onNext(())

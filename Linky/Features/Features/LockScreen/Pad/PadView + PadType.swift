@@ -13,14 +13,14 @@ import Core
 extension PadView {
     enum PadType: Equatable {
         case number(Int)
-        case cancle
+        case cancel
         case biometricsAuth
         case back
         
         var title: String? {
             switch self {
             case .number(let number): return String(number)
-            case .cancle: return "취소"
+            case .cancel: return "취소"
             default: return nil
             }
         }
