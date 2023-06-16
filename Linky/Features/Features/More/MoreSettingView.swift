@@ -20,7 +20,7 @@ final class MoreSettingView: UIView {
     
     let titleLabel = UILabel().then {
         $0.textColor = .code2
-        $0.font = FontManager.shared.pretendard(weight: .medium, size: 14)
+        $0.font = FontManager.shared.pretendard(weight: .medium, size: 16)
     }
     
     let separatorView = UIView().then {
