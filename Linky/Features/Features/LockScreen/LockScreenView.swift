@@ -204,23 +204,12 @@ final class LockScreenView: UIView {
         subtitleLabel.textColor = .error
     }
     
-    private func shakeAnimation(shouldVibrate: Bool = true, completion: (() -> ())? = nil) {
-        let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
-        animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
-        animation.duration = 0.5
-        animation.values = [-20.0, 20.0, -20.0, 20.0, -10.0, 10.0, -5.0, 5.0, 0.0]
-        
+    private func shakeAnimation() {
         [titleLabel,
          subtitleLabel,
-         passwordStackView].forEach {
-            $0.layer.add(animation, forKey: "shake")
-        }
+         passwordStackView].forEach { $0.shakeAnimation() }
         
-        if shouldVibrate {
-            self.vibrate()
-        }
-        
-        completion?()
+        vibrate()
     }
     
     public func vibrate(_ type: UINotificationFeedbackGenerator.FeedbackType = .error) {
