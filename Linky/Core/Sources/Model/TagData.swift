@@ -9,12 +9,20 @@ import Foundation
 
 public struct TagData: Codable {
     public let tagNo: Int
-    public let title: String
+    public var title: String
     public let creationDate: Date
     
-    public init(tagNo: Int, title: String, creationDate: Date) {
-        self.tagNo = tagNo
+    public init(title: String, creationDate: Date) {
+        self.tagNo = TagData.getNextTagNo()
         self.title = title
         self.creationDate = creationDate
     }
+    
+    public static func getNextTagNo() -> Int {
+        guard let tagNo = UserDefaultsManager.shared.tagList.last?.tagNo else { return 0 } 
+        
+        return tagNo + 1
+    }
 }
+
+extension TagData: Equatable { }

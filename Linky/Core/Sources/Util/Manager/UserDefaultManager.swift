@@ -83,6 +83,14 @@ public struct UserDefaultsManager {
             
             return tagList
         }
+        
+        set {
+            guard case let encoder = JSONEncoder(),
+                  let encoded = try? encoder.encode(newValue)
+            else { return }
+            
+            UserDefaults.standard.setValue(encoded, forKey: Key.tagList)
+        }
     }
 }
 
