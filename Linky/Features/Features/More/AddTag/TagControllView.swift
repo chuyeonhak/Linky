@@ -1,5 +1,5 @@
 //
-//  AddTagView.swift
+//  TagControlView.swift
 //  Features
 //
 //  Created by chuchu on 2023/06/16.
@@ -13,9 +13,11 @@ import SnapKit
 import Then
 import RxSwift
 
-final class AddTagView: UIView {
+final class TagControlView: UIView {
     let type: TagManageType!
     let disposeBag = DisposeBag()
+    
+    var tagData: TagData?
     
     let canComplete = PublishSubject<Bool>()
     
@@ -32,18 +34,20 @@ final class AddTagView: UIView {
     }
     
     lazy var lineTextField = LineTextField().then {
+        $0.text = tagData?.title
         $0.textAlignment = .center
         $0.placeholder = type.placeholder
     }
     
-    let textCountLabel = UILabel().then {
-        $0.text = "0 / 8"
+    lazy var textCountLabel = UILabel().then {
+        $0.text = "\(tagData?.title.count ?? 0) / 8"
         $0.textColor = .code3
         $0.font = FontManager.shared.pretendard(weight: .medium, size: 12)
     }
     
-    init(type: TagManageType) {
+    init(type: TagManageType, tagData: TagData? = nil) {
         self.type = type
+        self.tagData = tagData
         
         super.init(frame: .zero)
         commonInit()

@@ -14,24 +14,26 @@ import Then
 extension TagManageView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard selectedItems.indices ~= indexPath.row else { return }
-//
+        
         selectedItems[indexPath.row] = !selectedItems[indexPath.row]
         tableView.reloadRows(at: [indexPath], with: .none)
+        
+        let selectedCount = selectedItems.filter({ $0 }).count
+        
+        viewModel.input.tagSelectedCount.onNext(selectedCount)
     }
 }
 
 extension TagManageView: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        selectedItems.count
-//        UserDefaultsManager.shared.tagList.count
+        UserDefaultsManager.shared.tagList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TagManageCell.identifier,
-                                                       for: indexPath) as? TagManageCell
+                                                       for: indexPath) as? TagManageCell,
+              let tagData = UserDefaultsManager.shared.tagList[safe: indexPath.row]
         else { return UITableViewCell() }
-        
-        let tagData = TagData(tagNo: 3, title: "wow", creationDate: Date())
         
         cell.configure(data: tagData, isSelected: selectedItems[indexPath.row])
         
@@ -42,16 +44,15 @@ extension TagManageView: UITableViewDataSource {
                    trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
     -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive,
-                                              title: "삭제") { action, view, success in
-            self.selectedItems.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .automatic)
+                                              title: "삭제") { [weak self] action, view, success in
+            self?.viewModel.input.tagHandle.onNext((.delete, indexPath.row))
         }.then {
             $0.backgroundColor = .error
         }
         
         let editAction = UIContextualAction(style: .normal,
-                                              title: "수정") { action, view, success in
-            print("edit")
+                                              title: "수정") { [weak self] action, view, success in
+            self?.viewModel.input.tagHandle.onNext((.edit, indexPath.row))
         }.then {
             $0.backgroundColor = .code4
         }

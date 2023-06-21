@@ -14,11 +14,11 @@ import Then
 import RxSwift
 
 final class TagManageView: UIView {
-//    var selectedItems = Array(repeating: false, count: UserDefaultsManager.shared.tagList.count)
-    var selectedItems = Array(repeating: false, count: 3)
+    var selectedItems = Array(repeating: false, count: UserDefaultsManager.shared.tagList.count)
+    let viewModel: TagManageViewModel!
     
     let titleLabel = UILabel().then {
-        $0.text = Const.Text.title
+        $0.text = "\(UserDefaultsManager.shared.tagList.count)개의 태그가 있어요."
         $0.textColor = .code2
         $0.font = FontManager.shared.pretendard(weight: .semiBold, size: 22)
     }
@@ -45,8 +45,9 @@ final class TagManageView: UIView {
         $0.register(TagManageCell.self, forCellReuseIdentifier: TagManageCell.identifier)
     }
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(viewModel: TagManageViewModel) {
+        self.viewModel = viewModel
+        super.init(frame: .zero)
         commonInit()
     }
     
@@ -57,7 +58,6 @@ final class TagManageView: UIView {
     private func commonInit() {
         addComponent()
         setConstraints()
-        bind()
     }
     
     private func addComponent() {
@@ -88,16 +88,9 @@ final class TagManageView: UIView {
         }
         
         tagTableView.snp.makeConstraints {
-            let height = getTableViewHeight()
             $0.top.equalTo(addTagButton.snp.bottom).offset(32)
             $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(height)
+            $0.bottom.equalToSuperview().inset(113)
         }
-    }
-    
-    private func bind() { }
-    
-    private func getTableViewHeight() -> CGFloat {
-        return 200
     }
 }
