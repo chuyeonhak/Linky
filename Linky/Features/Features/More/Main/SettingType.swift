@@ -21,7 +21,7 @@ enum SettingType: CaseIterable {
         case .tips: return "링키 120% 활용하기"
         case .lock: return "화면 잠금 설정"
         case .tagManagement: return "태그 관리"
-        case .linkManagement: return "링크 관리"
+        case .linkManagement: return "링크 휴지통"
         case .synchronizationGuide: return "동기화 안내"
         }
     }
