@@ -33,7 +33,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     private func openLockScreen() {
-        if UserDefaultsManager.shared.usePassword {
+        let lock = window?.rootViewController?.presentedViewController as? LockScreenViewController
+        
+        if UserDefaultsManager.shared.usePassword && lock == nil {
             print(UserDefaultsManager.shared.password)
             let lockScreenVc = LockScreenViewController(type: .normal)
 
