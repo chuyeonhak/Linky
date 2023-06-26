@@ -36,6 +36,10 @@ final class CustomTabBar: UIView {
         $0.setImage(UIImage(named: "icoPlus"), for: .normal)
     }
     
+    let vibrator = UISelectionFeedbackGenerator().then {
+        $0.prepare()
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
@@ -129,6 +133,7 @@ final class CustomTabBar: UIView {
     func selectTab(index: Int) -> Int {
         resetSelectedItem()
         selectItem(index: index)
+        vibrator.selectionChanged()
         
         return index
     }
@@ -200,6 +205,12 @@ extension UIView {
         layer.add(animation, forKey: "shake")
         
         completion?()
+    }
+    
+    func setBackgroundWithAnimation(color: UIColor?) {
+        UIView.animate(withDuration: 0.25) {
+            self.backgroundColor = color
+        }
     }
 }
 
