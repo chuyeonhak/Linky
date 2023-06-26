@@ -24,7 +24,7 @@ final class MoreView: UIView {
     
     lazy var settingStackView = UIStackView().then {
         $0.addCornerRadius(radius: 12)
-        $0.addShadow(offset: CGSize(width: 0, height: 0), opacity: 0.16, blur: 10)
+        $0.addShadow(offset: CGSize(width: 0, height: 0), opacity: 0.08, blur: 10)
         $0.axis = .vertical
         $0.distribution = .fillEqually
     }
