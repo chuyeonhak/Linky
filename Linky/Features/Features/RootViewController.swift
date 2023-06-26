@@ -25,7 +25,6 @@ public final class RootViewController: UITabBarController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-//        let hello = HomeTabbarController()
         
         setViewControllers([firstVc, secondVc, thirdVc], animated: false)
         self.tabBar.isHidden = true

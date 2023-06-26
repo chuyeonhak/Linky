@@ -30,7 +30,6 @@ final class TagManageViewModel {
     let model = Model()
     let input = Input()
     var output: Output?
-    var tempPassword = ""
     
     init() {
         self.output = Output(
