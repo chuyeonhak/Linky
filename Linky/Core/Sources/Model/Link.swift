@@ -12,14 +12,16 @@ public struct Link: Codable {
     public var url: String?
     public let creationDate: Date
     public var isRemoved: Bool
-    public let content: Content
+    public var content: MetaData?
+    public var tagList: [TagData] = [TagData(title: "태그 없음", creationDate: Date())]
+    public var linkMemo: String = ""
     
     public init(url: String?) {
         self.no = Link.getNextNo()
         self.url = url
         self.creationDate = Date()
         self.isRemoved = true
-        self.content = Content(url: url)
+        self.content = nil
     }
     
     private static func getNextNo() -> Int {
@@ -44,11 +46,13 @@ public struct Content: Codable {
     public let title: String
     public let subtitle: String
     public let count: String
+    public let image: String
     
     init(url: String?) {
         self.title = url ?? ""
         self.subtitle = ""
         self.count = ""
+        self.image = ""
     }
 }
 
