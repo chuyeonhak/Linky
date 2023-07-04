@@ -34,7 +34,7 @@ extension AddLinkDetailView {
             static let linkTitle = "링크 메모"
             static let addTagTitle = "태그 추가"
             static let linkPlaceholder = "ex.엄마가 공유해 줌"
-            static let tagPlaceholder = "추가할 태그를 입력해 주세요."
+            static let tagPlaceholder = "태그 입력(띄어쓰기 포함, 8자 이내)"
         }
     }
 }
