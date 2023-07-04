@@ -102,6 +102,8 @@ public final class AddLinkView: UIView {
         backgroundTapped.rx.event
             .bind { [weak self] _ in self?.linkTextFiled.resignFirstResponder() }
             .disposed(by: disposeBag)
+        
+        linkTextFiled.becomeFirstResponder()
     }
     
     private func linkTextFiledIsEmpty() -> Bool {
