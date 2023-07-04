@@ -14,6 +14,12 @@ import Then
 import RxSwift
 
 final class AddLinkDetailView: UIView {
+    let viewModel: AddLinkDetailViewModel!
+    let disposeBag = DisposeBag()
+    let metaData: MetaData!
+    var selectedItems = Array(repeating: false, count: UserDefaultsManager.shared.tagList.count)
+    var searchIndexPath: IndexPath?
+    
     let memoLinkLabel = UILabel().then {
         $0.text = Const.Text.linkTitle
         $0.textColor = Const.Custom.subtitle.color
@@ -34,6 +40,7 @@ final class AddLinkDetailView: UIView {
     let tagLineTextField = LineTextField().then {
         $0.changePlaceholderTextColor(
             placeholderText: Const.Text.tagPlaceholder, textColor: .code4)
+        $0.returnKeyType = .done
     }
     
     lazy var tagCollectionView = UICollectionView(
@@ -53,37 +60,29 @@ final class AddLinkDetailView: UIView {
         $0.backgroundColor = Const.Custom.linkInfoBG.color
     }
     
-    let linkTitle = UILabel().then {
-        $0.text = "네이버 지도"
+    lazy var linkTitle = UILabel().then {
+        $0.text = metaData.title
         $0.textColor = Const.Custom.linkTitle.color
         $0.font = FontManager.shared.pretendard(weight: .semiBold, size: 13)
     }
     
-    let linkSubtitle = UILabel().then {
-        $0.text = "나나방콕 상무점"
+    lazy var linkSubtitle = UILabel().then {
+        $0.text = metaData.subtitle
         $0.textColor = Const.Custom.subtitle.color
         $0.textAlignment = .left
         $0.font = FontManager.shared.pretendard(weight: .medium, size: 13)
     }
     
-    let linkLabel = UILabel().then {
-        $0.text = "www.naver.com"
+    lazy var linkLabel = UILabel().then {
+        $0.text = metaData.url
         $0.textColor = Const.Custom.link.color
         $0.font = FontManager.shared.pretendard(weight: .regular, size: 13)
     }
     
-    var testArray: [TestTag] = [
-        TestTag(title: "웃긴거"),
-        TestTag(title: "# 데이트"),
-        TestTag(title: "맛집"),
-        TestTag(title: "카페"),
-        TestTag(title: "강의"),
-        TestTag(title: "wowoooowwww"),
-        TestTag(title: "테스트 입니다아아아아아아앙"),
-    ]
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(viewModel: AddLinkDetailViewModel, metaData: MetaData) {
+        self.viewModel = viewModel
+        self.metaData = metaData
+        super.init(frame: .zero)
         commonInit()
     }
     
@@ -139,12 +138,12 @@ final class AddLinkDetailView: UIView {
             let height = getCollectionViewHeight()
             
             $0.top.equalTo(tagLineTextField.snp.bottom).offset(16)
-            $0.leading.trailing.equalTo(tagLineTextField)
+            $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(height)
         }
         
         linkInfoView.snp.makeConstraints {
-            $0.top.equalTo(tagCollectionView.snp.bottom).offset(36)
+            $0.top.equalTo(tagCollectionView.snp.bottom).offset(16)
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(64)
         }
@@ -172,11 +171,33 @@ final class AddLinkDetailView: UIView {
         
     }
     
-    private func bind() { }
+    private func bind() {
+        linkLineTextField.becomeFirstResponder()
+        
+        linkLineTextField.rx.controlEvent(.editingDidEndOnExit)
+            .withUnretainedOnly(self)
+            .bind { $0.tagLineTextField.becomeFirstResponder() }
+            .disposed(by: disposeBag)
+        
+        tagLineTextField.rx.text
+            .withUnretained(self)
+            .bind { owner, text in
+                let maxLenght = 8
+                owner.tagLineTextField.maxLength(maxSize: maxLenght)
+            }
+            .disposed(by: disposeBag)
+        
+        tagLineTextField.rx.controlEvent(.editingDidEndOnExit)
+            .bind { [weak self] in self?.addTagList() }
+            .disposed(by: disposeBag)
+        
+        tagCollectionView.rx.didEndScrollingAnimation
+            .bind { [weak self] in self?.searchAnimation() }
+            .disposed(by: disposeBag)
+    }
     
     private func getCollectionViewHeight() -> Int {
         let itemLine = getCollectionViewLine()
-        let itemHeight = 37
         let limit = 5
         let isExceeded = itemLine > limit
         
@@ -187,12 +208,13 @@ final class AddLinkDetailView: UIView {
     
     private func getCollectionViewLine() -> Int {
         let deviceWidth = UIApplication.shared.window?.bounds.width ?? .zero
+        let tagList = UserDefaultsManager.shared.tagList
         let inset: CGFloat = 42.0
         let collectionViewWidth = deviceWidth - (inset * 2)
-        let textWidthArray = testArray.map { getItemWidth(text: $0.title) }
+        let textWidthArray = tagList.map { getItemWidth(text: $0.title) }
         
         var limit: CGFloat = collectionViewWidth
-        var count: Int = testArray.isEmpty ? 0: 1
+        var count: Int = tagList.isEmpty ? 0: 1
         
         for (index, textWidth) in textWidthArray.enumerated() {
             let currentWidth = textWidth + 4 // itemSpacing
@@ -208,6 +230,71 @@ final class AddLinkDetailView: UIView {
         }
         
         return count
+    }
+    
+    private func addTagList() {
+        guard let tagText = tagLineTextField.text,
+              !tagText.isEmpty && tagText.count > 1,
+              !isDuplicated(tagText: tagText)
+        else { return }
+        
+        var copyArr = UserDefaultsManager.shared.tagList
+        let tag = TagData(title: tagText, creationDate: Date())
+        
+        copyArr.append(tag)
+        selectedItems.append(false)
+        UserDefaultsManager.shared.tagList = copyArr
+        
+        tagLineTextField.text = ""
+        
+        configData()
+    }
+    
+    private func isDuplicated(tagText: String) -> Bool {
+        if case let tagList = UserDefaultsManager.shared.tagList,
+           let firstIndex = tagList.firstIndex(where: { $0.title == tagText }),
+           case let indexPath = IndexPath(item: firstIndex, section: 0) {
+            
+            tagCellAnimation(indexPath: indexPath)
+            
+            return true
+        }
+        
+        return false
+    }
+    
+    private func tagCellAnimation(indexPath: IndexPath) {
+        if let cell = tagCollectionView.cellForItem(at: indexPath) as? TagCell {
+            cell.shakeAnimation()
+            HapticManager.shared.notification(.error)
+        } else {
+            searchIndexPath = indexPath
+            
+            tagCollectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
+        }
+    }
+    
+    private func searchAnimation() {
+        guard let searchIndexPath,
+              let cell = tagCollectionView.cellForItem(at: searchIndexPath) as? TagCell
+        else { return }
+        
+        cell.shakeAnimation()
+        HapticManager.shared.notification(.error)
+        
+        self.searchIndexPath = nil
+    }
+    
+    func configData(shouldScrollToBottom: Bool = true) {
+        tagCollectionView.reloadData()
+        
+        tagCollectionView.snp.updateConstraints {
+            let height = getCollectionViewHeight()
+            
+            $0.height.equalTo(height)
+        }
+        
+        if shouldScrollToBottom { tagCollectionView.scrollsToBottom() }
     }
 }
 

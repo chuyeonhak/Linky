@@ -12,7 +12,7 @@ import Core
 import SnapKit
 import RxSwift
 
-class TagCell: UICollectionViewCell {
+final class TagCell: UICollectionViewCell {
     var disposeBag = DisposeBag()
     
     let tagLabel = UILabel().then {

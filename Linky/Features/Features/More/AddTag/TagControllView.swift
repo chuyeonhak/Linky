@@ -35,14 +35,7 @@ final class TagControlView: UIView {
     
     lazy var lineTextField = LineTextField().then {
         $0.text = tagData?.title
-        $0.textAlignment = .center
         $0.placeholder = type.placeholder
-    }
-    
-    lazy var textCountLabel = UILabel().then {
-        $0.text = "\(tagData?.title.count ?? 0) / 8"
-        $0.textColor = .code3
-        $0.font = FontManager.shared.pretendard(weight: .medium, size: 12)
     }
     
     init(type: TagManageType, tagData: TagData? = nil) {
@@ -68,8 +61,7 @@ final class TagControlView: UIView {
         
         [titleLabel,
          subtitleLabel,
-         lineTextField,
-         textCountLabel].forEach(addSubview)
+         lineTextField].forEach(addSubview)
     }
     
     private func setConstraints() {
@@ -88,11 +80,6 @@ final class TagControlView: UIView {
             $0.leading.trailing.equalToSuperview().inset(42)
             $0.height.equalTo(34)
         }
-        
-        textCountLabel.snp.makeConstraints {
-            $0.top.equalTo(lineTextField.snp.bottom).offset(6)
-            $0.centerX.equalToSuperview()
-        }
     }
     
     private func bind() {
@@ -101,10 +88,7 @@ final class TagControlView: UIView {
             .bind { owner, text in
                 let maxLenght = 8
                 let textCount = text?.count ?? 0
-                owner.textCountLabel.text = "\(textCount) / \(maxLenght)"
-                owner.lineTextField.maxLength(maxSize: maxLenght) { _ in
-                    owner.textCountLabel.text = "\(maxLenght) / \(maxLenght)"
-                }
+                owner.lineTextField.maxLength(maxSize: maxLenght)
                 owner.canComplete.onNext(textCount > 1)
             }
             .disposed(by: disposeBag)
