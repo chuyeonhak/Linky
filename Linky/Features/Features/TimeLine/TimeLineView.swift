@@ -18,7 +18,22 @@ final class TimeLineView: UIView {
     
     let emptyView = EmptyView(tabType: .timeline)
     
-    let timeLineTableView = UITableView()
+    lazy var linkCollectionView: UICollectionView = {
+        let flowLayout = UICollectionViewFlowLayout()
+        let deviceSize = UIScreen.main.bounds.size
+        flowLayout.itemSize = CGSize(width: deviceSize.width, height: 88)
+        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 40, right: 0)
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+        
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        collectionView.backgroundColor = .code8
+        collectionView.register(LinkManageCell.self,
+                                forCellWithReuseIdentifier: LinkManageCell.identifier)
+        
+        return collectionView
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -36,17 +51,17 @@ final class TimeLineView: UIView {
     }
     
     private func addComponent() {
-        [emptyView, timeLineTableView].forEach(addSubview)
+        [emptyView, linkCollectionView].forEach(addSubview)
     }
     
     private func setConstraints() {
-        timeLineTableView.isHidden = true
+        linkCollectionView.isHidden = true
         
         emptyView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
         
-        timeLineTableView.snp.makeConstraints {
+        linkCollectionView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
     }
