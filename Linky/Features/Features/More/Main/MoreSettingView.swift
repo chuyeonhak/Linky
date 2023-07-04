@@ -49,7 +49,8 @@ final class MoreSettingView: UIView {
     
     private func setConstraints() {
         iconImageView.snp.makeConstraints {
-            $0.top.bottom.leading.equalToSuperview().inset(12)
+            $0.leading.equalToSuperview().inset(12)
+            $0.centerY.equalToSuperview()
             $0.size.equalTo(24)
         }
         

@@ -23,7 +23,10 @@ final class LinkManageCell: UICollectionViewCell {
         $0.backgroundColor = .white
     }
     
-    let linkImageView = UIImageView()
+    let linkImageView = UIImageView().then {
+        $0.addCornerRadius(radius: 12, [.topLeft, .bottomLeft])
+        $0.layer.masksToBounds = true
+    }
     
     let contentStackView = UIStackView().then {
         $0.axis = .vertical
@@ -152,6 +155,7 @@ final class LinkManageCell: UICollectionViewCell {
         
         subtitleLabel.snp.makeConstraints {
             $0.leading.equalTo(domainLabel.snp.trailing).offset(4)
+            $0.trailing.equalToSuperview().inset(16)
             $0.bottom.equalToSuperview()
         }
     }
@@ -162,8 +166,10 @@ final class LinkManageCell: UICollectionViewCell {
         let custom = TagManageCell.Const.Custom.self
         let asset = isSelected ? custom.checkBoxOn: custom.checkBoxOff
         
-        titleLabel.text = link.content.title
+        titleLabel.text = link.content?.title
         dateLabel.text = link.dateText
+        subtitleLabel.text = link.content?.subtitle
         checkBoxImageView.image = asset.image
+        linkImageView.load(urlString: link.content?.imageUrl, placeHolder: asset.image)
     }
 }

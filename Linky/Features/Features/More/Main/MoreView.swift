@@ -55,7 +55,7 @@ final class MoreView: UIView {
         settingStackView.backgroundColor = .code8
         settingStackView.snp.makeConstraints {
             $0.top.leading.trailing.equalToSuperview().inset(16)
-            $0.height.equalTo(SettingType.allCases.count * 48)
+            $0.height.equalTo(SettingType.allCases.count * 60)
         }
     }
     
