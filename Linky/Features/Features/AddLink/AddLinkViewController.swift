@@ -73,7 +73,7 @@ final class AddLinkViewController: UIViewController {
             .withLatestFrom(addLinkView.canComplete) { $1 }
             .filter { $0 }
             .withUnretainedOnly(self)
-            .bind { $0.openAddLinkDetail() }
+            .bind { $0.getOpenGraph() }
             .disposed(by: disposeBag)
         
         return UIBarButtonItem(customView: rightButton)
@@ -103,13 +103,24 @@ final class AddLinkViewController: UIViewController {
         button?.titleLabel?.font = font
     }
     
-    private func openAddLinkDetail() {
-        let detailViewContrller = AddLinkDetailViewContrller()
-        
-        let tabBar = tabBarController as? RootViewController
-        
-        tabBar?.tabBarAnimation(shouldShow: false)
-        
-        navigationController?.pushViewController(detailViewContrller, animated: true)
+    private func getOpenGraph() {
+        let urlString = addLinkView.linkTextFiled.text
+    
+        guard let urlString else { return }
+        IndicatorManager.shared.startAnimation()
+        OpenGraphManager.shared.getMetaData(urlString: urlString) { data in
+            IndicatorManager.shared.stopAnimation()
+            self.openAddLinkDetail(data: data)
+        }
     }
+    
+    private func openAddLinkDetail(data: MetaData) {
+        DispatchQueue.main.async {
+            let detailViewContrller = AddLinkDetailViewContrller(metaData: data)
+            
+            self.navigationController?.pushViewController(detailViewContrller, animated: true)
+        }
+    }
+    
+    deinit { print(description, "deinit") }
 }
