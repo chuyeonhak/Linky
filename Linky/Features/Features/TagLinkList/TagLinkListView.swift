@@ -22,10 +22,6 @@ final class TagLinkListView: UIView {
 
     lazy var linkCollectionView: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
-        let deviceSize = UIScreen.main.bounds.size
-        flowLayout.itemSize = CGSize(width: deviceSize.width, height: 151)
-        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 40, right: 0)
-        flowLayout.minimumLineSpacing = 0
 
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
 

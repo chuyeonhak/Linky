@@ -26,7 +26,7 @@ public final class AddLinkView: UIView {
     
     let linkTextFiled = LineTextField().then {
         $0.changePlaceholderTextColor(
-            placeholderText: Const.Text.placeholder, textColor: .code4)
+            placeholderText: Const.Text.placeholder, textColor: .code5)
     }
     
     let pasteButton = UIButton().then {

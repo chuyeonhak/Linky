@@ -49,7 +49,7 @@ final class LockView: UIView {
     
     lazy var warningLabel = UILabel().then {
         $0.text = "비밀번호를 잃어버릴 경우 앱을 재설치 해야 하며,\n저장된 링크는 모두 삭제됩니다."
-        $0.textColor = .main
+        $0.textColor = .sub
         $0.numberOfLines = 2
         $0.font = FontManager.shared.pretendard(weight: .medium, size: 13)
         $0.alpha = lockSwitch.isOn ? 1 : 0

@@ -16,12 +16,15 @@ final class TagManageCell: UITableViewCell {
     static let identifier = description()
     
     let lineView = UIView().then {
-        $0.backgroundColor = .code5
+        $0.backgroundColor = .code6
     }
     
     let checkBoxImageView = UIImageView(image: Const.Custom.checkBoxOff.image)
     
-    let titleLabel = UILabel()
+    let titleLabel = UILabel().then {
+        $0.textColor = .code2
+        $0.font = FontManager.shared.pretendard(weight: .medium, size: 16)
+    }
     
     let countLabel = UILabel()
     

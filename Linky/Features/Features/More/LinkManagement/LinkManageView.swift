@@ -45,12 +45,8 @@ final class LinkManageView: UIView {
     }
     
     lazy var linkCollectionView: UICollectionView = {
-        let flowLayout = UICollectionViewFlowLayout()
-        let deviceSize = UIScreen.main.bounds.size
-        flowLayout.itemSize = CGSize(width: deviceSize.width, height: 88)
-        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 40, right: 0)
-        
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout:
+                                                UICollectionViewFlowLayout())
         
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -89,8 +85,8 @@ final class LinkManageView: UIView {
     
     private func setConstraints() {
         titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(60)
-            $0.leading.equalToSuperview().inset(20)
+            $0.top.equalTo(safeAreaLayoutGuide).inset(60)
+            $0.leading.equalTo(safeAreaLayoutGuide).inset(20)
         }
         
         emptyButton.snp.makeConstraints {
@@ -109,7 +105,7 @@ final class LinkManageView: UIView {
         
         linkCollectionView.snp.makeConstraints {
             $0.top.equalTo(emptyButton.snp.bottom).offset(38)
-            $0.leading.trailing.equalToSuperview()
+            $0.leading.trailing.equalTo(safeAreaLayoutGuide)
             $0.bottom.equalToSuperview()
         }
     }

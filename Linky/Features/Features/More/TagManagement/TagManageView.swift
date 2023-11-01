@@ -39,6 +39,7 @@ final class TagManageView: UIView {
     }
     
     lazy var tagTableView = UITableView().then {
+        $0.backgroundColor = .code8
         $0.delegate = self
         $0.dataSource = self
         $0.separatorStyle = .none
@@ -71,8 +72,8 @@ final class TagManageView: UIView {
     
     private func setConstraints() {
         titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(60)
-            $0.leading.equalToSuperview().inset(20)
+            $0.top.equalTo(safeAreaLayoutGuide).inset(60)
+            $0.leading.equalTo(safeAreaLayoutGuide).inset(20)
         }
         
         subtitleLabel.snp.makeConstraints {
@@ -90,7 +91,7 @@ final class TagManageView: UIView {
         tagTableView.snp.makeConstraints {
             $0.top.equalTo(addTagButton.snp.bottom).offset(32)
             $0.leading.trailing.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(113)
+            $0.bottom.equalToSuperview()
         }
     }
 }

@@ -18,22 +18,24 @@ final class LinkManageCell: UICollectionViewCell {
     let checkBoxImageView = UIImageView(image: TagManageCell.Const.Custom.checkBoxOff.image)
     
     let wrapperView = UIView().then {
-        $0.addCornerRadius(radius: 12)
-        $0.addShadow(offset: CGSize(width: 0, height: 0), opacity: 0.08, blur: 4)
-        $0.backgroundColor = .white
+        $0.backgroundColor = .code8
+    }
+    
+    let bottomLineView = UIView().then {
+        $0.backgroundColor = .code6
     }
     
     let linkImageView = UIImageView().then {
-        $0.addCornerRadius(radius: 12, [.topLeft, .bottomLeft])
+        $0.addCornerRadius(radius: 8)
         $0.layer.masksToBounds = true
     }
     
     let contentStackView = UIStackView().then {
         $0.axis = .vertical
-        $0.spacing = 4
+        $0.spacing = 2
     }
     
-    let topView = UIView()
+    let bottomView = UIView()
     
     let dateLabel = UILabel().then {
         $0.textColor = .code4
@@ -52,21 +54,13 @@ final class LinkManageCell: UICollectionViewCell {
     
     let titleLabel = UILabel().then {
         $0.textColor = .code2
-        $0.font = FontManager.shared.pretendard(weight: .semiBold, size: 13)
+        $0.font = FontManager.shared.pretendard(weight: .semiBold, size: 15)
     }
     
-    let bottomView = UIView()
-    
-    let domainLabel = UILabel().then {
-        $0.text = "네이버"
-        $0.textColor = .sub
-        $0.font = FontManager.shared.pretendard(weight: .semiBold, size: 12)
-    }
-    
-    let subtitleLabel = UILabel().then {
-        $0.text = "나나방콕 상무점"
+    let urlLabel = UILabel().then {
+        $0.text = "www.linky.com"
         $0.textColor = .code3
-        $0.font = FontManager.shared.pretendard(weight: .medium, size: 12)
+        $0.font = FontManager.shared.pretendard(weight: .semiBold, size: 13)
     }
     
     override init(frame: CGRect) {
@@ -87,46 +81,49 @@ final class LinkManageCell: UICollectionViewCell {
     private func addComponent() {
         backgroundColor = .code8
         
-        [checkBoxImageView,
-         wrapperView].forEach(contentView.addSubview)
+        [wrapperView,
+         bottomLineView].forEach(contentView.addSubview)
         
         [linkImageView,
-         contentStackView].forEach(wrapperView.addSubview)
+         contentStackView,
+         checkBoxImageView].forEach(wrapperView.addSubview)
         
-        [topView,
-         titleLabel,
+        [titleLabel,
+         urlLabel,
          bottomView].forEach(contentStackView.addArrangedSubview)
         
         [dateLabel,
          lineView,
-         isWrittenLabel].forEach(topView.addSubview)
-        
-        [domainLabel, subtitleLabel].forEach(bottomView.addSubview)
+         isWrittenLabel].forEach(bottomView.addSubview)
     }
     
     private func setConstraints() {
-        checkBoxImageView.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(28)
-            $0.leading.equalTo(20)
-            $0.size.equalTo(32)
+        wrapperView.snp.makeConstraints {
+            $0.top.bottom.equalToSuperview().inset(12)
+            $0.leading.trailing.equalToSuperview().inset(20)
+            $0.trailing.equalToSuperview().inset(22)
         }
         
-        wrapperView.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(8)
-            $0.leading.equalTo(checkBoxImageView.snp.trailing).offset(10)
-            $0.trailing.equalToSuperview().inset(22)
-            $0.height.equalTo(72)
+        bottomLineView.snp.makeConstraints {
+            $0.leading.trailing.bottom.equalToSuperview()
+            $0.height.equalTo(1)
         }
         
         linkImageView.snp.makeConstraints {
             $0.top.leading.equalToSuperview()
-            $0.size.equalTo(72)
+            $0.size.equalTo(56)
+        }
+        
+        checkBoxImageView.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(12)
+            $0.trailing.equalToSuperview()
+            $0.size.equalTo(32)
         }
         
         contentStackView.snp.makeConstraints {
-            $0.top.bottom.equalToSuperview().inset(8)
-            $0.leading.equalTo(linkImageView.snp.trailing).offset(12)
-            $0.trailing.equalToSuperview().inset(12)
+            $0.top.bottom.equalToSuperview().inset(2)
+            $0.leading.equalTo(linkImageView.snp.trailing).offset(10)
+            $0.trailing.equalTo(checkBoxImageView.snp.leading).offset(-27)
         }
         
         dateLabel.snp.makeConstraints {
@@ -144,20 +141,6 @@ final class LinkManageCell: UICollectionViewCell {
             $0.top.equalToSuperview()
             $0.leading.equalTo(lineView.snp.trailing).offset(4)
         }
-        
-        titleLabel.snp.makeConstraints {
-            $0.centerY.equalToSuperview()
-        }
-        
-        domainLabel.snp.makeConstraints {
-            $0.bottom.leading.equalToSuperview()
-        }
-        
-        subtitleLabel.snp.makeConstraints {
-            $0.leading.equalTo(domainLabel.snp.trailing).offset(4)
-            $0.trailing.equalToSuperview().inset(16)
-            $0.bottom.equalToSuperview()
-        }
     }
     
     private func bind() { }
@@ -165,11 +148,21 @@ final class LinkManageCell: UICollectionViewCell {
     func configure(link: Link, isSelected: Bool) {
         let custom = TagManageCell.Const.Custom.self
         let asset = isSelected ? custom.checkBoxOn: custom.checkBoxOff
+        let isWrittenText = link.isWrittenCount == 0 ? "안 읽음": "\(link.isWrittenCount)번 읽음"
         
-        titleLabel.text = link.content?.title
-        dateLabel.text = link.dateText
-        subtitleLabel.text = link.content?.subtitle
+        titleLabel.text = link.content?.title ?? " "
+        urlLabel.text = link.content?.url
+        dateLabel.text = link.dateToString
+        isWrittenLabel.text = isWrittenText
         checkBoxImageView.image = asset.image
-        linkImageView.load(urlString: link.content?.imageUrl, placeHolder: asset.image)
+        setImageData(data: link.content?.imageData)
+    }
+    
+    private func setImageData(data: Data?) {
+        if let data {
+            linkImageView.image = UIImage(data: data)
+        } else {
+            linkImageView.image = UIImage(named: "nonImage")
+        }
     }
 }

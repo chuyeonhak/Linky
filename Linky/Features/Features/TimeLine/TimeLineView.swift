@@ -14,29 +14,30 @@ import Then
 import RxSwift
 
 final class TimeLineView: UIView {
+    let viewModel: TimeLineViewModel!
     let disposeBag = DisposeBag()
-    
     let emptyView = EmptyView(tabType: .timeline)
+    
+    var baseDataSource = UserDefaultsManager.shared.linkList.filter { !$0.isRemoved }
     
     lazy var linkCollectionView: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
-        let deviceSize = UIScreen.main.bounds.size
-        flowLayout.itemSize = CGSize(width: deviceSize.width, height: 88)
-        flowLayout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 40, right: 0)
-        
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.backgroundColor = .code8
-        collectionView.register(LinkManageCell.self,
-                                forCellWithReuseIdentifier: LinkManageCell.identifier)
+        
+        collectionView.backgroundColor = .code7
+        collectionView.register(TimeLineLinkCell.self,
+                                forCellWithReuseIdentifier: TimeLineLinkCell.identifier)
         
         return collectionView
     }()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(viewModel: TimeLineViewModel) {
+        self.viewModel = viewModel
+        
+        super.init(frame: .zero)
         commonInit()
     }
     
@@ -51,6 +52,7 @@ final class TimeLineView: UIView {
     }
     
     private func addComponent() {
+        backgroundColor = .code7
         [emptyView, linkCollectionView].forEach(addSubview)
     }
     
@@ -58,7 +60,7 @@ final class TimeLineView: UIView {
         linkCollectionView.isHidden = true
         
         emptyView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.edges.equalTo(safeAreaLayoutGuide)
         }
         
         linkCollectionView.snp.makeConstraints {
@@ -66,6 +68,5 @@ final class TimeLineView: UIView {
         }
     }
     
-    private func bind() {
-    }
+    private func bind() { }
 }

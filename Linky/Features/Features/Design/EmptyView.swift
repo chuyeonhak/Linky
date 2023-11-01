@@ -77,7 +77,7 @@ final class EmptyView: UIView {
             $0.top.equalTo(emptyTitleLabel.snp.bottom).offset(70)
             $0.leading.trailing.equalToSuperview().inset(24)
             $0.centerX.equalToSuperview()
-            $0.height.equalTo(46)
+            $0.height.equalTo(56)
         }
     }
     
