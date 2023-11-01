@@ -9,7 +9,7 @@ import UIKit
 
 import Then
 
-public struct HapticManager {
+public final class HapticManager {
     public static let shared = HapticManager()
     
     private let notification = UINotificationFeedbackGenerator().then {
@@ -26,7 +26,7 @@ public struct HapticManager {
         notification.notificationOccurred(type)
     }
     
-    public mutating func impact(_ style: UIImpactFeedbackGenerator.FeedbackStyle) {
+    public func impact(_ style: UIImpactFeedbackGenerator.FeedbackStyle) {
         self.impact = UIImpactFeedbackGenerator(style: style)
         impact?.prepare()
         
