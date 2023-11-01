@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import LinkPresentation
 
 import Core
 
@@ -104,17 +105,53 @@ final class AddLinkViewController: UIViewController {
     }
     
     private func getOpenGraph() {
-        let urlString = addLinkView.linkTextFiled.text
-    
-        guard let urlString else { return }
+        guard let urlString = addLinkView.linkTextFiled.text,
+              let url = URL(string: urlString) else {
+            openAddLinkDetail(data: MetaData(url: addLinkView.linkTextFiled.text))
+            return }
+        
         IndicatorManager.shared.startAnimation()
-        OpenGraphManager.shared.getMetaData(urlString: urlString) { data in
-            IndicatorManager.shared.stopAnimation()
-            self.openAddLinkDetail(data: data)
+        
+        let metadataProvider = LPMetadataProvider()
+        
+        metadataProvider.startFetchingMetadata(for: url) { [weak self] data, error in
+            if error != nil {
+                self?.openAddLinkDetail(data: MetaData(url: urlString))
+                return
+            }
+            
+            let noImageMetaData = MetaData(url: urlString,
+                                           title: data?.title,
+                                           subtitle: nil,
+                                           imageData: nil)
+            
+            guard let imageProvider = data?.imageProvider else {
+                self?.openAddLinkDetail(data: noImageMetaData)
+                return
+            }
+            
+            imageProvider.loadObject(ofClass: UIImage.self) { image, error in
+                if error != nil {
+                    self?.openAddLinkDetail(data: noImageMetaData)
+                    return
+                }
+                
+                guard let metaImage = image as? UIImage else {
+                    self?.openAddLinkDetail(data: noImageMetaData)
+                    return
+                }
+                
+                let metaData = MetaData(url: urlString,
+                                        title: data?.title,
+                                        imageData: metaImage.pngData())
+                
+                self?.openAddLinkDetail(data: metaData)
+            }
         }
     }
     
     private func openAddLinkDetail(data: MetaData) {
+        IndicatorManager.shared.stopAnimation()
         DispatchQueue.main.async {
             let detailViewContrller = AddLinkDetailViewContrller(metaData: data)
             
