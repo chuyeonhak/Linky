@@ -16,48 +16,50 @@ public struct UserDefaultsManager {
         static let tagList = "tagList"
         static let dropedTagList = "dropedTagList"
         public static let linkList = "linkList"
+        public static let isAllowedNotification = "isAllowedNotification"
+        static let useNotification = "useNotification"
+        static let notiSetting = "notiSetting"
+        static let sharedMetaData = "sharedMetaData"
     }
+    
     public static var shared = UserDefaultsManager()
+    
+    public let userDefaults = UserDefaults(suiteName: "group.com.chuchu.Linky")
     
     public var usePassword: Bool {
         get {
-            guard let usePassword = UserDefaults
-                .standard
-                .value(forKey: Key.usePassword) as? Bool
+            guard let usePassword = userDefaults?.value(forKey: Key.usePassword) as? Bool
             else { return false }
             
             return usePassword
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: Key.usePassword)
+            userDefaults?.set(newValue, forKey: Key.usePassword)
         }
     }
     
     public var password: String {
         get {
-            guard let password = UserDefaults
-                .standard
-                .value(forKey: Key.password) as? String
+            guard let password = userDefaults?.value(forKey: Key.password) as? String
             else { return "" }
             
             return password
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: Key.password)
+            userDefaults?.set(newValue, forKey: Key.password)
         }
     }
     
     public var useBiometricsAuth: Bool {
         get {
-            guard let useBiometricsAuth = UserDefaults
-                .standard
+            guard let useBiometricsAuth = userDefaults?
                 .value(forKey: Key.useBiometricsAuth) as? Bool
             else { return false }
             
             return useBiometricsAuth
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: Key.useBiometricsAuth)
+            userDefaults?.set(newValue, forKey: Key.useBiometricsAuth)
         }
     }
     
@@ -77,7 +79,7 @@ public struct UserDefaultsManager {
     
     public var tagList: [TagData] {
         get {
-            guard let tagListData = UserDefaults.standard.value(forKey: Key.tagList) as? Data,
+            guard let tagListData = userDefaults?.value(forKey: Key.tagList) as? Data,
                   case let decoder = JSONDecoder(),
                   let tagList = try? decoder.decode([TagData].self, from: tagListData)
             else { return  [] }
@@ -90,13 +92,13 @@ public struct UserDefaultsManager {
                   let encoded = try? encoder.encode(newValue)
             else { return }
             
-            UserDefaults.standard.setValue(encoded, forKey: Key.tagList)
+            userDefaults?.setValue(encoded, forKey: Key.tagList)
         }
     }
     
     public var linkList: [Link] {
         get {
-            guard let linkListData = UserDefaults.standard.value(forKey: Key.linkList) as? Data,
+            guard let linkListData = userDefaults?.value(forKey: Key.linkList) as? Data,
                   case let decoder = JSONDecoder(),
                   let linkList = try? decoder.decode([Link].self, from: linkListData)
             else { return  [] }
@@ -109,7 +111,54 @@ public struct UserDefaultsManager {
                   let encoded = try? encoder.encode(newValue)
             else { return }
             
-            UserDefaults.standard.setValue(encoded, forKey: Key.linkList)
+            userDefaults?.setValue(encoded, forKey: Key.linkList)
+        }
+    }
+    
+    public var isAllowedNotification: Bool {
+        get {
+            guard let isAllowedNotification = UserDefaults
+                .standard
+                .value(forKey: Key.isAllowedNotification) as? Bool
+            else { return false }
+            
+            return isAllowedNotification
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Key.isAllowedNotification)
+        }
+    }
+    
+    public var useNotification: Bool {
+        get {
+            guard let useNotification = UserDefaults
+                .standard
+                .value(forKey: Key.useNotification) as? Bool
+            else { return false }
+            
+            return useNotification
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: Key.useNotification)
+        }
+    }
+    
+    public var notiSetting: NotificationSetting {
+        get {
+            guard let notiSetting = UserDefaults.standard.value(forKey: Key.notiSetting) as? Data,
+                  case let decoder = JSONDecoder(),
+                  let noti = try? decoder.decode(NotificationSetting.self, from: notiSetting)
+            else { return  getDefaultNotificationSetting() }
+            
+            return noti
+        }
+        
+        set {
+            guard case let encoder = JSONEncoder(),
+                  let encoded = try? encoder.encode(newValue)
+            else { return }
+            
+            UserDefaults.standard.setValue(encoded, forKey: Key.notiSetting)
         }
     }
 }
