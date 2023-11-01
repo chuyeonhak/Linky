@@ -10,4 +10,6 @@ import ProjectDescriptionHelpers
 
 let project = Project.makeFrameworkProject(
     name: Module.core.name,
-    dependencies: [])
+    dependencies: [TargetDependency.SPM.rxSwift,
+                   TargetDependency.SPM.rxCocoa,
+                   TargetDependency.SPM.snapkit])
