@@ -5,4 +5,10 @@
 //  Created by chuchu on 2023/08/01.
 //
 
-import Foundation
+import UIKit
+
+open class PortraitViewController: UIViewController {
+    open override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
+}
