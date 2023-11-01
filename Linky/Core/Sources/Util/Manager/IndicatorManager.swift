@@ -13,26 +13,34 @@ public final class IndicatorManager {
     public static let shared = IndicatorManager()
     private var indicatorView: UIActivityIndicatorView?
     
-    private func setIndicatorView() {
+    private func setIndicatorView(superView: UIView? = nil) {
         let indicatorView = UIActivityIndicatorView()
+        let targetView = superView == nil ?
+        UIApplication.shared.window?.rootViewController?.view:
+        superView
         
         indicatorView.style = .large
         
         self.indicatorView = indicatorView
-        UIApplication.shared.window?.rootViewController?.view.addSubview(indicatorView)
+        
+        targetView?.addSubview(indicatorView)
         
         indicatorView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
     }
     
-    public func startAnimation() {
-        setIndicatorView()
-        indicatorView?.startAnimating()
+    public func startAnimation(superView: UIView? = nil) {
+        DispatchQueue.main.async {
+            self.setIndicatorView(superView: superView)
+            self.indicatorView?.startAnimating()
+        }
     }
     
     public func stopAnimation() {
-        indicatorView?.stopAnimating()
-        indicatorView?.removeFromSuperview()
+        DispatchQueue.main.async {
+            self.indicatorView?.stopAnimating()
+            self.indicatorView?.removeFromSuperview()
+        }
     }
 }
