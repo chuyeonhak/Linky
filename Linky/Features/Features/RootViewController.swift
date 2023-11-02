@@ -65,6 +65,7 @@ public final class RootViewController: UITabBarController {
             subview.addGestureRecognizer(tapGesture)
             
             tapGesture.rx.event
+                .do { [weak self] _ in self?.updateOrientations(selectedIndex: index) }
                 .withUnretainedOnly(self)
                 .map { $0.customTabBar.selectTab(index: index) }
                 .bind(to: rx.selectedIndex)
@@ -101,6 +102,15 @@ public final class RootViewController: UITabBarController {
         case 0: return firstVc
         case 1: return secondVc
         default: return thirdVc
+        }
+    }
+    
+    private func updateOrientations(selectedIndex: Int) {
+        if #available(iOS 16.0, *) {
+            setNeedsUpdateOfSupportedInterfaceOrientations()
+        } else if selectedIndex == 2 {
+            let orientation = UIInterfaceOrientation.portrait.rawValue
+            UIDevice.current.setValue(orientation, forKey: "orientation")
         }
     }
 }
