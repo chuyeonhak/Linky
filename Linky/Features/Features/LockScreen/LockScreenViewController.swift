@@ -13,12 +13,12 @@ import SnapKit
 import Then
 import RxSwift
 
-public final class LockScreenViewController: UIViewController {
+public final class LockScreenViewController: PortraitViewController {
     var lockScreenView: LockScreenView!
     
     let type: LockType!
     let viewModel = LockScreenViewModel()
-    let auth = BiometricsAuthManager()
+    public let auth = BiometricsAuthManager()
     let disposeBag = DisposeBag()
     
     var unlockAction: ((Bool) -> ())? = nil
@@ -86,9 +86,6 @@ extension LockScreenViewController: AuthenticateStateDelegate {
             dismiss(animated: true)
         case .fail(let error):
             print(error)
-            print("wow")
         }
     }
-    
-    
 }

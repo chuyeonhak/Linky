@@ -29,9 +29,12 @@ final class LockScreenView: UIView {
     }
     
     let subtitleLabel = UILabel().then {
-        
         $0.textColor = .code4
         $0.font = FontManager.shared.pretendard(weight: .medium, size: 13)
+    }
+    
+    let warningImageView = UIImageView(image: UIImage(named: "icoWarning")).then {
+        $0.isHidden = true
     }
     
     let passwordStackView = UIStackView().then {
@@ -67,6 +70,7 @@ final class LockScreenView: UIView {
         
         [titleLabel,
          subtitleLabel,
+         warningImageView,
          passwordStackView,
          padWrapperStackView].forEach(addSubview)
         
@@ -85,6 +89,12 @@ final class LockScreenView: UIView {
             $0.centerX.equalToSuperview()
         }
         
+        warningImageView.snp.makeConstraints {
+            $0.trailing.equalTo(subtitleLabel.snp.leading)
+            $0.centerY.equalTo(subtitleLabel)
+            $0.size.equalTo(24)
+        }
+        
         passwordStackView.snp.makeConstraints {
             $0.top.equalTo(subtitleLabel.snp.bottom).offset(35)
             $0.centerX.equalToSuperview()
@@ -93,7 +103,8 @@ final class LockScreenView: UIView {
         }
         
         padWrapperStackView.snp.makeConstraints {
-            let height = UIScreen.main.bounds.height * 0.4
+            let mainBounds = UIScreen.main.bounds
+            let height = max(mainBounds.width, mainBounds.height) * 0.4
             
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(safeAreaLayoutGuide)
@@ -200,12 +211,14 @@ final class LockScreenView: UIView {
     }
     
     private func setErrorTitle() {
+        warningImageView.isHidden = false
         subtitleLabel.text = LockType.normal.invalidText
         subtitleLabel.textColor = .error
     }
     
     private func shakeAnimation() {
         [titleLabel,
+         warningImageView,
          subtitleLabel,
          passwordStackView].forEach { $0.shakeAnimation() }
         
