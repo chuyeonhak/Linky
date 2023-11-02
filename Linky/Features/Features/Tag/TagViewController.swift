@@ -13,12 +13,16 @@ import SnapKit
 import Then
 import RxSwift
 
-class TagViewController: UIViewController {
+final class TagViewController: UIViewController {
     var tagView: TagView!
+    var currentTagDic: [TagData: [Link]] = [:]
+    
+    let viewModel = TagViewModel()
     let disposeBag = DisposeBag()
+    var baseTagList: [TagData] = []
 
     override func loadView() {
-        let tagView = TagView()
+        let tagView = TagView(viewModel: viewModel)
         
         self.tagView = tagView
         self.view = tagView
@@ -28,6 +32,7 @@ class TagViewController: UIViewController {
         super.viewDidLoad()
         
         configureNavigationButton()
+        bind()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -35,7 +40,9 @@ class TagViewController: UIViewController {
         
         navigationController?.navigationBar.barTintColor = .code7
         navigationController?.navigationBar.backgroundColor = .code7
+        navigationItem.searchController?.isActive = false
         UIApplication.shared.windows.first?.viewWithTag(Tag.statusBar)?.backgroundColor = .code7
+        checkLinkList()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -43,20 +50,93 @@ class TagViewController: UIViewController {
         
         tabBar?.tabBarAnimation(shouldShow: true)
     }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        tagView.tagCollectionView.collectionViewLayout.invalidateLayout()
+    }
+    
+    private func checkLinkList() {
+        let tagSet = getTagSet()
+        
+        tagView.baseDataSource = tagSet
+        tagView.tagCollectionView.isHidden = tagSet.isEmpty
+        tagView.tagCollectionView.reloadData()
+        tagView.tagCollectionView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+    }
+    
+    func getTagSet() -> [TagData] {
+        let tagDic = UserDefaultsManager.shared.getTagDic()
+        
+        let sortedTag = tagDic.sorted { first, second in
+            let (tag1, link1) = first
+            let (tag2, link2) = second
+            
+            return link1.count != link2.count ? link1.count > link2.count: tag1.title < tag2.title
+        }
+            .map(\.key)
+        
+        currentTagDic = tagDic
+        baseTagList = sortedTag
+        
+        return sortedTag
+    }
+    
+    private func setSearchController() {
+        let searchController = UISearchController(searchResultsController: nil)
+        
+        searchController.searchBar.delegate = self
+        searchController.searchBar.backgroundColor = .code7
+        searchController.searchBar.setValue("취소", forKey: "cancelButtonText")
+        searchController.searchBar.placeholder = "검색어를 입력해 주세요."
+        searchController.obscuresBackgroundDuringPresentation = false 
+        
+        self.navigationItem.searchController = searchController
+    }
 }
 
 private extension TagViewController {
     func configureNavigationButton() {
+        setSearchController()
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.barTintColor = .code7
         navigationController?.navigationBar.backgroundColor = .code7
         navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.view.backgroundColor = .code7
         
-        let leftItem = makeLeftItem()
-        let rightItem = makeRightItem()
+        navigationItem.leftBarButtonItem = makeLeftItem()
+    }
+    
+    private func bind() {
+        viewModel.output?.tagData
+            .drive { [weak self] in self?.openLinkList(tagData: $0) }
+            .disposed(by: disposeBag)
         
-        navigationItem.leftBarButtonItem = leftItem
-        navigationItem.rightBarButtonItem = rightItem
+    }
+    
+    private func openLinkList(tagData: TagData?) {
+        guard let tagData,
+              case let linkList = currentTagDic[tagData] ?? [] else { return }
+        
+        let vc = TagLinkListViewController(tagData: tagData, linkList: linkList)
+        let backButtonItem = makeBackButton(title: tagData.title)
+        
+        navigationItem.backBarButtonItem = backButtonItem
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    private func makeBackButton(title: String) -> UIBarButtonItem {
+        let backButtonItem = UIBarButtonItem(
+            title: title,
+            style: .plain,
+            target: nil,
+            action: nil)
+        
+        backButtonItem.setTitleTextAttributes(
+            [.font: FontManager.shared.pretendard(weight: .semiBold, size: 18)],
+            for: .normal)
+        
+        return backButtonItem
     }
     
     private func makeLeftItem() -> UIBarButtonItem {
@@ -73,19 +153,5 @@ private extension TagViewController {
             .disposed(by: disposeBag)
         
         return UIBarButtonItem(customView: leftButton)
-    }
-    
-    private func makeRightItem() -> UIBarButtonItem {
-        let rightButton = UIButton()
-        
-        rightButton.setImage(UIImage(named: "icoSearch"), for: .normal)
-        rightButton.setTitleColor(.code4, for: .normal)
-        rightButton.titleLabel?.font = FontManager.shared.pretendard(weight: .semiBold, size: 14)
-        
-        rightButton.rx.tap
-            .bind { print("rightButtonTapped") }
-            .disposed(by: disposeBag)
-        
-        return UIBarButtonItem(customView: rightButton)
     }
 }
