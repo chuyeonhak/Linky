@@ -14,12 +14,16 @@ import RxCocoa
 final class TagLinkListViewModel {
     struct Input {
         let editLink = PublishSubject<Link>()
+        let webViewLink = PublishSubject<Link>()
+        let toastMessage = PublishSubject<String?>()
     }
     
     struct Model { }
     
     struct Output {
         let openEditLink: Driver<Link>
+        let openWebView: Driver<Link>
+        let toastMessage: Driver<String?>
     }
     
     let disposeBag = DisposeBag()
@@ -30,7 +34,9 @@ final class TagLinkListViewModel {
     
     init() {
         self.output = Output(
-            openEditLink: input.editLink.asDriverOnErrorEmpty()
+            openEditLink: input.editLink.asDriverOnErrorEmpty(),
+            openWebView: input.webViewLink.asDriverOnErrorEmpty(),
+            toastMessage: input.toastMessage.asDriverOnErrorEmpty()
         )
     }
 }

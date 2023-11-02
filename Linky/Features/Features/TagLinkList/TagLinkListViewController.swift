@@ -57,18 +57,18 @@ final class TagLinkListViewController: UIViewController {
         navigationController?.navigationBar.backItem?.title = ""
         
         UIApplication.shared.windows.first?.viewWithTag(Tag.statusBar)?.backgroundColor = .code7
+        
+        checkLinkList()
     }
 }
 
 private extension TagLinkListViewController {
     func configureNavigationButton() {
         let rightItem = makeRightItem()
-        let backButton = makeBackButton()
         let tabBar = tabBarController as? RootViewController
         
         tabBar?.tabBarAnimation(shouldShow: false)
         navigationItem.rightBarButtonItem = rightItem
-        navigationItem.backBarButtonItem = backButton
     }
     
     private func makeRightItem() -> UIBarButtonItem {
@@ -99,9 +99,9 @@ private extension TagLinkListViewController {
         return UIBarButtonItem(image: UIImage(named: "icoLinkAll"), menu: menu)
     }
     
-    private func makeBackButton() -> UIBarButtonItem {
+    private func makeBackButton(title: String) -> UIBarButtonItem {
         let backButtonItem = UIBarButtonItem(
-            title: "링크 수정",
+            title: title,
             style: .plain,
             target: nil,
             action: nil)
@@ -162,12 +162,55 @@ private extension TagLinkListViewController {
         viewModel.output?.openEditLink
             .drive { [weak self] in self?.openLinkDetailView(link: $0) }
             .disposed(by: disposeBag)
+        
+        viewModel.output?.openWebView
+            .drive { [weak self] in self?.openWebView(link: $0) }
+            .disposed(by: disposeBag)
+        
+        viewModel.output?.toastMessage
+            .drive { UIApplication.shared.makeToast($0) }
+            .disposed(by: disposeBag)
     }
     
     private func openLinkDetailView(link: Link) {
         guard let metaData = link.content else { return }
         let vc = AddLinkDetailViewContrller(metaData: metaData, link: link)
         
+        navigationItem.backBarButtonItem = makeBackButton(title: "링크 수정")
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    private func openWebView(link: Link) {
+        guard let urlString = link.content?.url,
+              let url = URL(string: urlString) else { return }
+        
+        let webViewController = MainWebViewController(linkUrl: url)
+        
+        upWrittenCount(link: link)
+        navigationItem.backBarButtonItem = makeBackButton(title: "돌아가기")
+        navigationController?.pushViewController(webViewController, animated: true)
+    }
+    
+    private func upWrittenCount(link: Link) {
+        
+        guard case var copyLinkList = UserDefaultsManager.shared.linkList,
+              let firstIndex = copyLinkList.firstIndex(of: link),
+              copyLinkList.indices ~= firstIndex,
+              var copyLink = copyLinkList[safe: firstIndex]
+        else { return }
+        
+        copyLink.isWrittenCount += 1
+        
+        copyLinkList[firstIndex] = copyLink
+        
+        UserDefaultsManager.shared.linkList = copyLinkList
+    }
+    
+    private func checkLinkList() {
+        let tagDic = UserDefaultsManager.shared.getTagDic()
+        let linkList = tagDic[tagData]
+        
+        tagLinkListView.linkList = linkList
+        tagLinkListView.linkCollectionView.reloadData()
     }
 }
