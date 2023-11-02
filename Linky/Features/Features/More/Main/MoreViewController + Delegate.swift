@@ -32,7 +32,7 @@ extension MoreViewController: SettingViewDelegate {
         case .lock: return LockViewController()
         case .tagManagement: return TagManageViewController()
         case .linkManagement: return LinkManageViewController()
-        case .synchronizationGuide: return UIViewController()
+        case .synchronizationGuide: return SynchronizationGuideViewController()
         }
     }
     

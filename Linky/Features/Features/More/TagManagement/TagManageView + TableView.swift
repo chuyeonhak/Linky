@@ -45,6 +45,7 @@ extension TagManageView: UITableViewDataSource {
     -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive,
                                               title: "삭제") { [weak self] action, view, success in
+            success(true)
             self?.viewModel.input.tagHandle.onNext((.delete, indexPath.row))
         }.then {
             $0.backgroundColor = .error

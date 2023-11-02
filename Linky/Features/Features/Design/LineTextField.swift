@@ -11,12 +11,12 @@ import SnapKit
 import Then
 import RxSwift
 
-final class LineTextField: UITextField {
+public final class LineTextField: UITextField {
     private let lineView = UIView().then {
         $0.backgroundColor = .code1
     }
     
-    override init(frame: CGRect) {
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
     }
@@ -35,6 +35,7 @@ final class LineTextField: UITextField {
     private func setTextField() {
         textColor = .code2
         tintColor = .code4
+        
         
         if let clearButton = value(forKeyPath: "_clearButton") as? UIButton {
             clearButton.setImage(UIImage(named: "icoClose"), for: .normal)

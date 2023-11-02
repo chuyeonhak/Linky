@@ -45,6 +45,7 @@ final class TagControlViewController: UIViewController {
         super.viewDidLoad()
         
         configureNavigationButton()
+        tagControllView.lineTextField.becomeFirstResponder()
         
         tagControllView.canComplete
             .distinctUntilChanged()
@@ -96,7 +97,7 @@ final class TagControlViewController: UIViewController {
             return
         }
         
-        let tag = TagData(title: tagText, creationDate: Date())
+        let tag = TagData(title: tagText, createdAt: Date())
         var copyArr = UserDefaultsManager.shared.tagList
         
         copyArr.append(tag)
@@ -121,6 +122,7 @@ final class TagControlViewController: UIViewController {
         tagData.title = tagText
         
         UserDefaultsManager.shared.tagList[firstIndex] = tagData
+        UserDefaultsManager.shared.editTagInLink(tag: tagData)
         navigationController?.popViewController(animated: true)
     }
     
