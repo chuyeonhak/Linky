@@ -7,11 +7,11 @@
 
 import UIKit
 
-class TagLeftAlignFlowLayout: UICollectionViewFlowLayout {
+final class TagLeftAlignFlowLayout: UICollectionViewFlowLayout {
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        self.minimumLineSpacing = 8.0
-        self.minimumInteritemSpacing = 4.0
-        self.sectionInset = UIEdgeInsets(top: 0.0, left: 42.0, bottom: 0.0, right: 42.0)
+        minimumLineSpacing = 8.0
+        minimumInteritemSpacing = 4.0
+        sectionInset = UIEdgeInsets(top: 0.0, left: 42.0, bottom: 0.0, right: 42.0)
 
         let attributes = super.layoutAttributesForElements(in: rect)
  
@@ -29,11 +29,12 @@ class TagLeftAlignFlowLayout: UICollectionViewFlowLayout {
     }
 }
 
-class DayLeftAlignFlowLayout: UICollectionViewFlowLayout {
+final class DayLeftAlignFlowLayout: UICollectionViewFlowLayout {
     override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        self.minimumLineSpacing = 6.0
-        self.minimumInteritemSpacing = 6.0
-        self.sectionInset = UIEdgeInsets(top: 15, left: 16, bottom: 22, right: 16)
+        itemSize = CGSize(width: 65, height: 33)
+        minimumLineSpacing = 8.0
+        minimumInteritemSpacing = 6.0
+        sectionInset = UIEdgeInsets(top: 15, left: 16, bottom: 32, right: 16)
 
         let attributes = super.layoutAttributesForElements(in: rect)
  
@@ -44,7 +45,7 @@ class DayLeftAlignFlowLayout: UICollectionViewFlowLayout {
                 leftMargin = sectionInset.left
             }
             layoutAttribute.frame.origin.x = leftMargin
-            leftMargin += layoutAttribute.frame.width + 4.0
+            leftMargin += layoutAttribute.frame.width + 6.0
             maxY = max(layoutAttribute.frame.maxY, maxY)
         }
         return attributes

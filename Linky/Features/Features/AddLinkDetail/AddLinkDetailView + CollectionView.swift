@@ -9,7 +9,7 @@ import UIKit
 import Core
 
 extension AddLinkDetailView: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView,
+    public func collectionView(_ collectionView: UICollectionView,
                         didSelectItemAt indexPath: IndexPath) {
         guard selectedItems.indices ~= indexPath.row else { return }
         
@@ -21,12 +21,12 @@ extension AddLinkDetailView: UICollectionViewDelegate {
 }
 
 extension AddLinkDetailView: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView,
+    public func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
         UserDefaultsManager.shared.tagList.count
     }
     
-    func collectionView(_ collectionView: UICollectionView,
+    public func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: TagCell.identifier,
@@ -57,7 +57,7 @@ extension AddLinkDetailView: UICollectionViewDataSource {
 }
 
 extension AddLinkDetailView: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView,
+    public func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         let tagList = UserDefaultsManager.shared.tagList
