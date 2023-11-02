@@ -38,7 +38,61 @@ extension LinkManageView: UICollectionViewDataSource {
         else { return UICollectionViewCell() }
 
         cell.configure(link: link, isSelected: isSelected)
+        cell.bottomLineView.isHidden = indexPath.row == linkList.count - 1
 
         return cell
+    }
+}
+
+extension LinkManageView: UICollectionViewDelegateFlowLayout {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
+        let width = getItemWidth()
+        
+        return CGSize(width: width, height: 88)
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        minimumLineSpacingForSectionAt section: Int
+    ) -> CGFloat {
+        0
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        minimumInteritemSpacingForSectionAt section: Int
+    ) -> CGFloat {
+        0
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        insetForSectionAt section: Int
+    ) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 0, bottom: 40, right: 0)
+    }
+    
+    private func getItemWidth() -> CGFloat {
+        var itemCount: CGFloat = 1.0
+        
+        let isLandscape = UIApplication.shared.isLandscape
+        let isIpad = UIDevice.current.isIpad
+        let spacing = (UIApplication.shared.window?.safeAreaInsets.left ?? 0) * 2
+        let collectionViewWidth: CGFloat = UIScreen.main.bounds.size.width - spacing
+        
+        if isLandscape { itemCount *= 2 }
+        if isIpad { itemCount *= 2 }
+        
+        let availableWidth = collectionViewWidth - (itemCount - 1)
+        let itemWidth = availableWidth / itemCount
+        
+        return itemWidth
     }
 }

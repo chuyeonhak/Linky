@@ -32,12 +32,17 @@ final class LinkManageViewController: UIViewController {
         configureNavigationButton()
     }
     
-    public override func viewWillAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         navigationController?.navigationBar.barTintColor = .code8
         navigationController?.navigationBar.backgroundColor = .code8
         UIApplication.shared.windows.first?.viewWithTag(Tag.statusBar)?.backgroundColor = .code8
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        linkManageView.linkCollectionView.collectionViewLayout.invalidateLayout()
     }
     
     private func bind() {
