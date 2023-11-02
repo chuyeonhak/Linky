@@ -18,9 +18,11 @@ final class AddLinkDetailViewContrller: UIViewController {
     let viewModel = AddLinkDetailViewModel()
     let disposeBag = DisposeBag()
     let metaData: MetaData!
+    var link: Link?
     
-    init(metaData: MetaData) {
+    init(metaData: MetaData, link: Link? = nil) {
         self.metaData = metaData
+        self.link = link
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -30,7 +32,9 @@ final class AddLinkDetailViewContrller: UIViewController {
     }
     
     override func loadView() {
-        let addLinkDetailView = AddLinkDetailView(viewModel: viewModel, metaData: metaData)
+        let addLinkDetailView = AddLinkDetailView(viewModel: viewModel,
+                                                  metaData: metaData,
+                                                  link: link)
         
         self.addLinkDetailView = addLinkDetailView
         self.view = addLinkDetailView
@@ -43,11 +47,19 @@ final class AddLinkDetailViewContrller: UIViewController {
         bind()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let tabBar = tabBarController as? RootViewController
+        
+        tabBar?.tabBarAnimation(shouldShow: false)
+        addLinkDetailView.linkLineTextField.becomeFirstResponder()
+    }
+    
     private func navigationSetting() {
         let rightItem = makeRightItem()
         
         navigationItem.rightBarButtonItem = rightItem
-        navigationController?.navigationBar.topItem?.title = "링크 추가"
     }
     
     private func bind() {
@@ -72,10 +84,44 @@ final class AddLinkDetailViewContrller: UIViewController {
     }
     
     private func openAddLinkComplete() {
-        saveLink()
-        let addLinkCompleteVc = AddLinkCompleteViewContrller()
+        if let link {
+            editLink(link: link)
+            
+            UIApplication.shared.makeToast("링크 수정 완료!")
+            navigationController?.popViewController(animated: true)
+        } else {
+            hasTagText()
+            saveLink()
+            UIApplication.shared.makeToast("링크 추가 완료!")
+            navigationController?.popToRootViewController(animated: true)
+        }
         
-        navigationController?.pushViewController(addLinkCompleteVc, animated: true)
+        
+    }
+    
+    private func hasTagText() {
+        guard addLinkDetailView.tagLineTextField.text?.isEmpty == false else { return }
+        
+        addLinkDetailView.addTagList()
+    }
+    
+    private func editLink(link: Link) {
+        guard case var copyLink = link,
+              case var linkList = UserDefaultsManager.shared.linkList,
+              let index = UserDefaultsManager.shared.linkList.firstIndex(of: link),
+              linkList.indices ~= index
+        else { return }
+        
+        let tagList = zip(addLinkDetailView.selectedItems, UserDefaultsManager.shared.tagList)
+            .filter(\.0)
+            .map(\.1)
+        
+        copyLink.linkMemo = addLinkDetailView.linkLineTextField.text ?? ""
+        copyLink.tagList = tagList
+        
+        linkList[index] = copyLink
+        
+        UserDefaultsManager.shared.linkList = linkList
     }
     
     private func saveLink() {
@@ -92,18 +138,19 @@ final class AddLinkDetailViewContrller: UIViewController {
         linkList.append(link)
         
         UserDefaultsManager.shared.linkList = linkList
-        
     }
     
     private func openDeleteAlert(indexPath: IndexPath) {
         let tag = UserDefaultsManager.shared.tagList[safe: indexPath.row]
-        let message = "'\(tag?.title ?? "")' 태그를 삭제할까요?"
+        let title = "\"\(tag?.title ?? "")\" 태그를 삭제할까요?"
+        let message = "연결된 모든 링크에서 태그가 삭제됩니다."
         presentAlertController(
-            title: "",
+            title: title,
             message: message,
             options: (title: "취소", style: .default), (title: "삭제", style: .destructive)) {
                 if $0 == "삭제" {
                     self.deleteTag(indexPath: indexPath)
+                    UserDefaultsManager.shared.deleteTagInLink(tag: tag)
                 }
             }
     }
@@ -116,7 +163,7 @@ final class AddLinkDetailViewContrller: UIViewController {
         UserDefaultsManager.shared.tagList = tagList
         
         addLinkDetailView.tagCollectionView.deleteItems(at: [indexPath])
-        addLinkDetailView.configData(shouldScrollToBottom: false)
+        addLinkDetailView.setCollectionViewHeight(isDeleted: true)
     }
     
     deinit {

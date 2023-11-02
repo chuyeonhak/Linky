@@ -13,24 +13,24 @@ import RxSwift
 import RxRelay
 import RxCocoa
 
-final class AddLinkDetailViewModel {
-    struct Input {
-        let deleteIndexPath = PublishSubject<IndexPath>()
+public final class AddLinkDetailViewModel {
+    public struct Input {
+        public let deleteIndexPath = PublishSubject<IndexPath>()
     }
     
     struct Model { }
     
-    struct Output {
-        let deleteIndexPath: Driver<IndexPath>
+    public struct Output {
+        public let deleteIndexPath: Driver<IndexPath>
     }
     
     let disposeBag = DisposeBag()
     
     let model = Model()
     let input = Input()
-    var output: Output?
+    public var output: Output?
     
-    init() {
+    public init() {
         self.output = Output(
             deleteIndexPath: input.deleteIndexPath.asDriverOnErrorEmpty()
         )

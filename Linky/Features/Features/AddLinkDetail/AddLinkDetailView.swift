@@ -13,12 +13,13 @@ import SnapKit
 import Then
 import RxSwift
 
-final class AddLinkDetailView: UIView {
+public final class AddLinkDetailView: UIView {
     let viewModel: AddLinkDetailViewModel!
     let disposeBag = DisposeBag()
     let metaData: MetaData!
-    var selectedItems = Array(repeating: false, count: UserDefaultsManager.shared.tagList.count)
+    public var selectedItems = Array(repeating: false, count: UserDefaultsManager.shared.tagList.count)
     var searchIndexPath: IndexPath?
+    var link: Link?
     
     let memoLinkLabel = UILabel().then {
         $0.text = Const.Text.linkTitle
@@ -26,9 +27,9 @@ final class AddLinkDetailView: UIView {
         $0.font = FontManager.shared.pretendard(weight: .medium, size: 12)
     }
     
-    let linkLineTextField = LineTextField().then {
+    public let linkLineTextField = LineTextField().then {
         $0.changePlaceholderTextColor(
-            placeholderText: Const.Text.linkPlaceholder, textColor: .code4)
+            placeholderText: Const.Text.linkPlaceholder, textColor: .code5)
     }
     
     let addTagLabel = UILabel().then {
@@ -37,15 +38,15 @@ final class AddLinkDetailView: UIView {
         $0.font = FontManager.shared.pretendard(weight: .medium, size: 12)
     }
     
-    let tagLineTextField = LineTextField().then {
+    public let tagLineTextField = LineTextField().then {
         $0.changePlaceholderTextColor(
-            placeholderText: Const.Text.tagPlaceholder, textColor: .code4)
+            placeholderText: Const.Text.tagPlaceholder, textColor: .code5)
         $0.returnKeyType = .done
     }
     
-    lazy var tagCollectionView = UICollectionView(
+    public lazy var tagCollectionView = UICollectionView(
         frame: .zero,
-        collectionViewLayout: CollectionViewLeftAlignFlowLayout()).then {
+        collectionViewLayout: TagLeftAlignFlowLayout()).then {
             $0.delegate = self
             $0.dataSource = self
             $0.backgroundColor = .clear
@@ -79,9 +80,12 @@ final class AddLinkDetailView: UIView {
         $0.font = FontManager.shared.pretendard(weight: .regular, size: 13)
     }
     
-    init(viewModel: AddLinkDetailViewModel, metaData: MetaData) {
+    public init(viewModel: AddLinkDetailViewModel,
+         metaData: MetaData,
+         link: Link?) {
         self.viewModel = viewModel
         self.metaData = metaData
+        self.link = link
         super.init(frame: .zero)
         commonInit()
     }
@@ -94,6 +98,7 @@ final class AddLinkDetailView: UIView {
         addComponent()
         setConstraints()
         bind()
+        linkCheck()
     }
     
     private func addComponent() {
@@ -172,8 +177,6 @@ final class AddLinkDetailView: UIView {
     }
     
     private func bind() {
-        linkLineTextField.becomeFirstResponder()
-        
         linkLineTextField.rx.controlEvent(.editingDidEndOnExit)
             .withUnretainedOnly(self)
             .bind { $0.tagLineTextField.becomeFirstResponder() }
@@ -196,6 +199,22 @@ final class AddLinkDetailView: UIView {
             .disposed(by: disposeBag)
     }
     
+    private func linkCheck() {
+        guard let link,
+              case let tagList = UserDefaultsManager.shared.tagList else { return }
+        
+        linkLineTextField.text = link.linkMemo
+        for tag in link.tagList {
+            if tagList.contains(tag),
+               let firstIndex = tagList.firstIndex(of: tag),
+               selectedItems.indices ~= firstIndex {
+                selectedItems[firstIndex] = true
+            }
+        }
+        
+        tagCollectionView.reloadData()
+    }
+    
     private func getCollectionViewHeight() -> Int {
         let itemLine = getCollectionViewLine()
         let limit = 5
@@ -207,7 +226,7 @@ final class AddLinkDetailView: UIView {
     }
     
     private func getCollectionViewLine() -> Int {
-        let deviceWidth = UIApplication.shared.window?.bounds.width ?? .zero
+        let deviceWidth = UIScreen.main.bounds.width
         let tagList = UserDefaultsManager.shared.tagList
         let inset: CGFloat = 42.0
         let collectionViewWidth = deviceWidth - (inset * 2)
@@ -232,22 +251,22 @@ final class AddLinkDetailView: UIView {
         return count
     }
     
-    private func addTagList() {
+    public func addTagList() {
         guard let tagText = tagLineTextField.text,
               !tagText.isEmpty && tagText.count > 1,
               !isDuplicated(tagText: tagText)
         else { return }
         
         var copyArr = UserDefaultsManager.shared.tagList
-        let tag = TagData(title: tagText, creationDate: Date())
+        let tag = TagData(title: tagText, createdAt: Date())
         
         copyArr.append(tag)
-        selectedItems.append(false)
+        selectedItems.append(true)
         UserDefaultsManager.shared.tagList = copyArr
         
         tagLineTextField.text = ""
         
-        configData()
+        setCollectionViewHeight()
     }
     
     private func isDuplicated(tagText: String) -> Bool {
@@ -255,6 +274,10 @@ final class AddLinkDetailView: UIView {
            let firstIndex = tagList.firstIndex(where: { $0.title == tagText }),
            case let indexPath = IndexPath(item: firstIndex, section: 0) {
             
+            selectedItems[firstIndex] = true
+            UIView.performWithoutAnimation {
+                tagCollectionView.reloadItems(at: [indexPath])
+            }
             tagCellAnimation(indexPath: indexPath)
             
             return true
@@ -285,20 +308,25 @@ final class AddLinkDetailView: UIView {
         self.searchIndexPath = nil
     }
     
-    func configData(shouldScrollToBottom: Bool = true) {
+    public func setCollectionViewHeight(isDeleted: Bool = false) {
+        let height = getCollectionViewHeight(),
+            shouldScrollToBottom = height == 5 * 37 && !isDeleted
         tagCollectionView.reloadData()
         
         tagCollectionView.snp.updateConstraints {
-            let height = getCollectionViewHeight()
-            
             $0.height.equalTo(height)
         }
         
-        if shouldScrollToBottom { tagCollectionView.scrollsToBottom() }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            if shouldScrollToBottom { self.tagCollectionView.scrollsToBottom() }
+        }
     }
-}
-
-struct TestTag {
-    let title: String
-    var isSelected: Bool = false
+    
+    public func configMetaData(metaData: MetaData) {
+        DispatchQueue.main.async {
+            self.linkLabel.text = metaData.url
+            self.linkTitle.text = metaData.title
+            self.linkSubtitle.text = metaData.subtitle
+        }
+    }
 }
