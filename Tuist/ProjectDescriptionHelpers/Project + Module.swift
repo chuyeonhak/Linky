@@ -16,7 +16,7 @@ public enum Module {
 extension Module {
     public var name: String {
         switch self {
-        case .app: return "App"
+        case .app: return "Linky"
         case .core: return "Core"
         case .features: return "Features"
         }

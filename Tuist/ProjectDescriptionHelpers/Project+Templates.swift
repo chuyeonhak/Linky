@@ -19,10 +19,7 @@ public extension Project {
         infoPlist: InfoPlist = .default
     ) -> Project {
         let settings: Settings = .settings(
-            base: .init().automaticCodeSigning(devTeam: "GP9D94CZ57")
-                .merging(
-                    ["OTHER_LDFLAGS" : "-ObjC",
-                     "DEBUG_INFORMATION_FORMAT": "dwarf-with-dsym"]),
+            base: Project.Setting.baseSetting,
             configurations: [
                 .debug(name: .debug),
                 .release(name: .release)
@@ -37,8 +34,10 @@ public extension Project {
             infoPlist: infoPlist,
             sources: sources,
             resources: resources,
+            entitlements: "ShareExtension/LinkyDebug.entitlements",
             scripts: [.firebaseCrashString],
-            dependencies: dependencies
+            dependencies: dependencies + [Project.Setting.shareExtension],
+            settings: settings
         )
         
         let testTarget = Target(
@@ -52,9 +51,22 @@ public extension Project {
             dependencies: [.target(name: name)]
         )
         
+        let shareExtensionTarget = Target(
+            name: "ShareExtension",
+            platform: .iOS,
+            product: .appExtension,
+            bundleId: "\(organizationName).\(name).ShareExtension",
+            deploymentTarget: deploymentTarget,
+            infoPlist: .file(path: "ShareExtension/Info.plist"),
+            sources: ["ShareExtension/**"],
+            resources: resources,
+            entitlements: "ShareExtension/ShareExtensionDebug.entitlements",
+            dependencies: dependencies
+        )
+        
         let schemes: [Scheme] = [.makeScheme(target: .debug, name: name)]
         
-        let targets: [Target] = [appTarget, testTarget]
+        let targets: [Target] = [appTarget, testTarget, shareExtensionTarget]
         
         return Project(
             name: name,

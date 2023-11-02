@@ -47,8 +47,12 @@ public extension Features {
             infoPlist: Project.Linky.infoPlist,
             sources: ["\(name)/**"],
             dependencies: [Module.core.project,
+                           TargetDependency.SPM.rxSwift,
+                           TargetDependency.SPM.rxCocoa,
                            TargetDependency.SPM.snapkit,
-                           TargetDependency.SPM.then]
+                           TargetDependency.SPM.then,
+                           TargetDependency.SPM.toast,
+                           TargetDependency.SPM.alamofire]
         )
     }
     

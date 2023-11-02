@@ -9,24 +9,23 @@ import ProjectDescription
 
 extension Project {
     public enum Linky {
-        public static let build: SettingValue = "1"
-        public static let version: SettingValue = "1.0.1"
+        public static let build: String = "7"
+        public static let version: String = "1.0.0"
         public static let platform: Platform = .iOS
         public static let deploymentTarget: DeploymentTarget = .iOS(targetVersion: "14.0", devices: [.iphone, .ipad])
-        public static let team = "GP9D94CZ57"
+        public static let team = "6QDV2VZHAS"
         public static let name = "Linky"
         public static let bundleId = "com.chuchu"
         public static let infoPlist: ProjectDescription.InfoPlist = .file(path: "Support/Info.plist")
     }
     
     public enum Setting {
-        static let notificationService: TargetDependency = .target(name: "NotificationServiceExtension")
-        static let widget: TargetDependency = .target(name: "WidgetExtension")
+        public static let shareExtension: TargetDependency = .target(name: "ShareExtension")
         static let baseSetting = SettingsDictionary()
             .automaticCodeSigning(devTeam: Linky.team)
             .merging(
-                ["MARKETING_VERSION": Linky.version,
-                 "CURRENT_PROJECT_VERSION": Linky.build,
+                ["MARKETING_VERSION": .string(Linky.version) ,
+                 "CURRENT_PROJECT_VERSION": .string(Linky.build),
                  "IPHONEOS_DEPLOYMENT_TARGET": "14.0",
                  "SWIFT_OBJC_BRIDGING_HEADER": "",
                  "SDKROOT" : "iphoneos",
@@ -37,5 +36,21 @@ extension Project {
         static let configurations: [Configuration] = [
             .debug(name: .debug),
             .release(name: .release)]
+        
+        static let shareExtensionSetting: InfoPlist = .extendingDefault(with: [
+            "NSExtensionAttributes": .dictionary([
+                "NSExtensionActivationRule": .dictionary([
+                    "NSExtensionActivationSupportsImageWithMaxCount": .integer(1),
+                    "NSExtensionActivationSupportsWebURLWithMaxCount": .integer(1),
+                    "NSExtensionActivationSupportsText": .boolean(true)
+                ])
+            ]),
+            "NSExtensionPointIdentifier": .string("com.apple.share-services"),
+            "NSExtensionPrincipalClass": .string("ShareExtension.ShareViewController"),
+            "MARKETING_VERSION": .string(Linky.version),
+            "CURRENT_PROJECT_VERSION": .string(Linky.build),
+            "IPHONEOS_DEPLOYMENT_TARGET": "14.0",
+        ])
+
     }
 }
