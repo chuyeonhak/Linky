@@ -3,6 +3,8 @@ import UIKit
 import Core
 import Features
 
+import Firebase
+
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
@@ -14,6 +16,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     ) {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
+        
+        FirebaseApp.configure()
         
         setUserNotificationCenter()
         deviceSizeSetting(window: window)
@@ -33,20 +37,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func sceneWillEnterForeground(_ scene: UIScene) {
         openLockScreen()
+        requestAuthNoti()
     }
-
-    private func openLockScreen() {
-        let lock = window?.rootViewController?.presentedViewController as? LockScreenViewController
-        
-        if UserDefaultsManager.shared.usePassword && lock == nil {
-            print(UserDefaultsManager.shared.password)
-            let lockScreenVc = LockScreenViewController(type: .normal)
-
-            lockScreenVc.modalPresentationStyle = .overFullScreen
-
-            UIApplication.shared.window?.rootViewController?.present(lockScreenVc, animated: false)
-        }
-    }
+    
 }
 
 extension SceneDelegate {
@@ -76,7 +69,9 @@ extension SceneDelegate {
             .foregroundColor: UIColor(named: "code2") ?? .white,
             .font: FontManager.shared.pretendard(weight: .medium, size: 15)
         ]
-        UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self]).setTitleTextAttributes(attributes, for: .normal)
+        UIBarButtonItem
+            .appearance(whenContainedInInstancesOf: [UISearchBar.self])
+            .setTitleTextAttributes(attributes, for: .normal)
     }
     
     private func setUserNotificationCenter() {
@@ -84,10 +79,27 @@ extension SceneDelegate {
         requestAuthNoti()
     }
     
+    private func openLockScreen() {
+        let lock = window?.rootViewController?.presentedViewController as? LockScreenViewController
+        
+        if UserDefaultsManager.shared.usePassword && lock == nil {
+            print(UserDefaultsManager.shared.password)
+            let lockScreenVc = LockScreenViewController(type: .normal)
+
+            lockScreenVc.modalPresentationStyle = .overFullScreen
+
+            UIApplication.shared.window?.rootViewController?.present(lockScreenVc, animated: false)
+        }
+    }
+    
     private func requestAuthNoti() {
         let notiAuthOptions = UNAuthorizationOptions(arrayLiteral: [.alert, .badge, .sound])
         UNUserNotificationCenter.current().requestAuthorization(options: notiAuthOptions) { (success, error) in
+            let notiManager = UserNotiManager.shared
+            let defaultManager = UserDefaultsManager.shared
+            
             UserDefaultsManager.shared.isAllowedNotification = success
+            defaultManager.useNotification ? notiManager.saveNoti(): notiManager.deleteAllNotifications()
         }
     }
 }
