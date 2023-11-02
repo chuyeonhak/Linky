@@ -13,9 +13,7 @@ import SnapKit
 import Then
 
 final class TipView: UIView {
-    let scrollView = UIScrollView().then {
-        $0.contentMode = .scaleAspectFill
-    }
+    let scrollView = UIScrollView()
     
     let tipImageView = UIImageView(image: UIImage(named: "tips")).then {
         $0.isUserInteractionEnabled = true
@@ -58,14 +56,14 @@ final class TipView: UIView {
         }
         
         tipImageView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-            $0.width.equalToSuperview()
+            $0.top.centerX.bottom.equalToSuperview()
+            $0.width.equalTo(375)
         }
         
         shareButton.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview().inset(24)
             $0.bottom.equalToSuperview().inset(30)
-            $0.height.equalTo(46)
+            $0.height.equalTo(56)
         }
     }
 }

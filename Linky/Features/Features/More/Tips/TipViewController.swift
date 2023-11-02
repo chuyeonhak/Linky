@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import LinkPresentation
 
 import Core
 
@@ -39,10 +40,30 @@ final class TipViewController: UIViewController {
     }
     
     private func shareExample() {
-        let activityVC = UIActivityViewController(activityItems: [URL(string: "https://www.google.com/")!], applicationActivities: nil)
+        let item = CustomActivityItem()
+        let activityVC = UIActivityViewController(activityItems: [item],
+                                                  applicationActivities: nil)
         
         activityVC.popoverPresentationController?.sourceView = tipView.shareButton
         
         present(activityVC, animated: true)
+    }
+}
+
+class CustomActivityItem: NSObject, UIActivityItemSource {
+    func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
+        ""
+    }
+    
+    func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
+        return ""
+    }
+    
+    func activityViewControllerLinkMetadata(_ activityViewController: UIActivityViewController) -> LPLinkMetadata? {
+        let metadata = LPLinkMetadata()
+        
+        metadata.title = "Linky"
+        
+        return metadata
     }
 }
