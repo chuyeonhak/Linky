@@ -17,11 +17,9 @@ let project = Project.makeAppProject(
         TargetDependency.SPM.swinject,
         TargetDependency.SPM.rxSwift,
         TargetDependency.SPM.rxCocoa,
-        TargetDependency.SPM.rxRelay,
         Module.core.project,
         Module.features.project
     ],
     resources: ["Resources/**"],
-    infoPlist: Project.Linky.infoPlist
-    )
+    infoPlist: Project.Linky.infoPlist)
 
