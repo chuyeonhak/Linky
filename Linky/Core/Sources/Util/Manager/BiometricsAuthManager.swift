@@ -24,6 +24,9 @@ public final class BiometricsAuthManager {
             return .touchID
         case .faceID:
             return .faceID
+        case .opticID:
+            if #available(iOS 17.0, *) { return .opticID }
+            else { return .faceID }
         @unknown default:
             fatalError()
         }
