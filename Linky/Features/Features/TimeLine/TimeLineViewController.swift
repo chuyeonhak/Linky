@@ -203,4 +203,33 @@ private extension TimeLineViewController {
         
         UserDefaultsManager.shared.linkList = copyLinkList
     }
+    
+    private func openFigetViewController() {
+        let vc = UIHostingController(rootView: makerProfileView())
+        vc.view.backgroundColor = .code7
+        
+        present(vc, animated: true)
+    }
+    
+    @ViewBuilder
+    func makerProfileView() -> some View {
+        VStack {
+            FidgetTextView("Project Manager @mong._09", fontSize: 25)
+                .frame(height: 25)
+            Spacer()
+            FidgetTextView("UI Designer @hi__luu", fontSize: 25)
+                .frame(height: 25)
+            Spacer()
+            FidgetTextView("iOS developer @amola_chu", fontSize: 25)
+                .frame(height: 25)
+            Spacer()
+            FidgetTextView("android developer @min._.dda", fontSize: 25)
+                .frame(height: 25)
+        }.frame(height: 160)
+    }
+    
+    @objc
+    func applicationWillEnterForeground(_ notification: NSNotification) {
+        sortList(type: currentSortType)
+    }
 }
