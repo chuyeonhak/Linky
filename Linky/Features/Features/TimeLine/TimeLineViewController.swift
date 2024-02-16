@@ -12,13 +12,13 @@ import Core
 import SnapKit
 import Then
 import RxSwift
+import SwiftUI
 
 final class TimeLineViewController: UIViewController {
     var timeLineView: TimeLineView!
     var viewModel = TimeLineViewModel()
     var currentSortType: LinkSortType = .all
     let disposeBag = DisposeBag()
-    var testCount = 15
     
     override func loadView() {
         let timeLineView = TimeLineView(viewModel: viewModel)
@@ -30,6 +30,7 @@ final class TimeLineViewController: UIViewController {
     override func viewDidLoad() {
         configureNavigationButton()
         bind()
+        addNotification()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -66,6 +67,14 @@ final class TimeLineViewController: UIViewController {
             .drive { UIApplication.shared.makeToast($0) }
             .disposed(by: disposeBag)
     }
+    
+    private func addNotification() {
+        NotificationCenter.default.addObserver(
+              self,
+              selector: #selector(applicationWillEnterForeground(_:)),
+              name: UIApplication.willEnterForegroundNotification,
+              object: nil)
+    }
 }
 
 private extension TimeLineViewController {
@@ -81,32 +90,15 @@ private extension TimeLineViewController {
         let leftButton = UIButton()
         
         leftButton.setImage(UIImage(named: "icoLogo"), for: .normal)
-        leftButton.setTitle(" LINKY", for: .normal)
+        leftButton.setTitle(" LINKY ", for: .normal)
         leftButton.setTitleColor(.code3, for: .normal)
         leftButton.titleLabel?.font = FontManager.shared.pretendard(weight: .bold, size: 24)
         
         leftButton.rx.tap
-            .bind { [weak self] _ in self?.test() }
+            .bind { [weak self] _ in self?.openFigetViewController() }
             .disposed(by: disposeBag)
         
         return UIBarButtonItem(customView: leftButton)
-    }
-    
-    private func test() {
-        guard testCount > 0 else { return }
-        testCount -= 1
-        
-        switch testCount {
-        case 5, 10:
-            print("\(testCount)번 더 눌러야해요.")
-        case 1:
-            UserDefaultsManager.shared.linkList = []
-            UserDefaultsManager.shared.tagList = []
-            
-            sortList(type: currentSortType)
-            UIApplication.shared.makeToast("리스트 모두 초기화 완료")
-        default: break
-        }
     }
     
     private func makeRightItem() -> UIBarButtonItem {
@@ -140,7 +132,7 @@ private extension TimeLineViewController {
         return backButtonItem
     }
     
-    private func checkLinkList(baseDatasource: [Link] = UserDefaultsManager.shared.linkList.filter({ !$0.isRemoved })) {
+    private func checkLinkList(baseDatasource: [(key: String, values: [Core.Link])] = UserDefaultsManager.shared.sortedLinksByDate) {
         timeLineView.baseDataSource = baseDatasource
         timeLineView.linkCollectionView.isHidden = baseDatasource.isEmpty
         timeLineView.linkCollectionView.reloadData()
@@ -148,18 +140,20 @@ private extension TimeLineViewController {
     }
     
     private func sortList(type: LinkSortType = .all) {
-        let linkList = UserDefaultsManager.shared.linkList.filter({ !$0.isRemoved })
+        let linkList = UserDefaultsManager.shared.sortedLinksByDate
         currentSortType = type
         
-        var baseDataSource: [Link] {
+        var baseDataSource: [(key: String, values: [Core.Link])] {
             switch type {
             case .all: return linkList
-            case .read: return linkList.filter { $0.isWrittenCount != 0 }
-            case .notRead: return linkList.filter { $0.isWrittenCount == 0 }
+            case .read: 
+                return linkList.filter { $0.values.filter { link in link.isWrittenCount == 0 }.isEmpty }
+            case .notRead:
+                return linkList.filter { $0.values.filter { link in link.isWrittenCount != 0 }.isEmpty }
             }
         }
         
-        checkLinkList(baseDatasource: baseDataSource.reversed())
+        checkLinkList(baseDatasource: baseDataSource)
         changeAssets(type: type)
     }
     
@@ -176,7 +170,7 @@ private extension TimeLineViewController {
         item?.image = UIImage(named: imageString)
     }
     
-    private func openLinkDetailView(link: Link) {
+    private func openLinkDetailView(link: Core.Link) {
         guard let metaData = link.content else { return }
         
         let vc = AddLinkDetailViewContrller(metaData: metaData, link: link)
@@ -185,7 +179,7 @@ private extension TimeLineViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    private func openWebView(link: Link) {
+    private func openWebView(link: Core.Link) {
         guard let urlString = link.content?.url,
               let url = URL(string: urlString) else { return }
         
@@ -196,8 +190,7 @@ private extension TimeLineViewController {
         navigationController?.pushViewController(webViewController, animated: true)
     }
     
-    private func upWrittenCount(link: Link) {
-        
+    private func upWrittenCount(link: Core.Link) {
         guard case var copyLinkList = UserDefaultsManager.shared.linkList,
               let firstIndex = copyLinkList.firstIndex(of: link),
               copyLinkList.indices ~= firstIndex,
