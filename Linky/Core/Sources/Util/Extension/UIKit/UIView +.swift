@@ -38,6 +38,11 @@ public extension UIView {
         }
     }
     
+    func addBorder(color: UIColor?, width: CGFloat = 1) {
+        layer.borderColor = color?.cgColor
+        layer.borderWidth = width
+    }
+    
     func shakeAnimation(completion: (() -> ())? = nil) {
         let animation = CAKeyframeAnimation(keyPath: "transform.translation.x")
         animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.linear)
