@@ -163,5 +163,49 @@ public struct UserDefaultsManager {
             UserDefaults.standard.setValue(encoded, forKey: Key.notiSetting)
         }
     }
+    
+    public var limitInquiryDic: [Int: Int] {
+        get {
+            guard let inquiryData = UserDefaults.standard.value(forKey: Key.inquiryDic) as? Data,
+                  case let decoder = JSONDecoder(),
+                  let inquiryDic = try? decoder.decode([Int: Int].self, from: inquiryData)
+            else { return [:] }
+            
+            return inquiryDic
+        }
+        
+        set {
+            guard case let encoder = JSONEncoder(),
+                  let encoded = try? encoder.encode(newValue)
+            else { return }
+            
+            UserDefaults.standard.setValue(encoded, forKey: Key.inquiryDic)
+        }
+    }
+    
+    public var isFirstEndingCredit: Bool {
+        get {
+            guard let isFirstEndingCredit = userDefaults?
+                .value(forKey: Key.isFirstEndingCredit) as? Bool
+            else { return true }
+            
+            return isFirstEndingCredit
+        }
+        set {
+            userDefaults?.set(newValue, forKey: Key.isFirstEndingCredit)
+        }
+    }
+    
+    public var noTagData: [TagData] {
+        noTagLinkList.isEmpty ? []: [TagData(title: "태그 없음", createdAt: Date())]
+    }
+    
+    public var noTagLinkList: [Link] { linkList.filter(\.hasNoTagList) }
+    
+    public var sortedLinksByDate: [(key: String, values: [Link])] {
+        let unRemovedLinkList = linkList.filter { !$0.isRemoved }
+        
+        return categorizeLinksByDateRanges(links: unRemovedLinkList)
+    }
+    
 }
-
