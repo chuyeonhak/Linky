@@ -17,14 +17,40 @@ extension TimeLineView: UICollectionViewDelegate {
 
 extension TimeLineView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        baseDataSource.count
+        baseDataSource[section].values.count
+    }
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        print(UserDefaultsManager.shared.sortedLinksByDate.map({ $0.key }))
+        return baseDataSource.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, 
+                        viewForSupplementaryElementOfKind kind: String,
+                        at indexPath: IndexPath) -> UICollectionReusableView {
+        guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TimeHeaderView.identifier, for: indexPath) as? TimeHeaderView,
+              kind == UICollectionView.elementKindSectionHeader else { return UICollectionReusableView() }
+        
+        header.label.text = baseDataSource[safe: indexPath.section]?.key
+        
+        return header
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        let width = UIApplication.shared.window?.bounds.width ?? 0
+        return CGSize(width: width, height: 40)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        return .zero
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: TimeLineLinkCell.identifier,
             for: indexPath) as? TimeLineLinkCell,
-              let link = baseDataSource[safe: indexPath.row]
+              let linkList = baseDataSource[safe: indexPath.section],
+              let link = linkList.values.reversed()[safe: indexPath.item]
         else { return UICollectionViewCell() }
         let wrapperViewTapped = UITapGestureRecognizer()
 
@@ -61,20 +87,23 @@ extension TimeLineView: UICollectionViewDataSource {
     private func deleteLink(link: Link) {
         guard case var copyLinkList = UserDefaultsManager.shared.linkList,
               case let filterList = baseDataSource,
-              let filterIndex = filterList.firstIndex(where: { $0.no == link.no }),
+              let section = filterList.firstIndex(where: { $0.values.contains(link) }),
+              let item = filterList[section].values.firstIndex(of: link),
               let linkIndex = copyLinkList.firstIndex(where: { $0.no == link.no }),
               copyLinkList.indices ~= linkIndex
         else { return }
         
+        
         copyLinkList[linkIndex].isRemoved = true
-        baseDataSource.remove(at: filterIndex)
+        baseDataSource[section].values.remove(at: item)
         
         UserDefaultsManager.shared.linkList = copyLinkList
         
         linkCollectionView.performBatchUpdates {
-            linkCollectionView.deleteItems(at: [IndexPath(item: filterIndex, section: 0)])
+            linkCollectionView.deleteItems(at: [IndexPath(item: item, section: section)])
         }
         
+        linkCollectionView.isHidden = copyLinkList.filter({ !$0.isRemoved }).isEmpty
     }
     
     private func editLink(link: Link) {
@@ -122,7 +151,9 @@ extension TimeLineView: UICollectionViewDelegateFlowLayout {
         let safeAreaLeft = max(safeAreaInsets.left, 16)
         let safeAreaRight = max(safeAreaInsets.right, 16)
         
-        return UIEdgeInsets(top: 6, left: safeAreaLeft, bottom: 100, right: safeAreaRight)
+        let bottom: CGFloat = (baseDataSource.count - 1) == section ? 100 : 0
+        
+        return UIEdgeInsets(top: 6, left: safeAreaLeft, bottom: bottom, right: safeAreaRight)
     }
     
     private func getItemWidth() -> CGFloat {

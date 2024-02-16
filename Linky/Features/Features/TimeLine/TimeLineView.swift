@@ -18,7 +18,7 @@ final class TimeLineView: UIView {
     let disposeBag = DisposeBag()
     let emptyView = EmptyView(tabType: .timeline)
     
-    var baseDataSource = UserDefaultsManager.shared.linkList.filter { !$0.isRemoved }
+    var baseDataSource = UserDefaultsManager.shared.sortedLinksByDate
     
     lazy var linkCollectionView: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
@@ -28,8 +28,14 @@ final class TimeLineView: UIView {
         collectionView.dataSource = self
         
         collectionView.backgroundColor = .code7
-        collectionView.register(TimeLineLinkCell.self,
-                                forCellWithReuseIdentifier: TimeLineLinkCell.identifier)
+        collectionView.register(
+            TimeLineLinkCell.self,
+            forCellWithReuseIdentifier: TimeLineLinkCell.identifier)
+        
+        collectionView.register(
+            TimeHeaderView.self,
+            forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+            withReuseIdentifier: TimeHeaderView.identifier)
         
         return collectionView
     }()
