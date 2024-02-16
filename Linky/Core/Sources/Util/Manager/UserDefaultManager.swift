@@ -208,4 +208,57 @@ public struct UserDefaultsManager {
         return categorizeLinksByDateRanges(links: unRemovedLinkList)
     }
     
+    func categorizeLinksByDateRanges(links: [Link]) -> [(key: String, values: [Link])] {
+        var copyLinks = links
+        let calendar = Calendar.current
+        let now = Date()
+        
+        var categorizedLinks: [(key: String, values: [Link])] = []
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM"
+        
+        let todayLinks = copyLinks.filter { calendar.isDateInToday($0.createdAt) }
+        if !todayLinks.isEmpty {
+            categorizedLinks.append(("오늘", todayLinks))
+        }
+        
+        let yesterdayLinks = copyLinks.filter { calendar.isDateInYesterday($0.createdAt) }
+        if !yesterdayLinks.isEmpty { categorizedLinks.append(("어제", yesterdayLinks)) }
+        
+        if let threeDaysAgo = calendar.date(byAdding: .day, value: -2, to: now),
+           let sevenDaysAgo = calendar.date(byAdding: .day, value: -7, to: now),
+           case let recentLinks = copyLinks.filter({ $0.createdAt > sevenDaysAgo && $0.createdAt <= threeDaysAgo }),
+            !recentLinks.isEmpty { categorizedLinks.append(("이전 7일", recentLinks)) }
+        
+        if let thirtyDaysAgo = calendar.date(byAdding: .day, value: -30, to: now),
+           let eightDaysAgo = calendar.date(byAdding: .day, value: -8, to: now),
+           case let olderLinks = copyLinks.filter({ $0.createdAt > thirtyDaysAgo && $0.createdAt <= eightDaysAgo }),
+        !olderLinks.isEmpty { categorizedLinks.append(("이전 30일", olderLinks)) }
+        
+        if let thirtyDaysAgo = calendar.date(byAdding: .day, value: -30, to: now),
+           case let monthLinks = copyLinks.filter({ $0.createdAt > thirtyDaysAgo && $0.createdAt <= now }),
+           !monthLinks.isEmpty { copyLinks.removeAll { monthLinks.contains($0) } }
+        
+        
+        let thisYear = calendar.component(.year, from: now)
+        
+        let thisYearLink = copyLinks.filter { calendar.component(.year, from: $0.createdAt) == thisYear }
+        let anotherYearLink = copyLinks.filter { calendar.component(.year, from: $0.createdAt) != thisYear }
+        
+        let thisYearCategoryList: [String: [Link]] = thisYearLink.reduce(into: [:]) { result, link in
+            let key = dateFormatter.string(from: link.createdAt)
+            result[key, default: []].append(link)
+        }
+        
+        let anotherYearCategoryList: [String: [Link]] = anotherYearLink.reduce(into: [:]) { result, link in
+            let key = String(calendar.component(.year, from: link.createdAt)) + "년"
+            result[key, default: []].append(link)
+        }
+        
+        categorizedLinks.append(contentsOf: thisYearCategoryList.sorted { $0.key > $1.key }.map { (key: $0.key, values: $0.value) })
+        categorizedLinks.append(contentsOf: anotherYearCategoryList.sorted { $0.key > $1.key }.map { (key: $0.key, values: $0.value) })
+        
+        return categorizedLinks
+    }
 }
