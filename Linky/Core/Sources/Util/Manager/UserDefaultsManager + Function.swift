@@ -11,7 +11,7 @@ import CloudKit
 public extension UserDefaultsManager {
     func getTagDic() -> [TagData: [Link]] {
         var tempDic: [TagData: [Link]] = [:]
-        let linkList = UserDefaultsManager.shared.linkList
+        let linkList = linkList
         
         for link in linkList where !link.isRemoved {
             for tag in link.tagList {
@@ -64,6 +64,16 @@ public extension UserDefaultsManager {
         let info = Days.allCases.map { NotificationInfo(days: $0, selected: false) }
         
         return NotificationSetting(info: info, time: nil)
+    }
+    
+    mutating func todayCountUp() {
+        var copyDic = limitInquiryDic
+        
+        let today = Date().toInt()
+        let count = copyDic[today] ?? 0
+        copyDic[today] = count + 1
+        
+        self.limitInquiryDic = copyDic
     }
 }
 
