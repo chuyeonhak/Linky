@@ -33,7 +33,7 @@ extension AddLinkDetailView {
         enum Text {
             static let linkTitle = "링크 메모"
             static let addTagTitle = "태그 추가"
-            static let linkPlaceholder = "ex.엄마가 공유해 줌"
+            static let linkPlaceholder = "메모 입력(띄어쓰기 포함, 30자 이내)"
             static let tagPlaceholder = "태그 입력(띄어쓰기 포함, 8자 이내)"
         }
     }
