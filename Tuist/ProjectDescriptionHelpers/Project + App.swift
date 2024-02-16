@@ -9,8 +9,8 @@ import ProjectDescription
 
 extension Project {
     public enum Linky {
-        public static let build: String = "7"
-        public static let version: String = "1.0.0"
+        public static let build: String = "0"
+        public static let version: String = "1.0.2"
         public static let platform: Platform = .iOS
         public static let deploymentTarget: DeploymentTarget = .iOS(targetVersion: "14.0", devices: [.iphone, .ipad])
         public static let team = "6QDV2VZHAS"
