@@ -36,10 +36,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneWillResignActive(_ scene: UIScene) {}
 
     func sceneWillEnterForeground(_ scene: UIScene) {
-        openLockScreen()
-        requestAuthNoti()
+        if UpdateManager.shared.shouldUpdate { openUpdateAlert() }
+        else {
+            openLockScreen()
+            requestAuthNoti()
+        }
     }
-    
 }
 
 extension SceneDelegate {
@@ -101,6 +103,17 @@ extension SceneDelegate {
             UserDefaultsManager.shared.isAllowedNotification = success
             defaultManager.useNotification ? notiManager.saveNoti(): notiManager.deleteAllNotifications()
         }
+    }
+    
+    private func openUpdateAlert() {
+        let blockView = UIView().then { $0.backgroundColor = .main }
+        window?.rootViewController?.view.addSubview(blockView)
+        blockView.snp.makeConstraints { $0.edges.equalToSuperview() }
+        window?.rootViewController?.presentAlertController(
+            style: .alert,
+            title: "Linky를 업데이트 해주세요!",
+            options: (title: "업데이트 하러가기", style: .default),
+            animated: false) { _ in UpdateManager.shared.openAppStore() }
     }
 }
 
