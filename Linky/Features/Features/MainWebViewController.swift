@@ -38,6 +38,7 @@ final class MainWebViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        webView.navigationDelegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -56,4 +57,19 @@ final class MainWebViewController: UIViewController {
     }
     
     deinit { print(description, "deinit") }
+}
+
+extension MainWebViewController: WKNavigationDelegate {
+    func webView(_ webView: WKWebView,
+                 decidePolicyFor navigationAction: WKNavigationAction,
+                 decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        if let url = navigationAction.request.url,
+           UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+            navigationController?.popViewController(animated: true)
+            decisionHandler(.cancel)
+            return
+        }
+        decisionHandler(.allow)
+    }
 }
