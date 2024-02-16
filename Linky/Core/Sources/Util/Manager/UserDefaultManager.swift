@@ -9,17 +9,19 @@ import Foundation
 
 public struct UserDefaultsManager {
     public enum Key {
-        static let usePassword = "usePassword"
-        static let password = "password"
-        static let useBiometricsAuth = "useBiometricsAuth"
-        static let isFirstBioAuth = "isFirstBioAuth"
-        static let tagList = "tagList"
-        static let dropedTagList = "dropedTagList"
+        fileprivate static let usePassword = "usePassword"
+        fileprivate static let password = "password"
+        fileprivate static let useBiometricsAuth = "useBiometricsAuth"
+        fileprivate static let isFirstBioAuth = "isFirstBioAuth"
+        fileprivate static let tagList = "tagList"
+        fileprivate static let dropedTagList = "dropedTagList"
         public static let linkList = "linkList"
         public static let isAllowedNotification = "isAllowedNotification"
-        static let useNotification = "useNotification"
-        static let notiSetting = "notiSetting"
-        static let sharedMetaData = "sharedMetaData"
+        fileprivate static let useNotification = "useNotification"
+        fileprivate static let notiSetting = "notiSetting"
+        fileprivate static let sharedMetaData = "sharedMetaData"
+        fileprivate static let inquiryDic = "inquiryCount"
+        fileprivate static let isFirstEndingCredit = "isFirstEndingCredit"
     }
     
     public static var shared = UserDefaultsManager()
