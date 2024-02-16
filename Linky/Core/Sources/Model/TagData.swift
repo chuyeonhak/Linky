@@ -37,7 +37,9 @@ public struct TagData: Codable {
     }
 }
 
-extension TagData: Equatable { }
+extension TagData: Equatable {
+    public static func == (lhs: TagData, rhs: TagData) -> Bool { lhs.title == rhs.title }
+}
 
 extension TagData: Hashable { }
 
