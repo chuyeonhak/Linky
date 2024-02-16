@@ -14,6 +14,7 @@ public final class IndicatorManager {
     private var indicatorView: UIActivityIndicatorView?
     
     private func setIndicatorView(superView: UIView? = nil) {
+        guard indicatorView == nil else { return }
         let indicatorView = UIActivityIndicatorView()
         let targetView = superView == nil ?
         UIApplication.shared.window?.rootViewController?.view:
@@ -41,6 +42,7 @@ public final class IndicatorManager {
         DispatchQueue.main.async {
             self.indicatorView?.stopAnimating()
             self.indicatorView?.removeFromSuperview()
+            self.indicatorView = nil
         }
     }
 }
