@@ -6,14 +6,15 @@
 //
 
 import UIKit
-
+//
 enum SettingType: CaseIterable {
     case notificationSettings
     case tips
     case lock
     case tagManagement
     case linkManagement
-    case synchronizationGuide
+//    case synchronizationGuide
+    case inquiry
     
     var title: String {
         switch self {
@@ -22,7 +23,8 @@ enum SettingType: CaseIterable {
         case .lock: return "화면 잠금 설정"
         case .tagManagement: return "태그 관리"
         case .linkManagement: return "링크 휴지통"
-        case .synchronizationGuide: return "동기화 안내"
+//        case .synchronizationGuide: return "동기화 안내"
+        case .inquiry: return "문의하기"
         }
     }
     
@@ -37,7 +39,8 @@ enum SettingType: CaseIterable {
         case .lock: return "icoLock"
         case .tagManagement: return "icoTag"
         case .linkManagement: return "icoLink"
-        case .synchronizationGuide: return "icoGuid"
+//        case .synchronizationGuide: return "icoGuid"
+        case .inquiry: return "icoInquiry"
         }
     }
 }
