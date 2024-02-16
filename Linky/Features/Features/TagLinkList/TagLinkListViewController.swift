@@ -206,9 +206,11 @@ private extension TagLinkListViewController {
         UserDefaultsManager.shared.linkList = copyLinkList
     }
     
-    private func checkLinkList() {
+    func checkLinkList() {
         let tagDic = UserDefaultsManager.shared.getTagDic()
-        let linkList = tagDic[tagData]
+        var linkList = tagDic[tagData] ?? []
+        
+        if tagData.title == "태그 없음" { linkList += UserDefaultsManager.shared.noTagLinkList }
         
         tagLinkListView.linkList = linkList
         tagLinkListView.linkCollectionView.reloadData()

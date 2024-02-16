@@ -56,8 +56,8 @@ final class TagViewController: UIViewController {
         tagView.tagCollectionView.collectionViewLayout.invalidateLayout()
     }
     
-    private func checkLinkList() {
-        let tagSet = getTagSet()
+    func checkLinkList() {
+        let tagSet = getTagSet() + UserDefaultsManager.shared.noTagData
         
         tagView.baseDataSource = tagSet
         tagView.tagCollectionView.isHidden = tagSet.isEmpty
@@ -73,8 +73,7 @@ final class TagViewController: UIViewController {
             let (tag2, link2) = second
             
             return link1.count != link2.count ? link1.count > link2.count: tag1.title < tag2.title
-        }
-            .map(\.key)
+        }.map(\.key)
         
         currentTagDic = tagDic
         baseTagList = sortedTag

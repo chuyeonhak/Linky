@@ -23,7 +23,6 @@ extension TagViewController: UISearchBarDelegate {
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        tagView.baseDataSource = getTagSet()
-        tagView.tagCollectionView.reloadData()
+        checkLinkList()
     }
 }
