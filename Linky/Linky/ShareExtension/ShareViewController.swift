@@ -8,6 +8,7 @@
 
 import UIKit
 import LinkPresentation
+import UniformTypeIdentifiers
 
 import Core
 import Features
@@ -16,6 +17,7 @@ import SnapKit
 import Then
 import RxSwift
 import RxCocoa
+
 
 class ShareViewController: UIViewController {
     let disposeBag = DisposeBag()
@@ -125,24 +127,48 @@ class ShareViewController: UIViewController {
     }
     
     private func findExtensionItemUrl() {
-        if let item = extensionContext?.inputItems.first as? NSExtensionItem,
-           let itemProvider = item.attachments?.first as? NSItemProvider,
-           itemProvider.hasItemConformingToTypeIdentifier("public.url") {
-            itemProvider.loadItem(forTypeIdentifier: "public.url") { [weak self] url, error in
-                if let shareURL = url as? URL {
-                    DispatchQueue.main.async {
-                        self?.searchUrl(url: shareURL)
-                    }
-                }
+        guard let item = extensionContext?.inputItems.first as? NSExtensionItem,
+              let attachments = item.attachments else { return }
+        
+        for provider in attachments {
+            checkProvider(provider: provider, type: .url)
+            checkProvider(provider: provider, type: .plainText)
+        }
+    }
+    
+    private func checkProvider(provider: NSItemProvider?, type: UTType) {
+        guard provider?.hasItemConformingToTypeIdentifier(type.identifier) != nil else { return }
+        
+        provider?.loadItem(forTypeIdentifier: type.identifier) { [weak self] object, error in
+            if let url = object as? URL {
+                self?.searchUrl(url: url)
+            } else if let objectString = object as? String,
+                      let urlString = self?.extractURLUsingURLComponents(from: objectString),
+                      let url = URL(string: urlString) {
+                self?.searchUrl(url: url)
             }
         }
     }
     
+    private func extractURLUsingURLComponents(from text: String) -> String? {
+        let words = text.components(separatedBy: .whitespacesAndNewlines)
+        
+        for word in words {
+            if let url = URL(string: word), url.scheme != nil {
+                return url.absoluteString
+            }
+        }
+        
+        return nil
+    }
+    
     private func searchUrl(url: URL) {
-        getOpenGraph(url: url) { data in
-            self.metaData = data
-            self.addLinkDetailView.configMetaData(metaData: data)
-            IndicatorManager.shared.stopAnimation()
+        DispatchQueue.main.async {
+            self.getOpenGraph(url: url) { data in
+                self.metaData = data
+                self.addLinkDetailView.configMetaData(metaData: data)
+                IndicatorManager.shared.stopAnimation()
+            }
         }
     }
     
@@ -166,7 +192,6 @@ class ShareViewController: UIViewController {
         linkList.append(link)
         
         UserDefaultsManager.shared.linkList = linkList
-        
     }
     
     private func getOpenGraph(url: URL,
