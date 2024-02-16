@@ -8,12 +8,21 @@
 import Foundation
 
 public extension Date {
-    func dateToString() -> String {
+    func toString() -> String {
         let formatter = DateFormatter()
         
         formatter.dateFormat = "yyyy.MM.dd HH:mm"
         formatter.locale = Locale(identifier: "ko_KR")
         
         return formatter.string(from: self)
+    }
+    
+    func toInt() -> Int {
+        let formatter = DateFormatter()
+        
+        formatter.dateFormat = "yyyyMMdd"
+        formatter.locale = Locale(identifier: "ko_KR")
+        
+        return Int(Int(formatter.string(from: self)) ?? 0)
     }
 }
