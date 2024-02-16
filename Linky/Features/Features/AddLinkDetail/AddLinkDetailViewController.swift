@@ -85,6 +85,7 @@ final class AddLinkDetailViewContrller: UIViewController {
     
     private func openAddLinkComplete() {
         if let link {
+            hasTagText()
             editLink(link: link)
             
             UIApplication.shared.makeToast("링크 수정 완료!")

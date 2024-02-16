@@ -75,8 +75,10 @@ public struct Link: Codable {
     }
     
     public var dateToString: String {
-        return createdAt.dateToString()
+        return createdAt.toString()
     }
+    
+    public var hasNoTagList: Bool { tagList.isEmpty && !isRemoved }
     
     private func makeTagList(from records: [CKRecord]?) -> [TagData] {
         guard let records else { return [] }
