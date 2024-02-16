@@ -84,6 +84,6 @@ final class MoreSettingCell: UITableViewCell {
         backgroundColor = .clear
         iconImageView.image = type.image
         titleLabel.text = type.title
-        separatorView.isHidden = type == .synchronizationGuide
+        separatorView.isHidden = type == SettingType.allCases.last
     }
 }
