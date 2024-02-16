@@ -75,6 +75,12 @@ final class NotificationSettingsView: UIView {
         $0.font = FontManager.shared.pretendard(weight: .semiBold, size: 14)
     }
     
+    let guideLabel = UILabel().then {
+        $0.text = "링키를 보고 싶은 요일과 시간을 정해보세요:)"
+        $0.textColor = .code5
+        $0.font = FontManager.shared.pretendard(weight: .medium, size: 14)
+    }
+    
     lazy var datePicker = UIDatePicker().then {
         $0.datePickerMode = .time
         $0.preferredDatePickerStyle = .wheels
@@ -113,6 +119,7 @@ final class NotificationSettingsView: UIView {
         [notificationLabel,
          notificationSwitch,
          lineView,
+         guideLabel,
          settingView].forEach(addSubview)
         
         [setDayLabel,
@@ -138,6 +145,11 @@ final class NotificationSettingsView: UIView {
             $0.top.equalTo(notificationLabel.snp.bottom).offset(14)
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(1)
+        }
+        
+        guideLabel.snp.makeConstraints {
+            $0.top.equalTo(lineView.snp.bottom).offset(12)
+            $0.left.equalToSuperview().inset(20)
         }
         
         settingView.snp.makeConstraints {
@@ -212,6 +224,7 @@ final class NotificationSettingsView: UIView {
         
         UserDefaultsManager.shared.useNotification = isOn
         settingView.fadeInOut(startAlpha: alpha)
+        guideLabel.fadeInOut(startAlpha: 1.0 - alpha)
         
         isOn ? notiManager.saveNoti(): notiManager.deleteAllNotifications()
     }

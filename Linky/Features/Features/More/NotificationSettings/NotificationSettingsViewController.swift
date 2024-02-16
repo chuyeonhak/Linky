@@ -49,7 +49,6 @@ final class NotificationSettingsViewController: UIViewController {
               selector: #selector(applicationWillEnterForeground(_:)),
               name: UIApplication.willEnterForegroundNotification,
               object: nil)
-
     }
     
     private func bind() {
