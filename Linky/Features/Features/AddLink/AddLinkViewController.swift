@@ -34,6 +34,12 @@ final class AddLinkViewController: UIViewController {
             .distinctUntilChanged()
             .bind { [weak self] in self?.setRightButton(textIsEmpty: !$0) }
             .disposed(by: disposeBag)
+        
+        addLinkView.linkTextFiled.rx.controlEvent(.editingDidEndOnExit)
+            .withLatestFrom(addLinkView.canComplete) { $1 }
+            .filter { $0 }
+            .bind(onNext: getOpenGraph)
+            .disposed(by: disposeBag)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -73,8 +79,8 @@ final class AddLinkViewController: UIViewController {
         rightButton.rx.tap
             .withLatestFrom(addLinkView.canComplete) { $1 }
             .filter { $0 }
-            .withUnretainedOnly(self)
-            .bind { $0.getOpenGraph() }
+//            .map { _ in }
+            .bind(onNext: getOpenGraph)
             .disposed(by: disposeBag)
         
         return UIBarButtonItem(customView: rightButton)
@@ -104,8 +110,8 @@ final class AddLinkViewController: UIViewController {
         button?.titleLabel?.font = font
     }
     
-    private func getOpenGraph() {
-        guard let urlString = addLinkView.linkTextFiled.text,
+    private func getOpenGraph(_ canComplete: Bool) {
+        guard let urlString = getUrlString(),
               let url = URL(string: urlString) else {
             openAddLinkDetail(data: MetaData(url: addLinkView.linkTextFiled.text))
             return }
@@ -148,6 +154,16 @@ final class AddLinkViewController: UIViewController {
                 self?.openAddLinkDetail(data: metaData)
             }
         }
+    }
+    
+    private func getUrlString() -> String? {
+        guard var urlString = addLinkView.linkTextFiled.text else { return nil }
+        
+        if urlString.contains(".co") && !urlString.contains("http") {
+            urlString = "https://" + urlString
+        }
+        
+        return urlString
     }
     
     private func openAddLinkDetail(data: MetaData) {
