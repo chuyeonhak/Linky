@@ -28,6 +28,7 @@ final class TimeLineLinkCell: UICollectionViewCell {
     let linkImageView = UIImageView().then {
         $0.addCornerRadius(radius: 4)
         $0.layer.masksToBounds = true
+        $0.contentMode = .scaleAspectFit
     }
     
     let contentStackView = UIStackView().then {
@@ -161,9 +162,9 @@ final class TimeLineLinkCell: UICollectionViewCell {
         }
         
         moreButton.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(4)
-            $0.trailing.equalToSuperview().inset(10)
-            $0.size.equalTo(24)
+            $0.top.trailing.equalToSuperview()
+            $0.width.equalTo(40)
+            $0.height.equalTo(32)
         }
         
         linkImageView.snp.makeConstraints {
@@ -205,7 +206,7 @@ final class TimeLineLinkCell: UICollectionViewCell {
         
         copyButton.snp.makeConstraints {
             $0.bottom.trailing.equalToSuperview()
-            $0.width.equalTo(28)
+            $0.width.equalTo(30)
             $0.height.equalTo(20)
         }
     }
