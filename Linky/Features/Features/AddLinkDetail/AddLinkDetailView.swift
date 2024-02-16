@@ -253,7 +253,7 @@ public final class AddLinkDetailView: UIView {
     
     public func addTagList() {
         guard let tagText = tagLineTextField.text,
-              !tagText.isEmpty && tagText.count > 1,
+              !tagText.isEmpty && tagText.count > 0,
               !isDuplicated(tagText: tagText)
         else { return }
         
