@@ -12,6 +12,7 @@ public extension UIViewController {
                                 title: String? = nil,
                                 message: String? = nil,
                                 options: (title: String, style: UIAlertAction.Style)...,
+                                animated: Bool = true,
                                 completion: ((String) -> Void)?) {
         let alertController = UIAlertController(title: title,
                                                 message: message,
@@ -25,6 +26,6 @@ public extension UIViewController {
             }))
         }
         
-        present(alertController, animated: true, completion: nil)
+        present(alertController, animated: animated)
     }
 }
