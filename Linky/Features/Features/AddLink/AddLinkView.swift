@@ -27,6 +27,9 @@ public final class AddLinkView: UIView {
     let linkTextFiled = LineTextField().then {
         $0.changePlaceholderTextColor(
             placeholderText: Const.Text.placeholder, textColor: .code5)
+        $0.returnKeyType = .done
+        $0.keyboardType = .webSearch
+        $0.autocapitalizationType = .none
     }
     
     let pasteButton = UIButton().then {
