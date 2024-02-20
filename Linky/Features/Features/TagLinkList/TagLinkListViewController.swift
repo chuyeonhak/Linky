@@ -80,10 +80,6 @@ private extension TagLinkListViewController {
         rightButton.titleLabel?.font = FontManager.shared.pretendard(weight: .semiBold, size: 14)
         rightButton.semanticContentAttribute = .forceRightToLeft
         
-        rightButton.rx.tap
-            .bind { print("rightButtonTapped") }
-            .disposed(by: disposeBag)
-        
         let children = [UIAction(title: "전체",
                                  handler: { [weak self] _ in self?.sortList(type: .all) }),
                         UIAction(title: "읽음",
