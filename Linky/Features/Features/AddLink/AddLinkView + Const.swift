@@ -7,6 +7,8 @@
 
 import UIKit
 
+import Core
+
 public extension AddLinkView {
     struct Const {
         enum Custom {
@@ -27,9 +29,9 @@ public extension AddLinkView {
         }
         
         enum Text {
-            static let addLinkTitle = "링크 추가하기"
-            static let placeholder = "추가할 링크를 입력해주세요."
-            static let pasteButtonTitle = "복사한 링크 붙여넣기"
+            static let addLinkTitle = I18N.addLink
+            static let placeholder = I18N.addLinkPlaceholder
+            static let pasteButtonTitle = I18N.pasteButtonText
         }
     }
 }

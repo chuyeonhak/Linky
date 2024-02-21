@@ -197,7 +197,7 @@ public struct UserDefaultsManager {
     }
     
     public var noTagData: [TagData] {
-        noTagLinkList.isEmpty ? []: [TagData(title: "태그 없음", createdAt: Date())]
+        noTagLinkList.isEmpty ? []: [TagData(title: I18N.noTags, createdAt: Date())]
     }
     
     public var noTagLinkList: [Link] { linkList.filter(\.hasNoTagList) }
@@ -220,21 +220,21 @@ public struct UserDefaultsManager {
         
         let todayLinks = copyLinks.filter { calendar.isDateInToday($0.createdAt) }
         if !todayLinks.isEmpty {
-            categorizedLinks.append(("오늘", todayLinks))
+            categorizedLinks.append((I18N.today, todayLinks))
         }
         
         let yesterdayLinks = copyLinks.filter { calendar.isDateInYesterday($0.createdAt) }
-        if !yesterdayLinks.isEmpty { categorizedLinks.append(("어제", yesterdayLinks)) }
+        if !yesterdayLinks.isEmpty { categorizedLinks.append((I18N.yesterday, yesterdayLinks)) }
         
         if let threeDaysAgo = calendar.date(byAdding: .day, value: -2, to: now),
            let sevenDaysAgo = calendar.date(byAdding: .day, value: -7, to: now),
            case let recentLinks = copyLinks.filter({ $0.createdAt > sevenDaysAgo && $0.createdAt <= threeDaysAgo }),
-            !recentLinks.isEmpty { categorizedLinks.append(("이전 7일", recentLinks)) }
+            !recentLinks.isEmpty { categorizedLinks.append((I18N.previous7Day, recentLinks)) }
         
         if let thirtyDaysAgo = calendar.date(byAdding: .day, value: -30, to: now),
            let eightDaysAgo = calendar.date(byAdding: .day, value: -8, to: now),
            case let olderLinks = copyLinks.filter({ $0.createdAt > thirtyDaysAgo && $0.createdAt <= eightDaysAgo }),
-        !olderLinks.isEmpty { categorizedLinks.append(("이전 30일", olderLinks)) }
+        !olderLinks.isEmpty { categorizedLinks.append((I18N.previous30Day, olderLinks)) }
         
         if let thirtyDaysAgo = calendar.date(byAdding: .day, value: -30, to: now),
            case let monthLinks = copyLinks.filter({ $0.createdAt > thirtyDaysAgo && $0.createdAt <= now }),
@@ -252,7 +252,7 @@ public struct UserDefaultsManager {
         }
         
         let anotherYearCategoryList: [String: [Link]] = anotherYearLink.reduce(into: [:]) { result, link in
-            let key = String(calendar.component(.year, from: link.createdAt)) + "년"
+            let key = String(calendar.component(.year, from: link.createdAt)) + I18N.year
             result[key, default: []].append(link)
         }
         

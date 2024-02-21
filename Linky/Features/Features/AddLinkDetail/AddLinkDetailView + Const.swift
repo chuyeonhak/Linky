@@ -7,6 +7,8 @@
 
 import UIKit
 
+import Core
+
 extension AddLinkDetailView {
     struct Const {
         enum Custom {
@@ -31,10 +33,10 @@ extension AddLinkDetailView {
         }
         
         enum Text {
-            static let linkTitle = "링크 메모"
-            static let addTagTitle = "태그 추가"
-            static let linkPlaceholder = "메모 입력(띄어쓰기 포함, 30자 이내)"
-            static let tagPlaceholder = "태그 입력(띄어쓰기 포함, 8자 이내)"
+            static let linkTitle = I18N.linkMemo
+            static let addTagTitle = I18N.addTag
+            static let linkPlaceholder = I18N.linkPlaceholder
+            static let tagPlaceholder = I18N.tagPlaceholder
         }
     }
 }
