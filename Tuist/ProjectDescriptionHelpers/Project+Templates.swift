@@ -35,7 +35,7 @@ public extension Project {
             sources: sources,
             resources: resources,
             entitlements: "ShareExtension/LinkyDebug.entitlements",
-            scripts: [.firebaseCrashString],
+            scripts: [.firebaseCrashString, .autoLocalization],
             dependencies: dependencies + [Project.Setting.shareExtension],
             settings: settings
         )
