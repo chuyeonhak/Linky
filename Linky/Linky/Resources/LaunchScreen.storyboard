@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Pretendard-Bold.otf">
+            <string>Pretendard-Bold</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--View Controller-->
         <scene sceneID="EHf-IW-A2E">
@@ -18,40 +24,30 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kip-h9-XgR">
-                                <rect key="frame" x="124.66666666666669" y="343" width="141" height="171"/>
+                                <rect key="frame" x="95" y="355" width="200" height="147.33333333333337"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchScreenLogo" translatesAutoresizingMaskIntoConstraints="NO" id="K5z-Aq-LsA">
-                                        <rect key="frame" x="0.3333333333333286" y="0.0" width="140" height="110"/>
+                                        <rect key="frame" x="30" y="0.0" width="140" height="110"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="110" id="1rU-D1-XlF"/>
-                                            <constraint firstAttribute="width" constant="140" id="uri-EI-vGf"/>
+                                            <constraint firstAttribute="width" constant="140" id="hcS-Cf-agj"/>
                                         </constraints>
                                     </imageView>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchScreenTitle" translatesAutoresizingMaskIntoConstraints="NO" id="EKp-FF-WtO">
-                                        <rect key="frame" x="12.999999999999986" y="116" width="115" height="31"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="115" id="5OZ-Ze-c8Z"/>
-                                            <constraint firstAttribute="height" constant="31" id="NDi-tt-Xpg"/>
-                                        </constraints>
-                                    </imageView>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchScreenSubtitle" translatesAutoresizingMaskIntoConstraints="NO" id="4AK-Fe-25G">
-                                        <rect key="frame" x="0.0" y="151" width="141" height="20"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="20" id="Aa2-7W-s4Q"/>
-                                            <constraint firstAttribute="width" constant="141" id="ts6-NS-Cwn"/>
-                                        </constraints>
-                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="L  I  N  K  Y" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pJh-ew-dwj">
+                                        <rect key="frame" x="38.666666666666657" y="115.99999999999999" width="123" height="31.333333333333329"/>
+                                        <fontDescription key="fontDescription" name="Pretendard-Bold" family="Pretendard" pointSize="26"/>
+                                        <color key="textColor" name="code2"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="4AK-Fe-25G" secondAttribute="trailing" id="4qO-m0-uTy"/>
-                                    <constraint firstItem="EKp-FF-WtO" firstAttribute="centerX" secondItem="K5z-Aq-LsA" secondAttribute="centerX" id="CGq-nK-otA"/>
-                                    <constraint firstItem="4AK-Fe-25G" firstAttribute="leading" secondItem="kip-h9-XgR" secondAttribute="leading" id="JSS-mv-fKf"/>
-                                    <constraint firstItem="EKp-FF-WtO" firstAttribute="top" secondItem="K5z-Aq-LsA" secondAttribute="bottom" constant="6" id="RCW-lH-Tc8"/>
-                                    <constraint firstItem="4AK-Fe-25G" firstAttribute="centerX" secondItem="K5z-Aq-LsA" secondAttribute="centerX" id="VcI-NZ-AcD"/>
-                                    <constraint firstItem="4AK-Fe-25G" firstAttribute="top" secondItem="EKp-FF-WtO" secondAttribute="bottom" constant="4" id="g3w-qI-bUR"/>
+                                    <constraint firstAttribute="width" constant="200" id="Dkb-is-QVO"/>
+                                    <constraint firstItem="pJh-ew-dwj" firstAttribute="centerX" secondItem="kip-h9-XgR" secondAttribute="centerX" id="JGv-eL-Mg8"/>
+                                    <constraint firstItem="K5z-Aq-LsA" firstAttribute="centerX" secondItem="kip-h9-XgR" secondAttribute="centerX" id="akO-zT-XAl"/>
                                     <constraint firstItem="K5z-Aq-LsA" firstAttribute="top" secondItem="kip-h9-XgR" secondAttribute="top" id="huI-91-Kgm"/>
-                                    <constraint firstAttribute="bottom" secondItem="4AK-Fe-25G" secondAttribute="bottom" id="kfF-hl-qHB"/>
+                                    <constraint firstItem="pJh-ew-dwj" firstAttribute="top" secondItem="K5z-Aq-LsA" secondAttribute="bottom" constant="6" id="kZd-lh-JMR"/>
+                                    <constraint firstAttribute="bottom" secondItem="pJh-ew-dwj" secondAttribute="bottom" id="nLm-6e-D3e"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -70,8 +66,9 @@
     </scenes>
     <resources>
         <image name="LaunchScreenLogo" width="140" height="110"/>
-        <image name="LaunchScreenSubtitle" width="140.33332824707031" height="13.333333015441895"/>
-        <image name="LaunchScreenTitle" width="113.33333587646484" height="18.666666030883789"/>
+        <namedColor name="code2">
+            <color red="0.15686274509803921" green="0.15686274509803921" blue="0.15686274509803921" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
