@@ -12,7 +12,7 @@ public extension Date {
         let formatter = DateFormatter()
         
         formatter.dateFormat = "yyyy.MM.dd HH:mm"
-        formatter.locale = Locale(identifier: "ko_KR")
+        formatter.locale = .current
         
         return formatter.string(from: self)
     }
@@ -21,7 +21,7 @@ public extension Date {
         let formatter = DateFormatter()
         
         formatter.dateFormat = "yyyyMMdd"
-        formatter.locale = Locale(identifier: "ko_KR")
+        formatter.locale = .current
         
         return Int(Int(formatter.string(from: self)) ?? 0)
     }

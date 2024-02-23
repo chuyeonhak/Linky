@@ -47,8 +47,8 @@ public class UserNotiManager {
     private func getContent() -> UNMutableNotificationContent {
         let notiContent = UNMutableNotificationContent()
         
-        notiContent.title = "안 읽은 링크를 확인하는 날이에요."
-        notiContent.body = "나중에 보려고 저장해둔 링크를 확인해 보세요."
+        notiContent.title = I18N.notiContentTitle
+        notiContent.body = I18N.notiContentMessage
         notiContent.userInfo = ["targetScene": "splash"] // 푸시 받을때 오는 데이터
         
         return notiContent

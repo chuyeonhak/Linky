@@ -72,14 +72,13 @@ final class AddLinkViewController: UIViewController {
     private func makeRightItem() -> UIBarButtonItem {
         let rightButton = UIButton()
         
-        rightButton.setTitle("완료", for: .normal)
+        rightButton.setTitle(I18N.completed, for: .normal)
         rightButton.setTitleColor(.code5, for: .normal)
         rightButton.titleLabel?.font = FontManager.shared.pretendard(weight: .medium, size: 14)
         
         rightButton.rx.tap
             .withLatestFrom(addLinkView.canComplete) { $1 }
             .filter { $0 }
-//            .map { _ in }
             .bind(onNext: getOpenGraph)
             .disposed(by: disposeBag)
         
@@ -88,7 +87,7 @@ final class AddLinkViewController: UIViewController {
     
     private func makeBackButton() -> UIBarButtonItem {
         let backButtonItem = UIBarButtonItem(
-            title: "링크 추가",
+            title: I18N.addLink,
             style: .plain,
             target: nil,
             action: nil)
@@ -108,6 +107,7 @@ final class AddLinkViewController: UIViewController {
         
         button?.setTitleColor(color, for: .normal)
         button?.titleLabel?.font = font
+        button?.sizeToFit()
     }
     
     private func getOpenGraph(_ canComplete: Bool) {

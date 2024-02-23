@@ -35,14 +35,15 @@ class ShareViewController: UIViewController {
     }
     
     let titleLabel = UILabel().then {
-        $0.text = "링크 추가"
+        $0.text = I18N.addLink
         $0.textColor = .code1
         $0.font = FontManager.shared.pretendard(weight: .semiBold, size: 18)
     }
     
     let completeButton = UIButton().then {
-        $0.setTitle("완료", for: .normal)
+        $0.setTitle(I18N.completed, for: .normal)
         $0.setTitleColor(.main, for: .normal)
+        $0.titleLabel?.textAlignment = .center
         $0.titleLabel?.font = FontManager.shared.pretendard(weight: .semiBold, size: 14)
     }
     
@@ -95,9 +96,11 @@ class ShareViewController: UIViewController {
         }
         
         completeButton.snp.makeConstraints {
+            let width = completeButton.titleLabel?.textSize.width ?? .zero
+            
             $0.top.equalToSuperview().inset(12)
             $0.trailing.equalToSuperview().inset(16)
-            $0.width.equalTo(45)
+            $0.width.equalTo(width + 20)
             $0.height.equalTo(36)
         }
     }
@@ -234,14 +237,16 @@ class ShareViewController: UIViewController {
     }
     
     private func openDeleteAlert(indexPath: IndexPath) {
-        let tag = UserDefaultsManager.shared.tagList[safe: indexPath.row]
-        let title = "\"\(tag?.title ?? "")\" 태그를 삭제할까요?"
-        let message = "연결된 모든 링크에서 태그가 삭제됩니다."
+        guard let tag = UserDefaultsManager.shared.tagList[safe: indexPath.row]
+        else { return }
+        
+        let title = I18N.deleteTagTitle.replace(of: "TAG", with: "\"\(tag.title)\"")
+        let message = I18N.deleteTagMessage
         presentAlertController(
             title: title,
             message: message,
-            options: (title: "취소", style: .default), (title: "삭제", style: .destructive)) {
-                if $0 == "삭제" {
+            options: (title: I18N.cancel, style: .default), (title: I18N.delete, style: .destructive)) {
+                if $0 == I18N.delete {
                     self.deleteTag(indexPath: indexPath)
                     UserDefaultsManager.shared.deleteTagInLink(tag: tag)
                 }

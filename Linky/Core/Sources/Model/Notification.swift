@@ -31,22 +31,15 @@ public enum Days: Int {
     case fri
     case sat
     
-    public var korean: String {
+    public var text: String {
         switch self {
-        case .sun:
-            return "일요일"
-        case .mon:
-            return "월요일"
-        case .tue:
-            return "화요일"
-        case .wed:
-            return "수요일"
-        case .thu:
-            return "목요일"
-        case .fri:
-            return "금요일"
-        case .sat:
-            return "토요일"
+        case .sun: return I18N.sunday
+        case .mon: return I18N.monday
+        case .tue: return I18N.tuesday
+        case .wed: return I18N.wednesday
+        case .thu: return I18N.thursday
+        case .fri: return I18N.friday
+        case .sat: return I18N.saturday
         }
     }
 }

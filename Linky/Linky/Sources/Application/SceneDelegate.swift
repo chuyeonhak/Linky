@@ -14,6 +14,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         willConnectTo session: UISceneSession,
         options connectionOptions: UIScene.ConnectionOptions
     ) {
+        sleep(1)
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
         
@@ -111,8 +112,8 @@ extension SceneDelegate {
         blockView.snp.makeConstraints { $0.edges.equalToSuperview() }
         window?.rootViewController?.presentAlertController(
             style: .alert,
-            title: "Linky를 업데이트 해주세요!",
-            options: (title: "업데이트 하러가기", style: .default),
+            title: I18N.updateTitle,
+            options: (title: I18N.updateMessage, style: .default),
             animated: false) { _ in UpdateManager.shared.openAppStore() }
     }
 }

@@ -9,4 +9,9 @@ import Foundation
 
 public extension String {
     var localized: String { NSLocalizedString(self, comment: "") }
+    
+    func replace(of target: String, with replacement: String) -> String {
+        let targetString = "#\(target)#"
+        return self.replacingOccurrences(of: targetString, with: replacement)
+    }
 }
