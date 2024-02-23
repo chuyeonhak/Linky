@@ -77,9 +77,10 @@ public final class AddLinkView: UIView {
         }
         
         pasteButton.snp.makeConstraints {
+            let textSize = pasteButton.titleLabel?.textSize ?? .zero
             $0.top.equalTo(linkTextFiled.snp.bottom).offset(16)
             $0.centerX.equalToSuperview()
-            $0.width.equalTo(120)
+            $0.width.equalTo(textSize.width + 20)
             $0.height.equalTo(26)
         }
     }
