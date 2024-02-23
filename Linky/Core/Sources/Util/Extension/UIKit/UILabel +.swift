@@ -23,4 +23,13 @@ public extension UILabel {
         
         self.attributedText = attributedStr
     }
+    
+    var textSize: CGSize {
+        guard let text,
+              let font = font,
+              case let nsText = text as NSString
+        else { return .zero }
+        
+        return nsText.size(withAttributes: [NSAttributedString.Key.font: font])
+    }
 }
