@@ -83,15 +83,15 @@ final class NotificationSettingsViewController: UIViewController {
     private func openAlert() {
         guard !UserDefaultsManager.shared.isAllowedNotification else { return }
         
-        let title = "알림 설정에서 링키를 허용해주세요."
-        let message = "확인을 누르면 설정 앱으로 이동합니다."
+        let title = I18N.allowNotificationTitle
+        let message = I18N.allowNotificationMessage
         
         presentAlertController(
             title: title,
             message: message,
-            options: (title: "취소", style: .default), (title: "확인", style: .default)) {
-                if $0 == "확인" { self.openLinkySetting() }
-                if $0 == "취소" { self.cancleSetting() }
+            options: (title: I18N.cancel, style: .default), (title: I18N.confirm, style: .default)) {
+                if $0 == I18N.confirm { self.openLinkySetting() }
+                if $0 == I18N.cancel { self.cancelSetting() }
             }
     }
     
@@ -100,7 +100,7 @@ final class NotificationSettingsViewController: UIViewController {
         UIApplication.shared.open(settingsURL, options: [:], completionHandler: nil)
     }
     
-    private func cancleSetting() {
+    private func cancelSetting() {
         notificationSettingsView.notificationSwitch.setOn(false, animated: true)
     }
     

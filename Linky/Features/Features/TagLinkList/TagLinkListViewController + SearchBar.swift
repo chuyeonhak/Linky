@@ -17,11 +17,14 @@ extension TagLinkListViewController: UISearchBarDelegate {
             if searchText.isEmpty {
                 return linkList
             } else {
-                return linkList.filter({
+                return linkList.filter {
+                    let linkMemoContains = $0.linkMemo.lowercased().contains(lowwerText)
                     let titleContains = $0.content?.title?.lowercased().contains(lowwerText)
                     let subtitleContains = $0.content?.subtitle?.lowercased().contains(lowwerText)
                     
-                    return titleContains == true || subtitleContains == true })
+                    return titleContains == true || 
+                    subtitleContains == true ||
+                    linkMemoContains == true}
             }
         }
         

@@ -71,7 +71,7 @@ final class AddLinkDetailViewContrller: UIViewController {
     private func makeRightItem() -> UIBarButtonItem {
         let rightButton = UIButton()
         
-        rightButton.setTitle("완료", for: .normal)
+        rightButton.setTitle(I18N.confirm, for: .normal)
         rightButton.setTitleColor(.main, for: .normal)
         rightButton.titleLabel?.font = FontManager.shared.pretendard(weight: .semiBold, size: 14)
         
@@ -88,12 +88,12 @@ final class AddLinkDetailViewContrller: UIViewController {
             hasTagText()
             editLink(link: link)
             
-            UIApplication.shared.makeToast("링크 수정 완료!")
+            UIApplication.shared.makeToast(I18N.linkModiToast)
             navigationController?.popViewController(animated: true)
         } else {
             hasTagText()
             saveLink()
-            UIApplication.shared.makeToast("링크 추가 완료!")
+            UIApplication.shared.makeToast(I18N.addLinkToast)
             navigationController?.popToRootViewController(animated: true)
         }
         
@@ -142,14 +142,16 @@ final class AddLinkDetailViewContrller: UIViewController {
     }
     
     private func openDeleteAlert(indexPath: IndexPath) {
-        let tag = UserDefaultsManager.shared.tagList[safe: indexPath.row]
-        let title = "\"\(tag?.title ?? "")\" 태그를 삭제할까요?"
-        let message = "연결된 모든 링크에서 태그가 삭제됩니다."
+        guard let tag = UserDefaultsManager.shared.tagList[safe: indexPath.row]
+        else { return }
+        let title = I18N.deleteTagTitle.replace(of: "TAG", with: "\"\(tag.title)\"")
+        let message = I18N.deleteTagMessage
         presentAlertController(
             title: title,
             message: message,
-            options: (title: "취소", style: .default), (title: "삭제", style: .destructive)) {
-                if $0 == "삭제" {
+            options: (title: I18N.cancel, style: .default),
+            (title: I18N.delete, style: .destructive)) {
+                if $0 == I18N.delete {
                     self.deleteTag(indexPath: indexPath)
                     UserDefaultsManager.shared.deleteTagInLink(tag: tag)
                 }

@@ -7,6 +7,8 @@
 
 import UIKit
 
+import Core
+
 enum TagManageType {
     case add
     case edit
@@ -14,8 +16,8 @@ enum TagManageType {
     
     var title: String {
         switch self {
-        case .add: return "태그 추가"
-        case .edit: return "태그 이름 변경"
+        case .add: return I18N.addTag
+        case .edit: return I18N.changeTagName
         case .delete: return ""
         }
     }
@@ -23,15 +25,15 @@ enum TagManageType {
     var subtitle: String {
         switch self {
         case .add: return ""
-        case .edit: return "새로운 태그 이름을 입력해주세요."
+        case .edit: return I18N.addNewTagSubtitle
         case .delete: return ""
         }
     }
     
     var placeholder: String {
         switch self {
-        case .add: return "추가할 태그를 입력해 주세요."
-        case .edit: return "변경할 태그를 입력해 주세요."
+        case .add: return I18N.addTagPlaceholder
+        case .edit: return I18N.changeTagSubtitle
         case .delete: return ""
         }
     }

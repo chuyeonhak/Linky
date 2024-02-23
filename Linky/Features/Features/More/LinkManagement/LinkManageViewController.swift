@@ -65,12 +65,16 @@ final class LinkManageViewController: UIViewController {
         
         switch selectedCount {
         case _ where selectedItems.isEmpty:
-            rightButton?.setImage(UIImage(named: "selectAllOff"), for: .normal)
+            rightButton?.setImage(UIImage(named: "checkOff"), for: .normal)
+            rightButton?.setTitleColor(.code5, for: .normal)
         case selectedItems.count:
-            rightButton?.setImage(UIImage(named: "selectAll"), for: .normal)
+            rightButton?.setImage(UIImage(named: "check"), for: .normal)
+            rightButton?.setTitleColor(.main, for: .normal)
         default:
-            rightButton?.setImage(UIImage(named: "selectAllOn"), for: .normal)
+            rightButton?.setImage(UIImage(named: "checkOn"), for: .normal)
+            rightButton?.setTitleColor(.code3, for: .normal)
         }
+        rightButton?.sizeToFit()
         
         linkManageView.buttonActivate(isSelected: isSelected)
     }
@@ -78,7 +82,12 @@ final class LinkManageViewController: UIViewController {
     private func makeRightItem() -> UIBarButtonItem {
         let rightButton = UIButton()
         
-        let imageStr = linkManageView.selectedItems.isEmpty ? "selectAllOff": "selectAllOn"
+        let imageStr = linkManageView.selectedItems.isEmpty ? "checkOff": "checkOn"
+        let titleColor: UIColor? = linkManageView.selectedItems.isEmpty ? .code5: .code3
+        
+        rightButton.setTitle(" " + I18N.selectAll, for: .normal)
+        rightButton.setTitleColor(titleColor, for: .normal)
+        rightButton.titleLabel?.font = FontManager.shared.pretendard(weight: .medium, size: 14)
         
         rightButton.setImage(UIImage(named: imageStr), for: .normal)
         

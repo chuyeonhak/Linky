@@ -48,7 +48,7 @@ final class TimeLineLinkCell: UICollectionViewCell {
     }
     
     let isWrittenLabel = UILabel().then {
-        $0.text = "안읽음"
+        $0.text = I18N.unread
         $0.textColor = .code4
         $0.font = FontManager.shared.pretendard(weight: .medium, size: 11)
     }
@@ -80,7 +80,6 @@ final class TimeLineLinkCell: UICollectionViewCell {
     let bottomView = UIView()
     
     let titleLabel = UILabel().then {
-        $0.text = "나나방콕 상무점"
         $0.textColor = .code3
         $0.font = FontManager.shared.pretendard(weight: .medium, size: 12)
     }
@@ -214,7 +213,9 @@ final class TimeLineLinkCell: UICollectionViewCell {
     func configure(link: Link) {
         self.link = link
         
-        let isWrittenText = link.isWrittenCount == 0 ? "안읽음": "\(link.isWrittenCount)번 읽음"
+        let isWrittenText = link.isWrittenCount == 0 ? 
+        I18N.unread:
+        I18N.readCount.replace(of: "COUNT", with: String(link.isWrittenCount))
         
         memoLabel.text = link.linkMemo
         dateLabel.text = link.dateToString

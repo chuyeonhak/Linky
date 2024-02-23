@@ -15,7 +15,7 @@ final class TimeHeaderView: UICollectionReusableView {
     let wrapperView = UIView()
     
     let label = UILabel().then {
-        $0.text = "대기중인 미션"
+        $0.text = ""
         $0.textColor = .code2
         $0.font = FontManager.shared.pretendard(weight: .semiBold, size: 18)
     }

@@ -86,9 +86,9 @@ final class TagViewController: UIViewController {
         
         searchController.searchBar.delegate = self
         searchController.searchBar.backgroundColor = .code7
-        searchController.searchBar.setValue("취소", forKey: "cancelButtonText")
-        searchController.searchBar.placeholder = "검색어를 입력해 주세요."
-        searchController.obscuresBackgroundDuringPresentation = false 
+        searchController.searchBar.setValue(I18N.cancel, forKey: "cancelButtonText")
+        searchController.searchBar.placeholder = I18N.findTagPlaceholder
+        searchController.obscuresBackgroundDuringPresentation = false
         
         self.navigationItem.searchController = searchController
     }
@@ -141,7 +141,7 @@ private extension TagViewController {
     private func makeLeftItem() -> UIBarButtonItem {
         let leftButton = UIButton()
         
-        leftButton.setTitle("태그", for: .normal)
+        leftButton.setTitle(I18N.tag, for: .normal)
         leftButton.setTitleColor(.code3, for: .normal)
         leftButton.titleLabel?.font = FontManager.shared.pretendard(weight: .bold, size: 24)
         

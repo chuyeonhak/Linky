@@ -44,7 +44,7 @@ extension TagManageView: UITableViewDataSource {
                    trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath)
     -> UISwipeActionsConfiguration? {
         let deleteAction = UIContextualAction(style: .destructive,
-                                              title: "삭제") { [weak self] action, view, success in
+                                              title: I18N.delete) { [weak self] action, view, success in
             success(true)
             self?.viewModel.input.tagHandle.onNext((.delete, indexPath.row))
         }.then {
@@ -52,7 +52,7 @@ extension TagManageView: UITableViewDataSource {
         }
         
         let editAction = UIContextualAction(style: .normal,
-                                              title: "수정") { [weak self] action, view, success in
+                                            title: I18N.edit) { [weak self] action, view, success in
             self?.viewModel.input.tagHandle.onNext((.edit, indexPath.row))
         }.then {
             $0.backgroundColor = .code4

@@ -61,7 +61,7 @@ private extension MoreViewController {
     private func makeLeftItem() -> UIBarButtonItem {
         let leftButton = UIButton()
         
-        leftButton.setTitle("더보기", for: .normal)
+        leftButton.setTitle(I18N.more, for: .normal)
         leftButton.setTitleColor(.code2, for: .normal)
         leftButton.titleLabel?.font = FontManager.shared.pretendard(weight: .bold, size: 22)
         

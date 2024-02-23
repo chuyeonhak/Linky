@@ -5,6 +5,8 @@
 //  Created by chuchu on 2023/06/08.
 //
 
+import Core
+
 public enum LockType {
     case normal
     case newPassword  // 비밀 번호 입력해주세요.
@@ -15,26 +17,24 @@ public enum LockType {
     var title: String {
         switch self {
         case .normal, .newPassword, .checkPassword, .enterLockScreen:
-            return "비밀번호 입력"
+            return I18N.enterPassword
         case .changePassword:
-            return "새로운 암호 입력"
+            return I18N.enterNewPassword
         }
     }
     
     var subtitle: String {
         switch self {
         case .normal, .newPassword, .enterLockScreen:
-            return "비밀번호 네 자리를 입력해 주세요."
+            return I18N.enterPasswordSubtitle
         case .changePassword:
-            return "새로운 암호를 입력해 주세요."
+            return I18N.enterNewPasswordSubtitle
         case .checkPassword:
-            return "확인을 위해 한 번 더 입력해 주세요."
+            return I18N.enterPasswordAgain
         }
     }
     
-    var invalidText: String {
-        "전에 입력한 번호와 일치하지 않아요."
-    }
+    var invalidText: String { I18N.passwordErrorSubtitle }
     
     var pads: [[PadView.PadType]] {
         return [[.number(1), .number(2), .number(3)],

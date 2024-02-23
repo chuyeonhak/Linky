@@ -71,11 +71,11 @@ extension TimeLineView: UICollectionViewDataSource {
     }
     
     private func getSettingMenu(link: Link) -> UIMenu {
-        let editAction = UIAction(title: "수정",
+        let editAction = UIAction(title: I18N.edit,
                                   image: UIImage(named: "icoEditOn"),
                                   handler: { [weak self] _ in self?.editLink(link: link) })
         
-        let deleteAction = UIAction(title: "삭제",
+        let deleteAction = UIAction(title: I18N.delete,
                                     image: UIImage(named: "icoTrashCanOnRed"),
                                     attributes: .destructive,
                                     handler: { [weak self] _ in self?.deleteLink(link: link) })
@@ -93,14 +93,14 @@ extension TimeLineView: UICollectionViewDataSource {
               copyLinkList.indices ~= linkIndex
         else { return }
         
-        
         copyLinkList[linkIndex].isRemoved = true
         baseDataSource[section].values.remove(at: item)
         
         UserDefaultsManager.shared.linkList = copyLinkList
         
         linkCollectionView.performBatchUpdates {
-            linkCollectionView.deleteItems(at: [IndexPath(item: item, section: section)])
+            let deleteItem = baseDataSource[section].values.count - item
+            linkCollectionView.deleteItems(at: [IndexPath(item: deleteItem, section: section)])
         }
         
         linkCollectionView.isHidden = copyLinkList.filter({ !$0.isRemoved }).isEmpty
@@ -111,7 +111,7 @@ extension TimeLineView: UICollectionViewDataSource {
     }
     
     private func copyUrl(link: Link) {
-        viewModel.input.toastMessage.onNext("링크 복사가 완료되었습니다.")
+        viewModel.input.toastMessage.onNext(I18N.linkCopyComplete)
         UIPasteboard.general.string = link.url
     }
 }

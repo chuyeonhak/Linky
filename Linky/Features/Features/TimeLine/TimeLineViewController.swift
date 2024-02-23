@@ -51,7 +51,9 @@ final class TimeLineViewController: UIViewController {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
+        
         timeLineView.linkCollectionView.collectionViewLayout.invalidateLayout()
+        setSemanticContent()
     }
     
     private func bind() {
@@ -102,19 +104,26 @@ private extension TimeLineViewController {
     }
     
     private func makeRightItem() -> UIBarButtonItem {
-        let children = [UIAction(title: "전체",
+        let rightButton = UIButton().then {
+            $0.setTitle(I18N.all, for: .normal)
+            $0.setImage(UIImage(named: "icoArrowBottom"), for: .normal)
+            $0.setTitleColor(.code3, for: .normal)
+            $0.titleLabel?.font = FontManager.shared.pretendard(weight: .semiBold, size: 14)
+            $0.showsMenuAsPrimaryAction = true
+        }
+        
+        let children = [UIAction(title: I18N.all,
                                  handler: { [weak self] _ in self?.sortList(type: .all) }),
-                        UIAction(title: "읽음",
+                        UIAction(title: I18N.read,
                                  image: UIImage(named: "icoEyeOn"),
                                  handler: { [weak self] _ in self?.sortList(type: .read) }),
-                        UIAction(title: "안 읽음",
+                        UIAction(title: I18N.unread,
                                  image: UIImage(named: "icoEyeOff"),
                                  handler: { [weak self] _ in self?.sortList(type: .notRead) })]
         
-        let menu = UIMenu(options: .displayInline,
-                          children: children)
+        rightButton.menu = UIMenu(options: .displayInline, children: children)
         
-        return UIBarButtonItem(image: UIImage(named: "icoLinkAll"), menu: menu)
+        return UIBarButtonItem(customView: rightButton)
         
     }
     
@@ -147,9 +156,15 @@ private extension TimeLineViewController {
             switch type {
             case .all: return linkList
             case .read: 
-                return linkList.filter { $0.values.filter { link in link.isWrittenCount == 0 }.isEmpty }
+                return linkList.compactMap {
+                    let readList = $0.values.filter { link in link.isWrittenCount != 0 }
+                    return readList.isEmpty ? nil: (key: $0.key, values: readList)
+                }
             case .notRead:
-                return linkList.filter { $0.values.filter { link in link.isWrittenCount != 0 }.isEmpty }
+                return linkList.compactMap {
+                    let unreadList = $0.values.filter { link in link.isWrittenCount == 0 }
+                    return unreadList.isEmpty ? nil: (key: $0.key, values: unreadList)
+                }
             }
         }
         
@@ -158,16 +173,10 @@ private extension TimeLineViewController {
     }
     
     private func changeAssets(type: LinkSortType) {
-        let item = navigationItem.rightBarButtonItem
-        var imageString: String {
-            switch type {
-            case .all: return "icoLinkAll"
-            case .read: return "icoLinkRead"
-            case .notRead: return "icoLinkNotRead"
-            }
-        }
+        let button = navigationItem.rightBarButtonItem?.customView as? UIButton
         
-        item?.image = UIImage(named: imageString)
+        button?.setTitle(type.text, for: .normal)
+        button?.sizeToFit()
     }
     
     private func openLinkDetailView(link: Core.Link) {
@@ -175,8 +184,14 @@ private extension TimeLineViewController {
         
         let vc = AddLinkDetailViewContrller(metaData: metaData, link: link)
         
-        navigationItem.backBarButtonItem = makeBackButton(title: "링크 수정")
+        navigationItem.backBarButtonItem = makeBackButton(title: I18N.editLink)
         navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    private func setSemanticContent() {
+        let button = navigationItem.rightBarButtonItem?.customView as? UIButton
+        
+        button?.semanticContentAttribute = .forceRightToLeft
     }
     
     private func openWebView(link: Core.Link) {
@@ -186,7 +201,7 @@ private extension TimeLineViewController {
         let webViewController = MainWebViewController(linkUrl: url)
         
         upWrittenCount(link: link)
-        navigationItem.backBarButtonItem = makeBackButton(title: "돌아가기")
+        navigationItem.backBarButtonItem = makeBackButton(title: I18N.back)
         navigationController?.pushViewController(webViewController, animated: true)
     }
     

@@ -19,7 +19,7 @@ final class LockView: UIView {
     let auth = BiometricsAuthManager()
     
     let lockLabel = UILabel().then {
-        $0.text = "화면 잠금"
+        $0.text = I18N.useLock
         $0.textColor = .code2
         $0.font = FontManager.shared.pretendard(weight: .semiBold, size: 15)
     }
@@ -48,9 +48,9 @@ final class LockView: UIView {
     }
     
     lazy var warningLabel = UILabel().then {
-        $0.text = "비밀번호를 잃어버릴 경우 앱을 재설치 해야 하며,\n저장된 링크는 모두 삭제됩니다."
+        $0.text = I18N.passwordGuide
         $0.textColor = .sub
-        $0.numberOfLines = 2
+        $0.numberOfLines = 0
         $0.font = FontManager.shared.pretendard(weight: .medium, size: 13)
         $0.alpha = lockSwitch.isOn ? 1 : 0
     }
@@ -157,11 +157,6 @@ final class LockView: UIView {
                     self?.auth.execute()
                 }
             }.disposed(by: disposeBag)
-        
-//        UserDefaults.standard.rx.observe(Bool.self, UserDefaultsManager.Key.usePassword)
-//            .map { $0 ?? false }
-//            .bind { [weak self] in self?.unlock(usePassword: $0) }
-//            .disposed(by: disposeBag)
     }
 
     private func settingLockView(type: LockSetting) -> UIView {

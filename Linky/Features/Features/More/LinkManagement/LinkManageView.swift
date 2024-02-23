@@ -126,8 +126,9 @@ final class LinkManageView: UIView {
     
     private func configData(linkList: [Link] = UserDefaultsManager.shared.linkList) {
         let linkCount = linkList.filter { $0.isRemoved }.count
+        let text = I18N.linkCountText.replace(of: "COUNT", with: String(linkCount))
         
-        titleLabel.text = "\(linkCount)개의 링크가 있어요."
+        titleLabel.text = text
         selectedItems = Array(repeating: false, count: linkCount)
         linkCollectionView.reloadData()
         

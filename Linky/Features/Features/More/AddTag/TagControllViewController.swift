@@ -63,7 +63,7 @@ final class TagControlViewController: UIViewController {
     private func makeRightItem() -> UIBarButtonItem {
         let rightButton = UIButton()
         
-        rightButton.setTitle("완료", for: .normal)
+        rightButton.setTitle(I18N.completed, for: .normal)
         rightButton.setTitleColor(.code5, for: .normal)
         rightButton.titleLabel?.font = FontManager.shared.pretendard(weight: .medium, size: 14)
         
@@ -85,6 +85,7 @@ final class TagControlViewController: UIViewController {
         
         button?.setTitleColor(color, for: .normal)
         button?.titleLabel?.font = font
+        button?.sizeToFit()
     }
     
     private func saveTag() {
@@ -128,7 +129,7 @@ final class TagControlViewController: UIViewController {
     
     private func sameTagError() {
         tagControllView.subtitleLabel.shakeAnimation()
-        tagControllView.subtitleLabel.text = "동일한 이름의 태그가 있습니다."
+        tagControllView.subtitleLabel.text = I18N.tagNameErrorText
         tagControllView.subtitleLabel.textColor = .error
         
         vibrator.notificationOccurred(.error)

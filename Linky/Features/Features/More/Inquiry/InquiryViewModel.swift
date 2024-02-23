@@ -78,12 +78,12 @@ struct InquiryViewModel {
     private func checkLimit() {
         guard UserDefaultsManager.shared.limitInquiryDic[Date().toInt()] ?? 0 < 10
         else {
-            model.toastMessage.onNext("금일 건의사항 최대 횟수를 넘으셨습니다.")
+            model.toastMessage.onNext(I18N.maxCountInquiryToast)
             return
         }
         
         guard model.canSubmit.value else {
-            model.toastMessage.onNext("내용을 입력해주세요!")
+            model.toastMessage.onNext(I18N.inquiryContentToast)
             return
         }
         
@@ -102,7 +102,7 @@ struct InquiryViewModel {
             switch data.result {
             case .success(_):
                 UserDefaultsManager.shared.todayCountUp()
-                self.model.toastMessage.onNext("문의 완료!")
+                self.model.toastMessage.onNext(I18N.submitCompleted)
                 self.model.dismissAction.onNext(())
             case .failure(let error):
                 print(error)
@@ -129,10 +129,10 @@ extension InquiryViewModel {
         
         var title: String {
             switch self {
-            case .none: "문의 유형을 선택해 주세요."
-            case .error: "오류가 발생했어요."
-            case .want: "이런 게 필요해요."
-            case .etc: "기타 문의"
+            case .none: I18N.categoryNone
+            case .error: I18N.categoryError
+            case .want: I18N.categoryWant
+            case .etc: I18N.categoryEtc
             }
         }
         

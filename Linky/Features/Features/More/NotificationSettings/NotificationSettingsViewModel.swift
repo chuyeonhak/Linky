@@ -63,17 +63,17 @@ final class NotificationSettingsViewModel {
     
     func saveNotification(noti: NotificationSetting) {
         guard model.canSave.value else {
-            model.toastMessage.onNext("설정을 완료하신 후 저장해 주세요.")
+            model.toastMessage.onNext(I18N.notificationSettingToast)
             return
         }
         
         UserNotiManager.shared.saveNoti(noti: noti) { isSuccess in
             if isSuccess {
-                self.model.toastMessage.onNext("알림을 저장하였습니다.")
+                self.model.toastMessage.onNext(I18N.notificationSaveToast)
                 self.model.canSave.accept(false)
                 self.model.notiSetting.accept(noti)
             } else {
-                self.model.toastMessage.onNext("잠시 후 다시 시도해 주세요.")
+                self.model.toastMessage.onNext(I18N.networkErrorToast)
             }
         }
     }

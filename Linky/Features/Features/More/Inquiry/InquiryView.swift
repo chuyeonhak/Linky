@@ -19,7 +19,7 @@ final class InquiryView: UIView {
     let disposeBag = DisposeBag()
     
     let categoryLabel = UILabel().then {
-        $0.text = "카테고리"
+        $0.text = I18N.category
         $0.textColor = .code3
         $0.font = FontManager.shared.pretendard(weight: .medium, size: 13)
     }
@@ -27,7 +27,7 @@ final class InquiryView: UIView {
     let categoryImageView = UIImageView(image: UIImage(named: "asterisk"))
     
     lazy var categorySelectButton = UIButton().then {
-        $0.setTitle("문의 내용을 입력해 주세요.", for: .normal)
+        $0.setTitle(I18N.categoryNone, for: .normal)
         $0.setTitleColor(.code4, for: .normal)
         $0.setImage(UIImage(named: "icoArrowBottom"), for: .normal)
         $0.titleLabel?.font = FontManager.shared.pretendard(weight: .medium, size: 16)
@@ -42,7 +42,7 @@ final class InquiryView: UIView {
     }
     
     let inquiryLabel = UILabel().then {
-        $0.text = "문의내용"
+        $0.text = I18N.inquiryContent
         $0.textColor = .code3
         $0.font = FontManager.shared.pretendard(weight: .medium, size: 13)
     }
@@ -55,7 +55,7 @@ final class InquiryView: UIView {
         $0.contentInset = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
         $0.addCornerRadius(radius: 12)
         $0.addBorder(color: .clear)
-        $0.addPlaceholder(text: "마음이 여린 개발자입니다.\n비속어는 개발자의 마음을 아프게 합니다.", color: .code4)
+        $0.addPlaceholder(text: I18N.inquiryPlaceholder, color: .code4)
     }
     
     init(viewModel: InquiryViewModel) {
@@ -176,57 +176,5 @@ final class InquiryView: UIView {
         let titleColor: UIColor? = category == .none ? .code4: .code2
         categorySelectButton.setTitle(category.title, for: .normal)
         categorySelectButton.setTitleColor(titleColor, for: .normal)
-    }
-}
-
-
-public struct NetworkManager {
-    static let shared = NetworkManager()
-    @frozen
-    enum API {
-        case error(SlackMessageModel)
-        case want(SlackMessageModel)
-        case etc(SlackMessageModel)
-        
-        var urlString: String {
-            switch self {
-            case .error(_):
-                "https://hooks.slack.com/services/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"
-            case .want(_):
-                "https://hooks.slack.com/services/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"
-            case .etc(_):
-                "https://hooks.slack.com/services/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"
-            }
-        }
-        var url: URL { URL(string: urlString)! }
-        
-        var method: HTTPMethod {
-            switch self {
-            case .error(_), .want(_), .etc(_): .post
-            }
-        }
-        
-        var parameters: [String: Any] {
-            switch self {
-            case .error(let model), .want(let model), .etc(let model): model.json
-            }
-        }
-        
-        var encoder: ParameterEncoding {
-            switch self {
-            case .error(_), .want(_), .etc(_): JSONEncoding()
-            }
-        }
-        
-        var headers: HTTPHeaders { ["Content-Type": "application/json"] }
-        
-    }
-    
-    func request(api: API, completion: @escaping (AFDataResponse<Data?>) -> Void) {
-        AF.request(api.url,
-                   method: api.method,
-                   parameters: api.parameters,
-                   encoding: api.encoder,
-                   headers: api.headers).response(completionHandler: completion)
     }
 }

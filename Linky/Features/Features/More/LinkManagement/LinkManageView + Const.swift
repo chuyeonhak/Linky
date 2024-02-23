@@ -7,6 +7,8 @@
 
 import UIKit
 
+import Core
+
 extension LinkManageView {
     struct Const {
         enum Custom {
@@ -27,8 +29,8 @@ extension LinkManageView {
         }
         
         enum Text {
-            static let emptyButtonTitle = "비우기"
-            static let recoveryButtonTitle = "복원하기"
+            static let emptyButtonTitle = I18N.clear
+            static let recoveryButtonTitle = I18N.recover
         }
     }
 }

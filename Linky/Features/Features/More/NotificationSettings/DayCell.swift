@@ -59,7 +59,7 @@ final class DayCell: UICollectionViewCell {
         let textColor: UIColor? = isSelected ? .code2: .code4
         let opacity: Float = isSelected ? 0.0: 0.08
         
-        titleLabel.text = days.korean
+        titleLabel.text = days.text
         titleLabel.textColor = textColor
         contentView.backgroundColor = bgColor
         contentView.layer.shadowOpacity = opacity

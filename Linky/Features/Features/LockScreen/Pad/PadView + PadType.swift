@@ -20,7 +20,7 @@ extension PadView {
         var title: String? {
             switch self {
             case .number(let number): return String(number)
-            case .cancel: return "취소"
+            case .cancel: return I18N.cancel
             default: return nil
             }
         }

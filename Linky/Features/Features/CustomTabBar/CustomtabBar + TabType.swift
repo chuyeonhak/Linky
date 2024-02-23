@@ -7,6 +7,8 @@
 
 import UIKit
 
+import Core
+
 extension CustomTabBar {
     enum TabType: Int, CaseIterable {
         case timeline = 0
@@ -16,9 +18,9 @@ extension CustomTabBar {
         
         var title: String {
             switch self {
-            case .timeline: return "타임라인"
-            case .tag: return "태그"
-            case .more: return "더보기"
+            case .timeline: return I18N.timeline
+            case .tag: return I18N.tag
+            case .more: return I18N.more
             case .link: return "링크"
             }
         }
@@ -46,15 +48,15 @@ extension CustomTabBar {
         
         var emptyText: String {
             switch self {
-            case .timeline: return "내가 추가한 링크를\n시간 순서대로 볼 수 있어요."
-            case .tag: return "내가 추가한 링크를\n태그 별로 볼 수 있어요"
+            case .timeline: return I18N.timeEmptyText
+            case .tag: return I18N.timeEmptyText
             case .more: return ""
-            case .link: return "링크 등록 완료!"
+            case .link: return I18N.addLinkComplete
             }
         }
         
         var addLinkTitle: String {
-            return "링크 추가하기"
+            return I18N.addLink
         }
     }
 }

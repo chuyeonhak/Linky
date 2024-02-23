@@ -47,7 +47,7 @@ final class LinkManageCell: UICollectionViewCell {
     }
     
     let isWrittenLabel = UILabel().then {
-        $0.text = "안읽음"
+        $0.text = I18N.unread
         $0.textColor = .code5
         $0.font = FontManager.shared.pretendard(weight: .medium, size: 11)
     }
@@ -148,7 +148,10 @@ final class LinkManageCell: UICollectionViewCell {
     func configure(link: Link, isSelected: Bool) {
         let custom = TagManageCell.Const.Custom.self
         let asset = isSelected ? custom.checkBoxOn: custom.checkBoxOff
-        let isWrittenText = link.isWrittenCount == 0 ? "안 읽음": "\(link.isWrittenCount)번 읽음"
+        let isWrittenText = link.isWrittenCount == 0 ?
+        I18N.unread:
+        I18N.readCount.replace(of: "COUNT", with: String(link.isWrittenCount))
+        
         
         titleLabel.text = link.content?.title ?? " "
         urlLabel.text = link.content?.url

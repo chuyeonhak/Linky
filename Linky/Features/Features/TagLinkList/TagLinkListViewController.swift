@@ -17,7 +17,7 @@ final class TagLinkListViewController: UIViewController {
     var tagLinkListView: TagLinkListView!
     var currentSortType: LinkSortType = .all
     let tagData: TagData!
-    let linkList: [Link]!
+    var linkList: [Link]!
     let disposeBag = DisposeBag()
     let viewModel = TagLinkListViewModel()
     
@@ -60,6 +60,12 @@ final class TagLinkListViewController: UIViewController {
         
         checkLinkList()
     }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        
+        setSemanticContent()
+    }
 }
 
 private extension TagLinkListViewController {
@@ -72,27 +78,26 @@ private extension TagLinkListViewController {
     }
     
     private func makeRightItem() -> UIBarButtonItem {
-        let rightButton = UIButton()
+        let rightButton = UIButton().then {
+            $0.setTitle(I18N.all, for: .normal)
+            $0.setImage(UIImage(named: "icoArrowBottom"), for: .normal)
+            $0.setTitleColor(.code3, for: .normal)
+            $0.titleLabel?.font = FontManager.shared.pretendard(weight: .semiBold, size: 14)
+            $0.showsMenuAsPrimaryAction = true
+        }
         
-        rightButton.setImage(UIImage(named: "icoArrowBottom"), for: .normal)
-        rightButton.setTitle("전체", for: .normal)
-        rightButton.setTitleColor(.code3, for: .normal)
-        rightButton.titleLabel?.font = FontManager.shared.pretendard(weight: .semiBold, size: 14)
-        rightButton.semanticContentAttribute = .forceRightToLeft
-        
-        let children = [UIAction(title: "전체",
+        let children = [UIAction(title: I18N.all,
                                  handler: { [weak self] _ in self?.sortList(type: .all) }),
-                        UIAction(title: "읽음",
+                        UIAction(title: I18N.read,
                                  image: UIImage(named: "icoEyeOn"),
                                  handler: { [weak self] _ in self?.sortList(type: .read) }),
-                        UIAction(title: "안 읽음",
+                        UIAction(title: I18N.unread,
                                  image: UIImage(named: "icoEyeOff"),
                                  handler: { [weak self] _ in self?.sortList(type: .notRead) })]
         
-        let menu = UIMenu(options: .displayInline,
-                          children: children)
+        rightButton.menu = UIMenu(options: .displayInline,children: children)
         
-        return UIBarButtonItem(image: UIImage(named: "icoLinkAll"), menu: menu)
+        return UIBarButtonItem(customView: rightButton)
     }
     
     private func makeBackButton(title: String) -> UIBarButtonItem {
@@ -113,8 +118,8 @@ private extension TagLinkListViewController {
         let searchController = UISearchController(searchResultsController: nil)
         
         searchController.searchBar.delegate = self
-        searchController.searchBar.setValue("취소", forKey: "cancelButtonText")
-        searchController.searchBar.placeholder = "검색어를 입력해 주세요."
+        searchController.searchBar.setValue(I18N.cancel, forKey: "cancelButtonText")
+        searchController.searchBar.placeholder = I18N.findLinkInfoPlaceholder
         searchController.obscuresBackgroundDuringPresentation = false
         
         self.navigationItem.searchController = searchController
@@ -129,6 +134,7 @@ private extension TagLinkListViewController {
     private func sortList(type: LinkSortType = .all) {
         currentSortType = type
         
+        print(linkList.count)
         var baseDataSource: [Link] {
             switch type {
             case .all: return linkList
@@ -137,21 +143,23 @@ private extension TagLinkListViewController {
             }
         }
         
+        print(linkList.count)
+        
         checkLinkList(baseDataSrouce: baseDataSource)
         changeAssets(type: type)
     }
     
     private func changeAssets(type: LinkSortType) {
-        let item = navigationItem.rightBarButtonItem
-        var imageString: String {
-            switch type {
-            case .all: return "icoLinkAll"
-            case .read: return "icoLinkRead"
-            case .notRead: return "icoLinkNotRead"
-            }
-        }
+        let button = navigationItem.rightBarButtonItem?.customView as? UIButton
         
-        item?.image = UIImage(named: imageString)
+        button?.setTitle(type.text, for: .normal)
+        button?.sizeToFit()
+    }
+    
+    private func setSemanticContent() {
+        let button = navigationItem.rightBarButtonItem?.customView as? UIButton
+        
+        button?.semanticContentAttribute = .forceRightToLeft
     }
     
     private func bind() {
@@ -172,7 +180,7 @@ private extension TagLinkListViewController {
         guard let metaData = link.content else { return }
         let vc = AddLinkDetailViewContrller(metaData: metaData, link: link)
         
-        navigationItem.backBarButtonItem = makeBackButton(title: "링크 수정")
+        navigationItem.backBarButtonItem = makeBackButton(title: I18N.editLink)
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -183,7 +191,7 @@ private extension TagLinkListViewController {
         let webViewController = MainWebViewController(linkUrl: url)
         
         upWrittenCount(link: link)
-        navigationItem.backBarButtonItem = makeBackButton(title: "돌아가기")
+        navigationItem.backBarButtonItem = makeBackButton(title: I18N.back)
         navigationController?.pushViewController(webViewController, animated: true)
     }
     
@@ -206,8 +214,9 @@ private extension TagLinkListViewController {
         let tagDic = UserDefaultsManager.shared.getTagDic()
         var linkList = tagDic[tagData] ?? []
         
-        if tagData.title == "태그 없음" { linkList += UserDefaultsManager.shared.noTagLinkList }
+        if tagData.title == I18N.noTags { linkList += UserDefaultsManager.shared.noTagLinkList }
         
+        self.linkList = linkList
         tagLinkListView.linkList = linkList
         tagLinkListView.linkCollectionView.reloadData()
     }

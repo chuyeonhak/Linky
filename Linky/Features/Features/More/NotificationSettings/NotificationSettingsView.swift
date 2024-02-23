@@ -20,7 +20,7 @@ final class NotificationSettingsView: UIView {
     var notiSetting = UserDefaultsManager.shared.notiSetting
     
     let notificationLabel = UILabel().then {
-        $0.text = "알림 사용"
+        $0.text = I18N.useNotifications
         $0.textColor = .code2
         $0.font = FontManager.shared.pretendard(weight: .semiBold, size: 15)
     }
@@ -45,7 +45,7 @@ final class NotificationSettingsView: UIView {
     }
     
     let setDayLabel = UILabel().then {
-        $0.text = "요일 설정"
+        $0.text = I18N.daySetting
         $0.textColor = .code2
         $0.font = FontManager.shared.pretendard(weight: .semiBold, size: 14)
     }
@@ -70,13 +70,13 @@ final class NotificationSettingsView: UIView {
     }()
     
     let setTimeLabel = UILabel().then {
-        $0.text = "시간 설정"
+        $0.text = I18N.timeSetting
         $0.textColor = .code2
         $0.font = FontManager.shared.pretendard(weight: .semiBold, size: 14)
     }
     
     let guideLabel = UILabel().then {
-        $0.text = "링키를 보고 싶은 요일과 시간을 정해보세요:)"
+        $0.text = I18N.notificationGuideText
         $0.textColor = .code5
         $0.font = FontManager.shared.pretendard(weight: .medium, size: 14)
     }
@@ -84,12 +84,12 @@ final class NotificationSettingsView: UIView {
     lazy var datePicker = UIDatePicker().then {
         $0.datePickerMode = .time
         $0.preferredDatePickerStyle = .wheels
-        $0.locale = Locale(identifier: "ko_KR")
+        $0.timeZone = .current
         $0.date = notiSetting.time ?? Date()
     }
     
     lazy var saveButton = UIButton().then {
-        $0.setTitle("저장하기", for: .normal)
+        $0.setTitle(I18N.save, for: .normal)
         $0.setTitleColor(.white, for: .normal)
         $0.addCornerRadius(radius: 10)
         $0.backgroundColor = .code5

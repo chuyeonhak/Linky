@@ -18,7 +18,7 @@ final class AddLinkCompleteView: UIView {
     
     lazy var homeButton = UIButton().then {
         $0.addCornerRadius(radius: 10)
-        $0.setTitle("저장된 링크 보기", for: .normal)
+        $0.setTitle(I18N.viewLinks, for: .normal)
         $0.setTitleColor(emptyView.addLinkButton.titleLabel?.textColor, for: .normal)
         $0.titleLabel?.font = FontManager.shared.pretendard(weight: .bold, size: 15)
         $0.backgroundColor = .code4

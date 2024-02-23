@@ -21,7 +21,7 @@ final class TipView: UIView {
     
     let shareButton = UIButton().then {
         $0.addCornerRadius(radius: 10)
-        $0.setTitle("링키 바로 추가하기", for: .normal)
+        $0.setTitle(I18N.addLinkyText, for: .normal)
         $0.setTitleColor(.white, for: .normal)
         $0.backgroundColor = .main
         $0.titleLabel?.font = FontManager.shared.pretendard(weight: .bold, size: 15)

@@ -74,12 +74,13 @@ final class InquiryViewController: UIViewController {
     
     private func makeRightItem() -> UIBarButtonItem {
         let rightButton = UIButton().then {
-            $0.setTitle("제출하기", for: .normal)
+            $0.setTitle(I18N.submit, for: .normal)
             $0.setTitleColor(.code5, for: .normal)
             $0.titleLabel?.font = FontManager.shared.pretendard(weight: .semiBold, size: 14)
         }
         
         rightButton.rx.tap
+            .do(onNext: endEditing)
             .bind(to: viewModel.input.submitButtonTap)
             .disposed(by: disposeBag)
         
@@ -92,12 +93,16 @@ final class InquiryViewController: UIViewController {
         rightButton?.setTitleColor(color, for: .normal)
     }
     
+    private func endEditing() {
+        inquiryView.inquiryTextView.resignFirstResponder()
+    }
+    
     private func openSubmitAlert() {
-        let title = "문의를 제출할까요?"
+        let title = I18N.submitAlertTitle
         presentAlertController(
             title: title,
-            options: (title: "취소", style: .cancel), (title: "제출", style: .default)) {
-                if $0 == "제출" { self.viewModel.input.submitInquiry.onNext(()) }
+            options: (title: I18N.cancel, style: .cancel), (title: I18N.submit, style: .default)) {
+                if $0 == I18N.submit { self.viewModel.input.submitInquiry.onNext(()) }
             }
     }
 }

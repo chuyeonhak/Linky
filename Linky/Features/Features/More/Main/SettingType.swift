@@ -6,7 +6,9 @@
 //
 
 import UIKit
-//
+
+import Core
+
 enum SettingType: CaseIterable {
     case notificationSettings
     case tips
@@ -18,13 +20,13 @@ enum SettingType: CaseIterable {
     
     var title: String {
         switch self {
-        case .notificationSettings: return "알림설정"
-        case .tips: return "링키 120% 활용하기"
-        case .lock: return "화면 잠금 설정"
-        case .tagManagement: return "태그 관리"
-        case .linkManagement: return "링크 휴지통"
+        case .notificationSettings: return I18N.notificationSettings
+        case .tips: return I18N.tips
+        case .lock: return I18N.lock
+        case .tagManagement: return I18N.tagManagement
+        case .linkManagement: return I18N.linkManagement
 //        case .synchronizationGuide: return "동기화 안내"
-        case .inquiry: return "문의하기"
+        case .inquiry: return I18N.inquiry
         }
     }
     

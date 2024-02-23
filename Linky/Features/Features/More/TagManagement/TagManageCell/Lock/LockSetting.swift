@@ -7,6 +7,8 @@
 
 import UIKit
 
+import Core
+
 extension LockView {
     enum LockSetting {
         case changePassword
@@ -14,8 +16,8 @@ extension LockView {
         
         var title: String {
             switch self {
-            case .changePassword: return "비밀번호 변경"
-            case .biometricsAuth: return "생체인증 사용"
+            case .changePassword: return I18N.changePassword
+            case .biometricsAuth: return I18N.useBiometrics
             }
         }
         

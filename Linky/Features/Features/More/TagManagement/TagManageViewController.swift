@@ -67,11 +67,12 @@ public final class TagManageViewController: UIViewController {
     private func checkTagList() {
         let tagList = UserDefaultsManager.shared.tagList
         let selectedItems = Array(repeating: false, count: tagList.count)
+        let text = I18N.tagCountText.replace(of: "COUNT", with: String(tagList.count))
         
         self.tagList = tagList
         
         tagManageView.selectedItems = selectedItems
-        tagManageView.titleLabel.text = "\(tagList.count)개의 태그가 있어요."
+        tagManageView.titleLabel.text = text
         tagManageView.tagTableView.reloadData()
         setNavigationItem(selectedCount: 0)
     }
@@ -88,14 +89,16 @@ public final class TagManageViewController: UIViewController {
     }
     
     private func openAlert(handle: TagManageViewModel.TagHandle) {
-        let tag = UserDefaultsManager.shared.tagList[safe: handle.row]
-        let title = "\"\(tag?.title ?? "")\" 태그를 삭제할까요?"
-        let message = "연결된 모든 링크에서 태그가 삭제됩니다."
+        guard let tag = UserDefaultsManager.shared.tagList[safe: handle.row]
+        else { return }
+        
+        let title = I18N.deleteTagTitle.replace(of: "TAG", with: "\"\(tag.title)\"")
+        let message = I18N.deleteTagMessage
         presentAlertController(
             title: title,
             message: message,
-            options: (title: "취소", style: .default), (title: "삭제", style: .destructive)) {
-                if $0 == "삭제" {
+            options: (title: I18N.cancel, style: .default), (title: I18N.delete, style: .destructive)) {
+                if $0 == I18N.delete {
                     self.deleteTag(handle: handle)
                 }
             }
@@ -107,13 +110,14 @@ public final class TagManageViewController: UIViewController {
         tagManageView.selectedItems.remove(at: handle.row)
         tagList.remove(at: handle.row)
         UserDefaultsManager.shared.tagList = tagList
+        let text = I18N.tagCountText.replace(of: "COUNT", with: String(tagList.count))
 
         tagManageView.tagTableView.deleteRows(at: [IndexPath(item: handle.row, section: 0)],
                                               with: .automatic)
 
         UserDefaultsManager.shared.deleteTagInLink(tag: tag)
         
-        tagManageView.titleLabel.text = "\(tagList.count)개의 태그가 있어요."
+        tagManageView.titleLabel.text = text
         setNavigationItem(selectedCount: 0)
     }
     
@@ -165,10 +169,10 @@ public final class TagManageViewController: UIViewController {
             let title = selectedItems.filter { $0 }.count == 1 ? titleList: "[\(titleList)]"
             
             presentAlertController(
-                title: "\(title) 태그를 삭제할까요?",
-                message: "연결된 모든 링크에서 태그가 삭제됩니다.",
-                options: (title: "취소", style: .default), (title: "삭제", style: .destructive)) {
-                    if $0 == "삭제" {
+                title: I18N.deleteTagTitle.replace(of: "TAG", with: "\(title)"),
+                message: I18N.deleteTagMessage,
+                options: (title: I18N.cancel, style: .default), (title: I18N.delete, style: .destructive)) {
+                    if $0 == I18N.delete {
                         selectedItems.enumerated().reversed().forEach { index, isSelected in
                             if isSelected {
                                 self.deleteTag(handle: (type: .delete, row: index))

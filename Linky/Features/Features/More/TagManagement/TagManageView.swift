@@ -18,7 +18,10 @@ final class TagManageView: UIView {
     let viewModel: TagManageViewModel!
     
     let titleLabel = UILabel().then {
-        $0.text = "\(UserDefaultsManager.shared.tagList.count)개의 태그가 있어요."
+        let tagCount = UserDefaultsManager.shared.tagList.count
+        let text = I18N.tagCountText.replace(of: "COUNT", with: String(tagCount))
+        
+        $0.text = text
         $0.textColor = .code2
         $0.font = FontManager.shared.pretendard(weight: .semiBold, size: 22)
     }
@@ -82,9 +85,11 @@ final class TagManageView: UIView {
         }
         
         addTagButton.snp.makeConstraints {
+            let width = addTagButton.titleLabel?.textSize.width ?? .zero
+            
             $0.top.equalTo(subtitleLabel.snp.bottom).offset(16)
             $0.leading.equalTo(titleLabel)
-            $0.width.equalTo(81)
+            $0.width.equalTo(width + 20)
             $0.height.equalTo(36)
         }
         
