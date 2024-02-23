@@ -22,7 +22,9 @@ let dependencies = Dependencies(
         .remote(url: "https://github.com/Alamofire/Alamofire.git",
                 requirement: .upToNextMajor(from: "5.6.4")),
         .remote(url: "https://github.com/scalessec/Toast-Swift.git",
-                requirement: .upToNextMajor(from: "5.0.1"))
+                requirement: .upToNextMajor(from: "5.0.1")),
+        .remote(url: "https://github.com/simibac/ConfettiSwiftUI",
+                requirement: .upToNextMajor(from: "1.1.0"))
     ],
     platforms: [.iOS]
 )

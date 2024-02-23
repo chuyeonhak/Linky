@@ -18,6 +18,7 @@ public extension TargetDependency {
         public static let firebaseCrashlytics = TargetDependency.external(name: "FirebaseCrashlytics")
         public static let alamofire = TargetDependency.external(name: "Alamofire")
         public static let toast = TargetDependency.external(name: "Toast")
+        public static let confetti = TargetDependency.external(name: "ConfettiSwiftUI")
     }
     
     static let spms: [TargetDependency] = [
@@ -27,5 +28,6 @@ public extension TargetDependency {
         SPM.then,
         SPM.swinject,
         SPM.firebaseCrashlytics,
+        SPM.confetti
     ]
 }
