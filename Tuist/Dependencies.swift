@@ -3,7 +3,7 @@ import ProjectDescriptionHelpers
 
 let dependencies = Dependencies(
     carthage: [],
-    swiftPackageManager: [
+    swiftPackageManager: SwiftPackageManagerDependencies([
         .remote(
             url: "https://github.com/ReactiveX/RxSwift.git",
             requirement: .exact("6.6.0")),
@@ -25,6 +25,6 @@ let dependencies = Dependencies(
                 requirement: .upToNextMajor(from: "5.0.1")),
         .remote(url: "https://github.com/simibac/ConfettiSwiftUI",
                 requirement: .upToNextMajor(from: "1.1.0"))
-    ],
+    ]),
     platforms: [.iOS]
 )

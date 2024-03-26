@@ -6,13 +6,17 @@
 //
 
 import ProjectDescription
+import Foundation
 
 public extension TargetScript {
-    static let firebaseCrashString = TargetScript.pre(script: """
-    if [ "${CONFIGURATION}" != "Debug" ]; then
-         "Tuist/Dependencies/SwiftPackageManager/.build/checkouts/firebase-ios-sdk/Crashlytics/run" "Tuist/Dependencies/SwiftPackageManager/.build/checkouts/firebase-ios-sdk/Crashlytics/upload-symbols" -gsp ./Resources/GoogleService-Info.plist -p ios ${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}
-    fi
-    """, name: "Firebase Crashlystics")
+    static let firebaseCrashString = TargetScript.post(
+        script: """
+    "../../Tuist/Dependencies/SwiftPackageManager/.build/checkouts/firebase-ios-sdk/Crashlytics/run"
+    """,
+        name: "Firebase Crashlystics",
+        inputPaths: [.glob("${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}"),
+            .glob( "$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)")],
+        basedOnDependencyAnalysis: false)
     
     static let SwiftLintString = TargetScript.pre(script: """
     if test -d "/opt/homebrew/bin/"; then
@@ -27,8 +31,11 @@ public extension TargetScript {
         echo "warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"
     fi
     """, name: "SwiftLintString")
+    static let autoLocalization = TargetScript.pre(script: """
+cd ../../
+bash "Localizable.command"
+//path=\(ProcessInfo.processInfo.environment["LINKYPATH"] ?? "")
+//osascript -e 'tell app "System Events" to display dialog "'"${path}"'"'
+"""
+, name: "Localization")
 }
-
-
-
-
