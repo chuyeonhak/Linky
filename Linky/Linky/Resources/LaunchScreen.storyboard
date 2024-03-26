@@ -4,16 +4,10 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="Pretendard-Bold.otf">
-            <string>Pretendard-Bold</string>
-        </array>
-    </customFonts>
     <scenes>
         <!--View Controller-->
         <scene sceneID="EHf-IW-A2E">
@@ -24,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kip-h9-XgR">
-                                <rect key="frame" x="95" y="355" width="200" height="147.33333333333337"/>
+                                <rect key="frame" x="95" y="355" width="200" height="147"/>
                                 <subviews>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchScreenLogo" translatesAutoresizingMaskIntoConstraints="NO" id="K5z-Aq-LsA">
                                         <rect key="frame" x="30" y="0.0" width="140" height="110"/>
@@ -33,21 +27,22 @@
                                             <constraint firstAttribute="width" constant="140" id="hcS-Cf-agj"/>
                                         </constraints>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="L  I  N  K  Y" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pJh-ew-dwj">
-                                        <rect key="frame" x="38.666666666666657" y="115.99999999999999" width="123" height="31.333333333333329"/>
-                                        <fontDescription key="fontDescription" name="Pretendard-Bold" family="Pretendard" pointSize="26"/>
-                                        <color key="textColor" name="code2"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchScreenTitle" translatesAutoresizingMaskIntoConstraints="NO" id="Y9t-yk-sif">
+                                        <rect key="frame" x="42.666666666666657" y="116" width="115" height="31"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="31" id="Kqa-rM-pQH"/>
+                                            <constraint firstAttribute="width" constant="115" id="rFb-hv-Ngd"/>
+                                        </constraints>
+                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
+                                    <constraint firstItem="Y9t-yk-sif" firstAttribute="centerX" secondItem="kip-h9-XgR" secondAttribute="centerX" id="5Zv-Yh-3JH"/>
                                     <constraint firstAttribute="width" constant="200" id="Dkb-is-QVO"/>
-                                    <constraint firstItem="pJh-ew-dwj" firstAttribute="centerX" secondItem="kip-h9-XgR" secondAttribute="centerX" id="JGv-eL-Mg8"/>
+                                    <constraint firstItem="Y9t-yk-sif" firstAttribute="top" secondItem="K5z-Aq-LsA" secondAttribute="bottom" constant="6" id="NeF-9L-7Nf"/>
                                     <constraint firstItem="K5z-Aq-LsA" firstAttribute="centerX" secondItem="kip-h9-XgR" secondAttribute="centerX" id="akO-zT-XAl"/>
+                                    <constraint firstAttribute="bottom" secondItem="Y9t-yk-sif" secondAttribute="bottom" id="hIW-Oc-97n"/>
                                     <constraint firstItem="K5z-Aq-LsA" firstAttribute="top" secondItem="kip-h9-XgR" secondAttribute="top" id="huI-91-Kgm"/>
-                                    <constraint firstItem="pJh-ew-dwj" firstAttribute="top" secondItem="K5z-Aq-LsA" secondAttribute="bottom" constant="6" id="kZd-lh-JMR"/>
-                                    <constraint firstAttribute="bottom" secondItem="pJh-ew-dwj" secondAttribute="bottom" id="nLm-6e-D3e"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -66,9 +61,7 @@
     </scenes>
     <resources>
         <image name="LaunchScreenLogo" width="140" height="110"/>
-        <namedColor name="code2">
-            <color red="0.15686274509803921" green="0.15686274509803921" blue="0.15686274509803921" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
+        <image name="LaunchScreenTitle" width="113.33333587646484" height="18.666666030883789"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
