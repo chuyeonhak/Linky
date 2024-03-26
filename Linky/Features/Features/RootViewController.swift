@@ -94,6 +94,7 @@ public final class RootViewController: UITabBarController {
         
         tabBarAnimation(shouldShow: false)
         
+        navigationController.navigationItem.backBarButtonItem = makeBackButton(title: "")
         navigationController.pushViewController(addLinkViewController, animated: true)
     }
     
@@ -113,69 +114,21 @@ public final class RootViewController: UITabBarController {
             UIDevice.current.setValue(orientation, forKey: "orientation")
         }
     }
-}
-
-final class TimelineNavigationController: UINavigationController {
     
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    private func makeBackButton(title: String) -> UIBarButtonItem {
+        let backButtonItem = UIBarButtonItem(
+            title: title,
+            style: .plain,
+            target: nil,
+            action: nil)
         
-        self.view.backgroundColor = .white
-        self.navigationBar.barTintColor = .red
-        self.navigationBar.isTranslucent = false
+        backButtonItem.setTitleTextAttributes(
+            [.font: FontManager.shared.pretendard(weight: .semiBold, size: 18)],
+            for: .normal)
         
-        let cancle = UIBarButtonItem(systemItem: .cancel)
-        self.navigationItem.leftBarButtonItem = cancle
-        navigationItem.title = "hello"
-        print(#function)
-        
-        
+        return backButtonItem
     }
 }
-
-
-final class TestCell: UITableViewCell {
-    static let identifier = description()
-    
-    let label = UILabel()
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        commonInit()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func commonInit() {
-        addComponent()
-        setConstraints()
-        bind()
-    }
-    
-    private func addComponent() {
-        contentView.addSubview(label)
-    }
-    
-    private func setConstraints() {
-        label.snp.makeConstraints {
-            $0.top.bottom.equalToSuperview().inset(16)
-            $0.centerX.equalToSuperview()
-        }
-    }
-    
-    private func bind() { }
-    
-    func configure(model: String) {
-        label.text = model
-    }
-}
-
-
-
 
 enum Features {
     case timeLine
