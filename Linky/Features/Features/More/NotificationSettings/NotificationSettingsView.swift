@@ -197,7 +197,8 @@ final class NotificationSettingsView: UIView {
         
         datePicker.rx.date
             .changed
-            .map(setNotiTime)
+            .withUnretained(self)
+            .map { owner, date in owner.setNotiTime(date: date) }
             .bind(to: viewModel.input.changeNotiOption)
             .disposed(by: disposeBag)
         

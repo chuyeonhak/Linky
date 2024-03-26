@@ -44,7 +44,7 @@ final class NotificationSettingsViewModel {
         )
         
         input.changeNotiOption
-            .map(canSave)
+            .map { [weak self] in self?.canSave(noti: $0) ?? true }
             .bind(to: model.canSave)
             .disposed(by: disposeBag)
         
