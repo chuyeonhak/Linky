@@ -22,6 +22,7 @@ public struct UserDefaultsManager {
         fileprivate static let sharedMetaData = "sharedMetaData"
         fileprivate static let inquiryDic = "inquiryCount"
         fileprivate static let isFirstEndingCredit = "isFirstEndingCredit"
+        fileprivate static let notice = "notice"
     }
     
     public static var shared = UserDefaultsManager()
@@ -195,6 +196,21 @@ public struct UserDefaultsManager {
             userDefaults?.set(newValue, forKey: Key.isFirstEndingCredit)
         }
     }
+    
+    public var notice: String {
+        get {
+            guard let notice = userDefaults?
+                .value(forKey: Key.notice) as? String
+            else { return "" }
+            
+            return notice
+        }
+        set {
+            userDefaults?.set(newValue, forKey: Key.notice)
+        }
+    }
+    
+    
     
     public var noTagData: [TagData] {
         noTagLinkList.isEmpty ? []: [TagData(title: I18N.noTags, createdAt: Date())]

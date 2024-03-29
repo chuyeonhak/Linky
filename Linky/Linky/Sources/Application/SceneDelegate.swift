@@ -4,6 +4,7 @@ import Core
 import Features
 
 import Firebase
+import FirebaseRemoteConfig
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -18,8 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
         
-        FirebaseApp.configure()
-        
+        setFirebase()
         setUserNotificationCenter()
         deviceSizeSetting(window: window)
         setNavigation()
@@ -75,6 +75,27 @@ extension SceneDelegate {
         UIBarButtonItem
             .appearance(whenContainedInInstancesOf: [UISearchBar.self])
             .setTitleTextAttributes(attributes, for: .normal)
+    }
+    
+    private func setFirebase() {
+        FirebaseApp.configure()
+        
+        let remoteConfig = RemoteConfig.remoteConfig()
+        let settings = RemoteConfigSettings().then { $0.minimumFetchInterval = 0 }
+        
+        remoteConfig.configSettings = settings
+        
+        remoteConfig.fetch { status, error in
+            switch status {
+            case .success:
+                remoteConfig.activate { isChanged, error in
+                    if isChanged {
+                        UserDefaultsManager.shared.notice = remoteConfig["notice"].string
+                    }
+                }
+            default: break
+            }
+        }
     }
     
     private func setUserNotificationCenter() {
@@ -133,4 +154,8 @@ extension SceneDelegate: UNUserNotificationCenterDelegate {
             completionHandler()
         }
 
+}
+
+extension RemoteConfigValue {
+    var string: String { stringValue ?? "" }
 }

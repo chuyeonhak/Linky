@@ -14,6 +14,7 @@ let project = Project.makeAppProject(
     product: .app,
     dependencies: [
         TargetDependency.SPM.firebaseCrashlytics,
+        TargetDependency.SPM.firebaseRemoteConfig,
         TargetDependency.SPM.swinject,
         TargetDependency.SPM.rxSwift,
         TargetDependency.SPM.rxCocoa,

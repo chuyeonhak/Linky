@@ -16,6 +16,7 @@ public extension TargetDependency {
         public static let swinject = TargetDependency.external(name: "Swinject")
         public static let firebaseAnalytics = TargetDependency.external(name: "FirebaseAnalytics")
         public static let firebaseCrashlytics = TargetDependency.external(name: "FirebaseCrashlytics")
+        public static let firebaseRemoteConfig = TargetDependency.external(name: "FirebaseRemoteConfig")
         public static let alamofire = TargetDependency.external(name: "Alamofire")
         public static let toast = TargetDependency.external(name: "Toast")
         public static let confetti = TargetDependency.external(name: "ConfettiSwiftUI")
@@ -28,6 +29,7 @@ public extension TargetDependency {
         SPM.then,
         SPM.swinject,
         SPM.firebaseCrashlytics,
+        SPM.firebaseRemoteConfig,
         SPM.confetti
     ]
 }
