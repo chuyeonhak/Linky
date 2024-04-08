@@ -12,8 +12,8 @@ touch "$TEMP_FILE"
 
 echo "public enum I18N {" >> "$TEMP_FILE"
 
-keys=($(jq -r '.strings | keys[]' "$JSON_FILE"))
-
+#keys=($(jq -r '.strings | keys[]' "$JSON_FILE"))
+keys=($(jq -r '.strings | keys[] | select(index(":") | not)' "$JSON_FILE"))
 for key in "${keys[@]}"; do
 ko=$(jq -r '.strings.'${key}'.localizations.ko.stringUnit.value' "$JSON_FILE" | tr -d '\n')
     echo "    /// ${ko}" >> "$TEMP_FILE"

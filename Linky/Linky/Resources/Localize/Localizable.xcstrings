@@ -691,6 +691,23 @@
         }
       }
     },
+    "Emoji:" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "絵文字です:"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이모지:"
+          }
+        }
+      }
+    },
     "enterNewPassword" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1883,6 +1900,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "목요일"
+          }
+        }
+      }
+    },
+    "Time:" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "時間です:"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "시간:"
           }
         }
       }

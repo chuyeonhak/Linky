@@ -9,6 +9,8 @@
 import WidgetKit
 import SwiftUI
 
+import Features
+
 struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> SimpleEntry {
         SimpleEntry(date: Date(), emoji: "😀")
@@ -42,15 +44,39 @@ struct SimpleEntry: TimelineEntry {
 
 struct WidgetExtensionEntryView : View {
     var entry: Provider.Entry
-
+    @Environment(\.widgetFamily) var family: WidgetFamily
+    
     var body: some View {
-        VStack {
-            Text("Time:")
-            Text(entry.date, style: .time)
-
-            Text("Emoji:")
-            Text(entry.emoji)
+        ZStack {
+            Color(.code6)
+            
+            switch family {
+            case .systemSmall: smallView
+            case .systemMedium: smallView
+            default: EmptyView()
+            }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
+    @ViewBuilder
+    var smallView: some View {
+        HStack {
+            VStack {
+                ZStack {
+                    CircularProgressView(
+                        style: CircularProgressView.Style.default,
+                        percentage: .constant(0.5)
+                    )
+                    .frame(width: 56, height: 56)
+                }
+                
+                Spacer()
+            }
+            
+            Spacer()
+        }.padding()
+        
     }
 }
 
@@ -64,18 +90,11 @@ struct WidgetExtension: Widget {
                     .containerBackground(.fill.tertiary, for: .widget)
             } else {
                 WidgetExtensionEntryView(entry: entry)
-                    .padding()
-                    .background()
             }
         }
         .configurationDisplayName("My Widget")
         .description("This is an example widget.")
+        .supportedFamilies([.systemSmall, .systemMedium])
+        
     }
-}
-
-#Preview(as: .systemSmall) {
-    WidgetExtension()
-} timeline: {
-    SimpleEntry(date: .now, emoji: "😀")
-    SimpleEntry(date: .now, emoji: "🤩")
 }
