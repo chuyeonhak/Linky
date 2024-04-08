@@ -23,6 +23,9 @@ public struct UserDefaultsManager {
         fileprivate static let inquiryDic = "inquiryCount"
         fileprivate static let isFirstEndingCredit = "isFirstEndingCredit"
         fileprivate static let notice = "notice"
+        fileprivate static let errorURL = "errorURL"
+        fileprivate static let wantURL = "wantURL"
+        fileprivate static let etcURL = "etcURL"
     }
     
     public static var shared = UserDefaultsManager()
@@ -208,6 +211,40 @@ public struct UserDefaultsManager {
         set {
             userDefaults?.set(newValue, forKey: Key.notice)
         }
+    }
+    
+    public var errorURL: String {
+        get {
+            guard let errorURL = userDefaults?.value(forKey: Key.errorURL) as? String
+            else { return "" }
+            
+            return errorURL
+        }
+        set {
+            userDefaults?.set(newValue, forKey: Key.errorURL)
+        }
+    }
+    
+    public var wantURL: String {
+        get {
+            guard let wantURL = userDefaults?.value(forKey: Key.wantURL) as? String
+            else { return "" }
+            
+            return wantURL
+        }
+        set {
+            userDefaults?.set(newValue, forKey: Key.wantURL)
+        }
+    }
+    
+    public var etcURL: String {
+        get {
+            guard let etcURL = userDefaults?.value(forKey: Key.etcURL) as? String
+            else { return "" }
+            
+            return etcURL
+        }
+        set { userDefaults?.set(newValue, forKey: Key.etcURL) }
     }
     
     

@@ -19,12 +19,9 @@ public struct NetworkManager {
         
         var urlString: String {
             switch self {
-            case .error(_):
-                "https://hooks.slack.com/services/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"
-            case .want(_):
-                "https://hooks.slack.com/services/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"
-            case .etc(_):
-                "https://hooks.slack.com/services/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"
+            case .error(_): UserDefaultsManager.shared.errorURL
+            case .want(_): UserDefaultsManager.shared.wantURL
+            case .etc(_): UserDefaultsManager.shared.etcURL
             }
         }
         var url: URL { URL(string: urlString)! }

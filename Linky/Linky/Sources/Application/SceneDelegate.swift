@@ -4,12 +4,13 @@ import Core
 import Features
 
 import Firebase
+import FirebaseCore
 import FirebaseRemoteConfig
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
+    
     var window: UIWindow?
-
+    
     func scene(
         _ scene: UIScene,
         willConnectTo session: UISceneSession,
@@ -29,13 +30,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = vc
         window?.makeKeyAndVisible()
     }
-
+    
     func sceneDidDisconnect(_ scene: UIScene) {}
-
+    
     func sceneDidBecomeActive(_ scene: UIScene) {}
-
+    
     func sceneWillResignActive(_ scene: UIScene) {}
-
+    
     func sceneWillEnterForeground(_ scene: UIScene) {
         if UpdateManager.shared.shouldUpdate { openUpdateAlert() }
         else {
@@ -57,7 +58,7 @@ extension SceneDelegate {
     private func setNavigationBar() {
         let backButtonImage = UIImage(named: "icoArrowLeft")?
             .withAlignmentRectInsets(UIEdgeInsets(top: 0, left: 0, bottom: 6, right: 0))
-
+        
         UINavigationBar.appearance().backIndicatorImage = backButtonImage
         UINavigationBar.appearance().backIndicatorTransitionMaskImage = backButtonImage
         UINavigationBar.appearance().isTranslucent = false
@@ -89,9 +90,7 @@ extension SceneDelegate {
             switch status {
             case .success:
                 remoteConfig.activate { isChanged, error in
-                    if isChanged {
-                        UserDefaultsManager.shared.notice = remoteConfig["notice"].string
-                    }
+                    self.setUserDefaultFromRemoteConfig(remoteConfig)
                 }
             default: break
             }
@@ -137,25 +136,62 @@ extension SceneDelegate {
             options: (title: I18N.updateMessage, style: .default),
             animated: false) { _ in UpdateManager.shared.openAppStore() }
     }
+    
+    private func setUserDefaultFromRemoteConfig(_ config: RemoteConfig) {
+        let code = getConfigCode()
+        
+        UserDefaultsManager.shared.notice = config[code].string
+        UserDefaultsManager.shared.errorURL = config[RemoteConfigKey.errorUrl.stringValue].string
+        UserDefaultsManager.shared.wantURL = config[RemoteConfigKey.wantUrl.stringValue].string
+        UserDefaultsManager.shared.etcURL = config[RemoteConfigKey.etcUrl.stringValue].string
+    }
+    
+    private func getConfigCode() -> String {
+        let languageCode = Locale.current.languageCode ?? ""
+        
+        return if languageCode.isKorean { "notice" }
+        else if languageCode.isJapan { "noticeJapan" }
+        else { "noticeEnglish" }
+    }
 }
 
 extension SceneDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                    willPresent notification: UNNotification,
-                                    withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-            completionHandler([.badge, .sound])
-        }
-
-        func userNotificationCenter(_ center: UNUserNotificationCenter,
-                                    didReceive response: UNNotificationResponse,
-                                    withCompletionHandler completionHandler: @escaping () -> Void) {
-
-
-            completionHandler()
-        }
-
+                                willPresent notification: UNNotification,
+                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.badge, .sound])
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
+        
+        
+        completionHandler()
+    }
+    
 }
 
 extension RemoteConfigValue {
     var string: String { stringValue ?? "" }
+}
+
+enum RemoteConfigKey {
+    case notice
+    case noticeJapan
+    case noticeEnglish
+    case errorUrl
+    case wantUrl
+    case etcUrl
+    
+    var stringValue: String {
+        switch self {
+        case .notice: "notice"
+        case .noticeJapan: "noticeJapan"
+        case .noticeEnglish: "noticeEnglish"
+        case .errorUrl: "errorUrl"
+        case .wantUrl: "wantUrl"
+        case .etcUrl: "etcUrl"
+        }
+    }
 }

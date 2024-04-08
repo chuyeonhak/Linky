@@ -14,4 +14,10 @@ public extension String {
         let targetString = "#\(target)#"
         return self.replacingOccurrences(of: targetString, with: replacement)
     }
+    
+    var isKorean: Bool { self == "ko" }
+    
+    var isUs: Bool { self == "us" }
+    
+    var isJapan: Bool { self == "ja" }
 }
