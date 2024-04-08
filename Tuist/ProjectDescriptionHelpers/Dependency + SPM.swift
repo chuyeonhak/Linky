@@ -20,6 +20,7 @@ public extension TargetDependency {
         public static let alamofire = TargetDependency.external(name: "Alamofire")
         public static let toast = TargetDependency.external(name: "Toast")
         public static let confetti = TargetDependency.external(name: "ConfettiSwiftUI")
+        public static let marqueeText = TargetDependency.external(name: "MarqueeText")
     }
     
     static let spms: [TargetDependency] = [
@@ -30,6 +31,7 @@ public extension TargetDependency {
         SPM.swinject,
         SPM.firebaseCrashlytics,
         SPM.firebaseRemoteConfig,
-        SPM.confetti
+        SPM.confetti,
+        SPM.marqueeText
     ]
 }
