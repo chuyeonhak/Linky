@@ -16,28 +16,24 @@ struct MakerProfileView: View {
     @State private var count: Int = 0
     
     var body: some View {
-        ZStack {
             VStack {
-                let text = String(
-                    repeating: UserDefaultsManager.shared.notice + "    ",
-                    count: 5
-                )
+//                let text = String(
+//                    repeating: UserDefaultsManager.shared.notice + "    ",
+//                    count: 5
+//                )
+//                
+//                MarqueeText(
+//                    text: text,
+//                    font: FontManager.shared.pretendard(weight: .semiBold, size: 36),
+//                    leftFade: 16,
+//                    rightFade: 16,
+//                    startDelay: 0
+//                )
+//                .makeCompact()
+//                .foregroundColor(Color(UIColor.code2 ?? .white))
+//                .padding(.horizontal, 32)
+//                .padding(.bottom, 64)
                 
-                MarqueeText(
-                    text: text,
-                    font: FontManager.shared.pretendard(weight: .semiBold, size: 32),
-                    leftFade: 16,
-                    rightFade: 16,
-                    startDelay: 0
-                )
-                .makeCompact()
-                .foregroundColor(Color(UIColor.code3 ?? .white))
-                .padding([.top, .horizontal], 32)
-                
-                Spacer()
-            }
-            
-            VStack {
                 FidgetTextView("Project Manager @mong._09", fontSize: 25)
                     .frame(height: 25)
                     .confettiCannon(
@@ -57,8 +53,6 @@ struct MakerProfileView: View {
                 FidgetTextView("android developer @min._.dda", fontSize: 25)
                     .frame(height: 25)
             }
-            .padding(.top, 32)
             .frame(height: 160)
-        }
     }
 }
