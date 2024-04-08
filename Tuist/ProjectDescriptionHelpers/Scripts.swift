@@ -34,8 +34,8 @@ public extension TargetScript {
     static let autoLocalization = TargetScript.pre(script: """
 cd ../../
 bash "Localizable.command"
-//path=\(ProcessInfo.processInfo.environment["LINKYPATH"] ?? "")
-//osascript -e 'tell app "System Events" to display dialog "'"${path}"'"'
+#path=\(ProcessInfo.processInfo.environment["LINKYPATH"] ?? "")
+#osascript -e 'tell app "System Events" to display dialog "'"${path}"'"'
 """
 , name: "Localization")
 }

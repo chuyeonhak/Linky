@@ -21,6 +21,8 @@ extension Project {
     
     public enum Setting {
         public static let shareExtension: TargetDependency = .target(name: "ShareExtension")
+        public static let widgetExtension: TargetDependency = .target(name: "WidgetExtension")
+        
         static let baseSetting = SettingsDictionary()
             .automaticCodeSigning(devTeam: Linky.team)
             .merging(

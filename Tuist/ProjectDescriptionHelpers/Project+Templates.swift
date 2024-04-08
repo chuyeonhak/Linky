@@ -36,7 +36,7 @@ public extension Project {
             resources: resources,
             entitlements: "ShareExtension/LinkyDebug.entitlements",
             scripts: [.firebaseCrashString, .autoLocalization],
-            dependencies: dependencies + [Project.Setting.shareExtension],
+            dependencies: dependencies + [Project.Setting.shareExtension, Project.Setting.widgetExtension],
             settings: settings
         )
         
@@ -64,9 +64,26 @@ public extension Project {
             dependencies: dependencies
         )
         
+        let widgetExtensionTarget = Target(
+            name: "WidgetExtension",
+            platform: .iOS,
+            product: .appExtension,
+            bundleId: "\(organizationName).\(name).WidgetExtension",
+            deploymentTarget: deploymentTarget,
+            infoPlist: .file(path: "WidgetExtension/Info.plist"),
+            sources: ["WidgetExtension/**"],
+            resources: resources,
+            dependencies: dependencies
+        )
+        
         let schemes: [Scheme] = [.makeScheme(target: .debug, name: name)]
         
-        let targets: [Target] = [appTarget, testTarget, shareExtensionTarget]
+        let targets: [Target] = [
+            appTarget,
+            testTarget,
+            shareExtensionTarget,
+            widgetExtensionTarget
+        ]
         
         return Project(
             name: name,

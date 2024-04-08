@@ -53,7 +53,8 @@ public extension Features {
                            TargetDependency.SPM.then,
                            TargetDependency.SPM.toast,
                            TargetDependency.SPM.alamofire,
-                           TargetDependency.SPM.confetti]
+                           TargetDependency.SPM.confetti,
+                           TargetDependency.SPM.marqueeText]
         )
     }
     
