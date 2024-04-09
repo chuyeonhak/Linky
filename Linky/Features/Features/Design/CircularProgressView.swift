@@ -50,7 +50,7 @@ extension CircularProgressView {
     public struct Style {
         public static let `default` = CircularProgressView.Style(
             startPosition: .top,
-            backgroundColor: .gray.opacity(0.5),
+            backgroundColor: .gray.opacity(0.2),
             progressColor: Color(UIColor.main ?? .clear),
             stoke: StrokeStyle(lineWidth: 7, lineCap: .round),
             percentage: 0.5
