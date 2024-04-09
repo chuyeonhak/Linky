@@ -20,4 +20,6 @@ public extension String {
     var isUs: Bool { self == "us" }
     
     var isJapan: Bool { self == "ja" }
+    
+    var forceCharWrapping: String { map({ String($0) }).joined(separator: "\u{200B}") }
 }
