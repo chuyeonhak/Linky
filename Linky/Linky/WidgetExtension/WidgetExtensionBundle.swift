@@ -9,7 +9,6 @@
 import WidgetKit
 import SwiftUI
 
-@available(iOSApplicationExtension 15.0, *)
 @main
 struct WidgetExtensionBundle: WidgetBundle {
     var body: some Widget {

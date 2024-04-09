@@ -691,23 +691,6 @@
         }
       }
     },
-    "Emoji:" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "絵文字です:"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "이모지:"
-          }
-        }
-      }
-    },
     "enterNewPassword" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1559,6 +1542,29 @@
         }
       }
     },
+    "recommendationLink" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recommendation link"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "推奨リンクです"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "추천 링크"
+          }
+        }
+      }
+    },
     "recover" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1904,23 +1910,6 @@
         }
       }
     },
-    "Time:" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "時間です:"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "시간:"
-          }
-        }
-      }
-    },
     "timeEmptyText" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2239,6 +2228,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "수요일"
+          }
+        }
+      }
+    },
+    "widgetSubtitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can see the recommended link and access it right away."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "推奨リンクを表示して、すぐにアクセスできます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "추천되는 링크를 볼 수 있고 바로 링크에 접근할 수 있습니다."
+          }
+        }
+      }
+    },
+    "widgetTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "my \nLinky"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "my \nLinky"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "나의 링키"
           }
         }
       }

@@ -36,8 +36,7 @@ public extension Project {
             resources: resources,
             entitlements: "ShareExtension/LinkyDebug.entitlements",
             scripts: [.firebaseCrashString, .autoLocalization],
-            dependencies: dependencies + [Project.Setting.shareExtension],
-//            dependencies: dependencies + [Project.Setting.shareExtension, Project.Setting.widgetExtension],
+            dependencies: dependencies + [Project.Setting.shareExtension, Project.Setting.widgetExtension],
             settings: settings
         )
         
@@ -74,6 +73,7 @@ public extension Project {
             infoPlist: .file(path: "WidgetExtension/Info.plist"),
             sources: ["WidgetExtension/**"],
             resources: resources,
+            entitlements: "WidgetExtension/WidgetExtension.entitlements",
             dependencies: dependencies
         )
         
@@ -83,7 +83,7 @@ public extension Project {
             appTarget,
             testTarget,
             shareExtensionTarget,
-//            widgetExtensionTarget
+            widgetExtensionTarget
         ]
         
         return Project(
