@@ -10,24 +10,27 @@ JSON_FILE="Linky/Linky/Resources/Localize/Localizable.xcstrings"
 # make TEMP_FILE
 touch "$TEMP_FILE"
 
-echo "public enum I18N {" >> "$TEMP_FILE"
+# make TEMP_FILE
+touch "$TEMP_FILE"
 
-#keys=($(jq -r '.strings | keys[]' "$JSON_FILE"))
-keys=($(jq -r '.strings | keys[] | select(index(":") | not)' "$JSON_FILE"))
-for key in "${keys[@]}"; do
-ko=$(jq -r '.strings.'${key}'.localizations.ko.stringUnit.value' "$JSON_FILE" | tr -d '\n')
-    echo "    /// ${ko}" >> "$TEMP_FILE"
-    echo "    public static let "$key" = \"$key\".localized" >> "$TEMP_FILE" 
-done
-
-#for key in "${keys[@]}"; do
-#en=$(jq -r '.strings.'${key}'.localizations.en.stringUnit.value' "$JSON_FILE" | tr -d '\n')
-#    echo "${en}" >> "$TEMP_FILE"
-#done
-echo "}" >> "$TEMP_FILE"
+{
+    echo "public enum I18N {"
+    jq -r '.strings | to_entries[] | "\(.key):\(.value.localizations.ko.stringUnit.value| @json | rtrimstr("\"") | ltrimstr("\""))"' "$JSON_FILE" |
+    while IFS=":" read -r key value; do
+	if [[ "$key" =~ "@" ]]; then
+	    continue
+	elif [[ "$value" =~ "\n" ]]; then
+            modified_value=$(echo "$value" | tr '\n' ' ')
+            echo "    /// ${modified_value}
+	public static let "$key" = \"$key\".localized"
+        else 
+            echo "    /// ${value}
+    public static let "$key" = \"$key\".localized"
+        fi
+    done
+    
+    echo "}"
+} > "$TEMP_FILE"
 
 cat "$TEMP_FILE" > "$OUTPUT_FILE"
 rm "$TEMP_FILE"
-
-#osascript -e 'tell app "System Events" to display dialog "'"${JSON_FILE}"'"'
-

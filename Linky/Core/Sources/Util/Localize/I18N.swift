@@ -81,8 +81,8 @@ public enum I18N {
     public static let inquiryContent = "inquiryContent".localized
     /// 내용을 입력해주세요!
     public static let inquiryContentToast = "inquiryContentToast".localized
-    /// 마음이 여린 개발자입니다.비속어는 개발자의 마음을 아프게 합니다.
-    public static let inquiryPlaceholder = "inquiryPlaceholder".localized
+    /// 마음이 여린 개발자입니다.\n비속어는 개발자의 마음을 아프게 합니다. 
+	public static let inquiryPlaceholder = "inquiryPlaceholder".localized
     /// 링크 복사가 완료되었습니다.
     public static let linkCopyComplete = "linkCopyComplete".localized
     /// #COUNT#개의 링크가 있어요.
@@ -115,24 +115,26 @@ public enum I18N {
     public static let notificationGuideText = "notificationGuideText".localized
     /// 알림을 저장하였습니다.
     public static let notificationSaveToast = "notificationSaveToast".localized
-    /// 설정을 완료하신 후 저장해 주세요.
-    public static let notificationSettingToast = "notificationSettingToast".localized
     /// 알림설정
     public static let notificationSettings = "notificationSettings".localized
+    /// 설정을 완료하신 후 저장해 주세요.
+    public static let notificationSettingToast = "notificationSettingToast".localized
     /// 전에 입력한 번호와 일치하지 않아요.
     public static let passwordErrorSubtitle = "passwordErrorSubtitle".localized
-    /// 비밀번호를 잃어버릴 경우 앱을 재설치 해야 하며,저장된 링크는 모두 삭제됩니다.
-    public static let passwordGuide = "passwordGuide".localized
+    /// 비밀번호를 잃어버릴 경우 앱을 재설치 해야 하며,\n저장된 링크는 모두 삭제됩니다. 
+	public static let passwordGuide = "passwordGuide".localized
     /// 복사한 링크 붙여넣기
     public static let pasteButtonText = "pasteButtonText".localized
-    /// 이전 30일
-    public static let previous30Day = "previous30Day".localized
     /// 이전 7일
     public static let previous7Day = "previous7Day".localized
+    /// 이전 30일
+    public static let previous30Day = "previous30Day".localized
     /// 읽음
     public static let read = "read".localized
     /// #COUNT#번 읽음
     public static let readCount = "readCount".localized
+    /// 추천 링크
+    public static let recommendationLink = "recommendationLink".localized
     /// 복원하기
     public static let recover = "recover".localized
     /// 토요일
@@ -153,22 +155,22 @@ public enum I18N {
     public static let tag = "tag".localized
     /// #COUNT#개의 태그가 있어요.
     public static let tagCountText = "tagCountText".localized
-    /// 연결된 링크가 있는 태그를 삭제하면해당 링크는 '태그 없음'에 연결돼요.
-    public static let tagManageSubtitle = "tagManageSubtitle".localized
     /// 태그 관리
     public static let tagManagement = "tagManagement".localized
+    /// 연결된 링크가 있는 태그를 삭제하면\n해당 링크는 '태그 없음'에 연결돼요. 
+	public static let tagManageSubtitle = "tagManageSubtitle".localized
     /// 동일한 이름의 태그가 있습니다.
     public static let tagNameErrorText = "tagNameErrorText".localized
     /// 태그 입력(띄어쓰기 포함, 8자 이내)
     public static let tagPlaceholder = "tagPlaceholder".localized
     /// 목요일
     public static let thursday = "thursday".localized
-    /// 내가 추가한 링크를시간 순서대로 볼 수 있어요.
-    public static let timeEmptyText = "timeEmptyText".localized
-    /// 시간 설정
-    public static let timeSetting = "timeSetting".localized
+    /// 내가 추가한 링크를\n시간 순서대로 볼 수 있어요. 
+	public static let timeEmptyText = "timeEmptyText".localized
     /// 타임라인
     public static let timeline = "timeline".localized
+    /// 시간 설정
+    public static let timeSetting = "timeSetting".localized
     /// 링키 120% 활용하기
     public static let tips = "tips".localized
     /// 오늘
@@ -191,6 +193,10 @@ public enum I18N {
     public static let viewLinks = "viewLinks".localized
     /// 수요일
     public static let wednesday = "wednesday".localized
+    /// 추천되는 링크를 볼 수 있고 바로 링크에 접근할 수 있습니다.
+    public static let widgetSubtitle = "widgetSubtitle".localized
+    /// 나의 링키
+    public static let widgetTitle = "widgetTitle".localized
     /// 년
     public static let year = "year".localized
     /// 어제
