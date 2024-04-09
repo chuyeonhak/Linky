@@ -38,6 +38,15 @@ final class MoreView: UIView {
         $0.isScrollEnabled = UIDevice.current.orientation.isLandscape
     }
     
+    let noticeLabel = UILabel().then {
+        $0.text = UserDefaultsManager.shared.notice
+        $0.font = FontManager.shared.pretendard(weight: .medium, size: 14)
+        $0.textColor = .code4
+        $0.numberOfLines = 0
+        $0.setLineHeight(1.5)
+        $0.textAlignment = .center
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
@@ -54,9 +63,8 @@ final class MoreView: UIView {
     }
     
     private func addComponent() {
-        addSubview(tableViewWrapperView)
+        [tableViewWrapperView, noticeLabel].forEach(addSubview)
         tableViewWrapperView.addSubview(settingTableView)
-        configSettingViews()
     }
     
     private func setConstraints() {
@@ -70,26 +78,14 @@ final class MoreView: UIView {
             $0.bottom.lessThanOrEqualToSuperview().inset(bottomInset)
         }
         
+        noticeLabel.snp.makeConstraints {
+            $0.top.equalTo(tableViewWrapperView.snp.bottom).offset(24)
+            $0.left.right.equalToSuperview().inset(16)
+        }
+        
         settingTableView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
-    }
-    
-    private func configSettingViews() {
-//        SettingType.allCases.forEach { type in
-//            let settingView = MoreSettingView(),
-//                settingViewTapped = UITapGestureRecognizer()
-//
-//            settingView.configure(type: type)
-//            settingView.addGestureRecognizer(settingViewTapped)
-//
-//            settingViewTapped.rx.event
-//                .bind { [weak self] _ in
-//                    self?.delegate?.openNavigation(type: type, hasLock: true)
-//                }.disposed(by: disposeBag)
-//
-//            settingStackView.addArrangedSubview(settingView)
-//        }
     }
     
     private func bind() { }
