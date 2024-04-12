@@ -77,6 +77,17 @@ public final class RootViewController: UITabBarController {
             .disposed(by: disposeBag)
     }
     
+    public func moveToTimeLineViewController() {
+        let timeLineVc = firstVc.topViewController as? TimeLineViewController
+        
+        timeLineVc?.currentSortType = .all
+        selectedIndex = 0
+        customTabBar.selectTab(index: 0)
+        firstVc.popToRootViewController(animated: false)
+        
+        timeLineVc?.widgetLinkCheck()
+    }
+    
     func tabBarAnimation(shouldShow: Bool) {
         let height = UIApplication.safeAreaInset.bottom + 78
         

@@ -77,6 +77,37 @@ final class TimeLineViewController: UIViewController {
               name: UIApplication.willEnterForegroundNotification,
               object: nil)
     }
+    
+    public func widgetLinkCheck() {
+        guard let widgetLink = UserDefaultsManager.shared.widgetLink else { return }
+        sortList()
+        scrollTo(link: widgetLink)
+    }
+    
+    public func scrollTo(link: Core.Link) {
+        guard let section = timeLineView.baseDataSource.firstIndex(where: { $0.values.contains(link) }),
+              let sectionItemCount = timeLineView.baseDataSource[safe: section]?.values.count,
+              let item = timeLineView.baseDataSource[safe: section]?.values.firstIndex(of: link),
+              case let reverseItem = sectionItemCount - Int(item) - 1,
+              case let indexPath = IndexPath(item: reverseItem, section: section)
+        else { return }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.timeLineView.linkCollectionView.scrollToItem(
+                at: indexPath,
+                at: .centeredVertically,
+                animated: false
+            )
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                let cell = self.timeLineView.linkCollectionView.cellForItem(at: indexPath)
+                
+                cell?.shakeAnimation()
+                UserDefaultsManager.shared.widgetLink = nil
+            }
+            
+        }
+    }
 }
 
 private extension TimeLineViewController {
@@ -145,7 +176,6 @@ private extension TimeLineViewController {
         timeLineView.baseDataSource = baseDatasource
         timeLineView.linkCollectionView.isHidden = baseDatasource.isEmpty
         timeLineView.linkCollectionView.reloadData()
-        timeLineView.linkCollectionView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
     }
     
     private func sortList(type: LinkSortType = .all) {

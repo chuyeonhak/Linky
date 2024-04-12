@@ -1,4 +1,5 @@
 import UIKit
+import WidgetKit
 
 import Core
 import Features
@@ -29,9 +30,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let vc = RootViewController()
         window?.rootViewController = vc
         window?.makeKeyAndVisible()
+        
+        widgetCheck(context: connectionOptions.urlContexts.first)
     }
     
-    func sceneDidDisconnect(_ scene: UIScene) {}
+    func sceneDidDisconnect(_ scene: UIScene) { }
     
     func sceneDidBecomeActive(_ scene: UIScene) {}
     
@@ -43,6 +46,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             openLockScreen()
             requestAuthNoti()
         }
+    }
+    
+    func sceneDidEnterBackground(_ scene: UIScene) { WidgetCenter.shared.reloadAllTimelines() }
+    
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        widgetCheck(context: URLContexts.first)
     }
 }
 
@@ -104,12 +113,14 @@ extension SceneDelegate {
     
     private func openLockScreen() {
         let lock = window?.rootViewController?.presentedViewController as? LockScreenViewController
+        let rootViewController = window?.rootViewController as? RootViewController
         
         if UserDefaultsManager.shared.usePassword && lock == nil {
-            print(UserDefaultsManager.shared.password)
+            print("my password = \(UserDefaultsManager.shared.password)")
             let lockScreenVc = LockScreenViewController(type: .normal)
 
             lockScreenVc.modalPresentationStyle = .overFullScreen
+            lockScreenVc.unlockAction = { _ in rootViewController?.moveToTimeLineViewController() }
 
             UIApplication.shared.window?.rootViewController?.present(lockScreenVc, animated: false)
         }
@@ -152,6 +163,19 @@ extension SceneDelegate {
         return if languageCode.isKorean { "notice" }
         else if languageCode.isJapan { "noticeJapan" }
         else { "noticeEnglish" }
+    }
+    
+    private func widgetCheck(context: UIOpenURLContext?) {
+        guard let context,
+              case let linkList = UserDefaultsManager.shared.linkList,
+              let link = linkList.first (where: { $0.url == context.url.absoluteString }),
+              let rootViewController = window?.rootViewController as? RootViewController
+        else { return }
+        
+        UserDefaultsManager.shared.widgetLink = link
+        if !UserDefaultsManager.shared.usePassword {
+            rootViewController.moveToTimeLineViewController()
+        }
     }
 }
 
