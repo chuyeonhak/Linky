@@ -70,6 +70,29 @@
         }
       }
     },
+    "addLinkTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please add a link :)"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リンクを追加します :)"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "링크를 추가해 주세요 :)"
+          }
+        }
+      }
+    },
     "addLinkToast" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -996,13 +1019,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "You have #COUNT# tags."
+            "value" : "You have #COUNT# links."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "#COUNT#個のタグがあります。"
+            "value" : "#COUNT# リンクがあります。"
           }
         },
         "ko" : {

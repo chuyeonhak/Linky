@@ -5,6 +5,8 @@ public enum I18N {
     public static let addLinkComplete = "addLinkComplete".localized
     /// 추가할 링크를 입력해주세요.
     public static let addLinkPlaceholder = "addLinkPlaceholder".localized
+    /// 링크를 추가해 주세요 :)
+    public static let addLinkTitle = "addLinkTitle".localized
     /// 링크 추가 완료!
     public static let addLinkToast = "addLinkToast".localized
     /// 링키 바로 추가하기
