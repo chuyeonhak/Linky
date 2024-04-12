@@ -26,6 +26,7 @@ public struct UserDefaultsManager {
         fileprivate static let errorURL = "errorURL"
         fileprivate static let wantURL = "wantURL"
         fileprivate static let etcURL = "etcURL"
+        fileprivate static let widgetLink = "widgetLink"
     }
     
     public static var shared = UserDefaultsManager()
@@ -247,7 +248,24 @@ public struct UserDefaultsManager {
         set { userDefaults?.set(newValue, forKey: Key.etcURL) }
     }
     
-    
+    public var widgetLink: Core.Link? {
+        get {
+            guard let widgetLink = userDefaults?.value(forKey: Key.widgetLink) as? Data,
+                  case let decoder = JSONDecoder(),
+                  let deocdedWidgetLink = try? decoder.decode(Link.self, from: widgetLink)
+            else { return  nil }
+            
+            return deocdedWidgetLink
+        }
+        
+        set {
+            guard case let encoder = JSONEncoder(),
+                  let encoded = try? encoder.encode(newValue)
+            else { return }
+            
+            userDefaults?.setValue(encoded, forKey: Key.widgetLink)
+        }
+    }
     
     public var noTagData: [TagData] {
         noTagLinkList.isEmpty ? []: [TagData(title: I18N.noTags, createdAt: Date())]
@@ -274,15 +292,18 @@ public struct UserDefaultsManager {
         let todayLinks = copyLinks.filter { calendar.isDateInToday($0.createdAt) }
         if !todayLinks.isEmpty {
             categorizedLinks.append((I18N.today, todayLinks))
+            copyLinks.removeAll { todayLinks.contains($0) }
         }
         
         let yesterdayLinks = copyLinks.filter { calendar.isDateInYesterday($0.createdAt) }
-        if !yesterdayLinks.isEmpty { categorizedLinks.append((I18N.yesterday, yesterdayLinks)) }
+        if !yesterdayLinks.isEmpty {
+            categorizedLinks.append((I18N.yesterday, yesterdayLinks))
+            copyLinks.removeAll { yesterdayLinks.contains($0) }
+        }
         
-        if let threeDaysAgo = calendar.date(byAdding: .day, value: -2, to: now),
-           let sevenDaysAgo = calendar.date(byAdding: .day, value: -7, to: now),
-           case let recentLinks = copyLinks.filter({ $0.createdAt > sevenDaysAgo && $0.createdAt <= threeDaysAgo }),
-            !recentLinks.isEmpty { categorizedLinks.append((I18N.previous7Day, recentLinks)) }
+        if let sevenDaysAgo = calendar.date(byAdding: .day, value: -7, to: now),
+           case let recentLinks = copyLinks.filter({ $0.createdAt > sevenDaysAgo }),
+           !recentLinks.isEmpty { categorizedLinks.append((I18N.previous7Day, recentLinks)) }
         
         if let thirtyDaysAgo = calendar.date(byAdding: .day, value: -30, to: now),
            let eightDaysAgo = calendar.date(byAdding: .day, value: -8, to: now),
