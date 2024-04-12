@@ -21,7 +21,7 @@ public final class LockScreenViewController: PortraitViewController {
     public let auth = BiometricsAuthManager()
     let disposeBag = DisposeBag()
     
-    var unlockAction: ((Bool) -> ())? = nil
+    public var unlockAction: ((Bool) -> ())? = nil
     
     public init(type: LockType) {
         self.type = type
