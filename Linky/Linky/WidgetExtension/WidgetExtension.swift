@@ -25,10 +25,6 @@ struct Provider: TimelineProvider {
   
   func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
     var entries: [SimpleEntry] = [SimpleEntry(date: Date(), percent: getPercent(), link: getRandomLink())]
-    
-    // Generate a timeline consisting of five entries an hour apart, starting from the current date.
-    let currentDate = Date()
-    
     let timeline = Timeline(entries: entries, policy: .atEnd)
     completion(timeline)
   }
@@ -37,7 +33,8 @@ struct Provider: TimelineProvider {
     let linkList = UserDefaultsManager.shared.linkList
     let filterdList = linkList.filter { !$0.isRemoved }
     
-    return filterdList.randomElement()
+    if let link = linkList.first(where: { $0.isWrittenCount == 0 }) { return link }
+    else { return filterdList.randomElement() }
   }
   
   private func getPercent() -> CGFloat {
@@ -75,7 +72,7 @@ struct WidgetExtensionEntryView : View {
       default: EmptyView()
       }
     }
-    .widgetURL(URL(string: entry.link?.url ?? "www.naver.com"))
+    .widgetURL(URL(string: entry.link?.url ?? ""))
     .frame(maxWidth: .infinity, maxHeight: .infinity)
   }
   
