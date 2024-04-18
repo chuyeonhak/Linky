@@ -21,6 +21,6 @@ let project = Project.makeAppProject(
         Module.core.project,
         Module.features.project
     ],
-    resources: ["Resources/**"],
+    resources: ["Resources/**", "PrivacyInfo.xcprivacy"],
     infoPlist: Project.Linky.infoPlist)
 
