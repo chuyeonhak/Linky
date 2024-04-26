@@ -10,49 +10,33 @@ import SwiftUI
 import Core
 
 import ConfettiSwiftUI
-import MarqueeText
 
 struct MakerProfileView: View {
     @State private var count: Int = 0
     
     var body: some View {
-            VStack {
-//                let text = String(
-//                    repeating: UserDefaultsManager.shared.notice + "    ",
-//                    count: 5
-//                )
-//                
-//                MarqueeText(
-//                    text: text,
-//                    font: FontManager.shared.pretendard(weight: .semiBold, size: 36),
-//                    leftFade: 16,
-//                    rightFade: 16,
-//                    startDelay: 0
-//                )
-//                .makeCompact()
-//                .foregroundColor(Color(UIColor.code2 ?? .white))
-//                .padding(.horizontal, 32)
-//                .padding(.bottom, 64)
-                
-                FidgetTextView("Project Manager @mong._09", fontSize: 25)
-                    .frame(height: 25)
-                    .confettiCannon(
-                        counter: $count,
-                        num: 100,
-                        openingAngle: .zero,
-                        closingAngle: Angle(degrees: 360),
-                        radius: 200)
-                    .onAppear { count += 1 }
-                Spacer()
-                FidgetTextView("UI Designer @hi__luu", fontSize: 25)
-                    .frame(height: 25)
-                Spacer()
-                FidgetTextView("iOS developer @amola_chu", fontSize: 25)
-                    .frame(height: 25)
-                Spacer()
-                FidgetTextView("android developer @min._.dda", fontSize: 25)
-                    .frame(height: 25)
-            }
-            .frame(height: 160)
+        VStack(spacing: 20) {
+            FidgetTextView("Project Manager @mong._09", fontSize: 25)
+                .frame(height: 25)
+                .confettiCannon(
+                    counter: $count,
+                    num: 100,
+                    openingAngle: .zero,
+                    closingAngle: Angle(degrees: 360),
+                    radius: 200)
+                .onAppear { count += 1 }
+            
+            FidgetTextView("UI Designer @hi__luu", fontSize: 25)
+                .frame(height: 25)
+            
+            FidgetTextView("iOS developer @amola_chu", fontSize: 25)
+                .frame(height: 25)
+            
+            FidgetTextView("android developer @ddoeuner", fontSize: 25)
+                .frame(height: 25)
+            
+            FidgetTextView("android developer @u___nan_", fontSize: 25)
+                .frame(height: 25)
+        }
     }
 }
