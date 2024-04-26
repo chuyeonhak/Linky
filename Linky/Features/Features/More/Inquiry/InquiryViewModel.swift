@@ -94,6 +94,7 @@ struct InquiryViewModel {
         IndicatorManager.shared.startAnimation()
         let messageModel = SlackMessageModel()
             .addBlock(blockType: .header("\(model.currentCategory.value.type)"))
+            .addBlock(blockType: .osType)
             .addBlock(blockType: .contents(text))
             .addBlock(blockType: .divider)
         

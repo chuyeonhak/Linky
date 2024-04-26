@@ -35,13 +35,14 @@ extension SlackBlock {
         case header(String)
         case title(String)
         case contents(String)
+        case osType
         case image
         case divider
         
         var type: String {
             switch self {
             case .header(_): "header"
-            case .title(_), .contents(_): "section"
+            case .title(_), .contents(_), .osType: "section"
             case .image: "image"
             case .divider: "divider"
             }
@@ -52,6 +53,7 @@ extension SlackBlock {
             case .header(let text): SlackText(type: "plain_text", text: text)
             case .title(let text): SlackText(type: "mrkdwn", text: "*제목*\n" + text)
             case .contents(let text): SlackText(type: "mrkdwn", text: "*내용*\n" + text)
+            case .osType: SlackText(type: "mrkdwn", text: "OS: 🍎iOS🍎")
             case .image: SlackText(type: type, text: "")
             case .divider: SlackText(type: type, text: "")
             }
@@ -64,7 +66,10 @@ extension SlackBlock {
 extension SlackBlock {
     public static func makeBlock(block: BlockType) -> SlackBlock {
         switch block {
-        case .header(_), .title(_), .contents(_): SlackBlock(type: block.type, text: block.text)
+        case .header(_),
+                .title(_),
+                .contents(_),
+                .osType: SlackBlock(type: block.type, text: block.text)
         case .image: SlackBlock(type: block.type, text: nil, imageURL: nil, altText: nil)
         case .divider: SlackBlock(type: block.type, text: nil)
         }
