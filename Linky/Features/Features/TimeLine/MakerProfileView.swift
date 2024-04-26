@@ -16,6 +16,9 @@ struct MakerProfileView: View {
     
     var body: some View {
         VStack(spacing: 20) {
+            FidgetTextView("Drag me", fontSize: 32)
+                .frame(height: 25)
+            
             FidgetTextView("Project Manager @mong._09", fontSize: 25)
                 .frame(height: 25)
                 .confettiCannon(
